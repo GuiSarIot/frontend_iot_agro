@@ -1,0 +1,201 @@
+.profilePopup {
+    position: relative;
+}
+
+.boxImage {
+    padding: 10px;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+.boxImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
+/* box info */
+.boxInfo {
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    bottom: -290px;
+    left: -420px;
+    width: 520px;
+    padding: 22px;
+    border-radius: 12px;
+    background-color: var(--background-color-secondary);
+    box-shadow: 20px 20px 60px #00000040, -20px -20px 60px var(--shadow-color-primary);
+    transition: all 0.3s ease-in-out;
+}
+
+.boxInfo.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.decorator {
+    position: absolute;
+    top: -20px;
+    left: 91%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    z-index: 300;
+    border-style: solid;
+    border-width: 0 20px 20px 20px;
+    border-color: transparent transparent var(--background-color-secondary) transparent;
+}
+
+/* section top */
+.sectionTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sectionTop a {
+    min-width: 130px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sectionTop a:hover {
+    color: var(--text-color-secondary);
+    text-decoration: underline;
+}
+
+.sectionTop span {
+    display: flex;
+    align-items: center;
+}
+
+.sectionTop span svg {
+    font-size: 13px;
+}
+
+/* section botton */
+.sectionBottom {
+    width: 100%;
+    margin: 30px auto 20px auto;
+    padding: 0 30px;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.imageProfile {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.imageProfile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.descriptionProfile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.descriptionProfile h4 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.descriptionProfile p {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.descriptionProfile a {
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    color: var(--text-color-secondary);
+}
+
+.descriptionProfile a svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+}
+
+
+/* responsive tablets */
+@media screen and (max-width: 600px) {
+    .boxImage {
+        padding: 10px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .boxImage img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+
+@media screen and (max-width: 900px) {
+    .boxInfo {
+        z-index: 4;
+        opacity: 0;
+        bottom: -174px;
+        left: -245px;
+        width: 320px;
+    }
+
+    .boxInfo.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .sectionTop a {
+        min-width: max-content;
+    }
+
+    .sectionTop p, .sectionTop a {
+        font-size: 13px;
+    }
+
+    .sectionBottom {
+        margin: 10px auto 5px auto;
+    }
+
+    .imageProfile {
+        width: 80px;
+        height: 80px;
+    }
+
+    .descriptionProfile{
+        margin-left: 10px;
+    }
+
+    .descriptionProfile h4 {
+        font-size: 12px;
+    }
+
+    .descriptionProfile p {
+        font-size: 10px;
+    }
+
+    .descriptionProfile a {
+        font-size: 10px;
+    }
+}

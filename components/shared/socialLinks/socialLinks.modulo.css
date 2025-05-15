@@ -1,0 +1,10 @@
+.bg-green-500 {
+    border-radius: 20px;
+}
+
+.links-social {
+    margin-top: 1.5rem !important;
+    gap: 1.5rem !important;
+    flex-wrap: wrap !important;
+    display: flex !important;
+}

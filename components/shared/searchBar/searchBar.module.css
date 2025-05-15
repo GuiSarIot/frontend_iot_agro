@@ -1,0 +1,121 @@
+.searchBar{
+    position: relative;
+}
+
+.searchBar:hover .searchSelected{
+    color: var(--text-color-secondary);
+}
+
+.searchSelected{
+    min-width: 290px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.searchSelected h4{
+    position: relative;
+    text-align: center;
+    font-weight: lighter;
+    font-size: 1.1rem;
+    padding: 2px 20px;
+}
+
+.searchSelected h4 span{
+    position: absolute;
+    top: -3px;
+    right: 10px;
+    transform: rotate(90deg);
+}
+
+.boxSearch{
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: -20px;
+    left: -20%;
+    width: 150%;
+    max-height: 200px;
+    max-width: 700px;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 0 10px;
+    overflow-y: auto;
+    background-color: var(--background-color-secondary);
+    box-shadow: 4px 4px 13px var(--shadow-color-secondary);
+}
+
+.boxSearch.active{
+    z-index: 100;
+    opacity: 1;
+    visibility: visible;
+}
+
+.inputSearch{
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color-secondary);
+    padding: 10px 0;
+}
+
+.inputSearch input{
+    width: 97%;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-color-primary);
+    border: 1px solid var(--border-color-primary);
+}
+
+.inputSearch input::placeholder{
+    color: var(--text-color-primary);
+}
+
+.optionSearch ul{
+    list-style: none;
+}
+
+.optionSearch ul li{
+    width: 100%;
+}
+
+.optionSearch ul li a{
+    width: 100%;
+    padding: 10px 20px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+}
+
+.optionSearch ul li a:hover{
+    text-decoration: none;
+    background-color: var(--background-color-third);
+}
+
+
+/* responsive tablets */
+@media screen and (max-width: 1380px){
+    .searchSelected{
+        max-width: 60%;
+        min-width: max-content;
+    }
+    
+    .searchSelected h4{
+        font-size: 1rem;
+    }
+    
+    .searchSelected h4 span{
+        position: absolute;
+        top: -3px;
+        right: -3px;
+    }
+
+    .boxSearch.active{
+        z-index: 4;
+    }
+}

@@ -1,0 +1,30 @@
+
+.titleModal{
+    padding: 15px;
+}
+
+.titleModal h3{
+    font-weight: lighter;
+    color: var(--text-color-secondary);
+}
+
+.btnFooter{
+    padding: 5px;
+}
+
+.btnFooter button,
+.buttonOutSide{
+    color: var(--text-color-secondary);
+    font-weight: lighter;
+    padding: 5px 25px;
+    background-color: transparent;
+    background-color: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid var(--text-color-secondary);
+}
+
+.btnFooter button:hover{
+    background-color: var(--background-color-primary);
+}

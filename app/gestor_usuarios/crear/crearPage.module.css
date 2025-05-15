@@ -1,0 +1,6 @@
+.content{
+    min-height: 50vh;
+}
+.sectionTitleP{
+    color: var(--border-color-secondary);
+}

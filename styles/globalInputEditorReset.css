@@ -1,0 +1,12 @@
+.ql-formats{
+    color: var(--text-color-primary) !important;
+}
+
+.ql-editor :is(h1, h2, h3, h4, h5, h6, p) {
+    font-weight: lighter;
+    color: var(--text-color-primary);
+}
+
+.ql-editor :is(a) {
+    color: var(--text-color-secondary);
+}

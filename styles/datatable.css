@@ -1,0 +1,121 @@
+/* removing default styles from primereact classes */
+.p-datatable-header {
+    border: none;
+    
+    border-radius: 5px 5px 0 0;
+}
+
+/* datatable custom */
+.dataTableCustom{
+    width: 80%;
+}
+
+/* table header */
+.dataTableCustom .table-header{
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dataTableCustom .table-header input{
+    padding: 5px;
+    color: var(--text-color-primary);
+}
+
+/* table content */
+.dataTableCustom table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 10px;
+}
+
+.dataTableCustom table th {
+    font-weight: 600;
+    color: var(--text-color-primary);
+    border: none;
+}
+
+.dataTableCustom table th span{
+    width: 100%;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.dataTableCustom table td {
+    text-align: left;
+    color: var(--text-color-primary);
+    border: none;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.dataTableCustom table td,
+.dataTableCustom table th {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+
+.dataTableCustom td button{
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    color: var(--text-color-primary);
+}
+
+.dataTableCustom td button,
+.dataTableCustom td a{
+    transition: all 0.3 ease-in-out;
+}
+
+.dataTableCustom td button svg,
+.dataTableCustom td a svg{
+    font-size: 18px;
+    margin: 5px;
+}
+
+.dataTableCustom td button:hover,
+.dataTableCustom td a:hover{
+    color: var(--text-color-secondary);
+}
+
+.p-datatable .p-column-header-content{
+    display: block;
+}
+
+
+/* respnsive tablets */
+@media screen and (max-width: 1380px) {
+    
+    .dataTableCustom table td,
+    .dataTableCustom table th {
+        padding: 3px 10px;
+        font-size: 13px;
+    }
+
+
+    
+    /* table header */
+    .dataTableCustom .table-header input{
+        width: 40%;
+        padding: 5px;
+        margin: 0 auto;
+        color: var(--text-color-primary);
+        font-size: 13px;
+    }
+}
+
+
+/* respnsive mobiles */
+@media screen and (max-width: 750px) {
+    /* table header */
+    .dataTableCustom .table-header input{
+        width: 90%;
+        padding: 5px;
+        margin: 0 auto;
+        color: var(--text-color-primary);
+        font-size: 13px;
+    }
+}

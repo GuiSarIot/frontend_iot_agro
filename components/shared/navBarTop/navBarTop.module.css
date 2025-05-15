@@ -1,0 +1,67 @@
+.navBarTop{
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 30px ;
+    z-index: 2;
+    border-bottom: 2px solid var(--background-color-primary);
+}
+
+.searchBar{
+    position: relative;
+    max-width: 500px;
+}
+
+.boxImage{
+    width: 100px;
+    height: 100px;
+}
+
+.boxImage img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.burguerButtton button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-primary);
+}
+
+.userInfo{
+    position: absolute;
+    right: 5px;
+    top: 100%;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-left: 2px solid var(--background-color-primary);
+    border-right: 2px solid var(--background-color-primary);
+    border-bottom: 2px solid var(--background-color-primary);
+    border-radius: 0 0 12px 12px;
+    background-color: var(--background-color-secondary);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.userInfo .name{
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+}
+
+
+/* responsive tablets */
+@media screen and (max-width: 600px) {
+    .userInfo{
+        display: none;
+    }
+}

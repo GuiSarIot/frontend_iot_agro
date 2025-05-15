@@ -1,0 +1,30 @@
+.p-dialog-mask{
+    z-index: 12 !important;
+}
+
+.p-dialog-header {
+    padding: 5px;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.p-dialog-content {
+    padding: 15px;
+    color: var(--text-color-primary);
+}
+
+.p-dialog-footer {
+    padding: 5px;
+    border-top: 1px solid var(--border-color-primary);
+}
+
+.p-dialog-header-close svg {
+   color: var(--text-color-secondary);
+}
+
+.p-dialog-header-close:hover {
+    background-color: var(--background-color-fifth);
+}
+
+.p-dialog-header-close:hover svg {
+    color: var(--text-color-third);
+}

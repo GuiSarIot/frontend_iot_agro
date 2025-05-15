@@ -1,0 +1,124 @@
+.content{
+    width: 100%;
+    min-height: 100vh;
+    background: #000;
+    background-size: cover;
+    background-position: center center;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content2{
+    width: 100%;
+    min-height: 100vh;
+    background: var(--background-color-primary);
+    background-size: cover;
+    background-position: center center;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content > div{
+    position: relative;
+}
+
+.content .contentPage, .content .contentPage2{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    /* background: var(--background-color-fourth);
+    border-radius: 20px;
+    box-shadow: 4px 4px 13px var(--shadow-color-secondary); */
+    min-height: 40vh;
+    z-index: 30;
+}
+
+
+.content .contentPage :is(h1, h2, p){
+    color: var(--text-color-third);
+}
+
+.content .contentPage h1{
+    font-size: 5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.content .contentPage h1 span{
+    color: var(--text-color-third);
+    font-weight: normal;
+    font-size: 3rem;
+    margin-left: 5px;
+}
+
+.content .contentPage p{
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 20px 0;
+}
+
+.content .contentImage {
+    position: relative;
+}
+
+.content .contentImage img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    pointer-events: none;
+}
+
+
+.content .contentImage a {
+    position: absolute;
+    bottom: 27%;
+    z-index: 80;
+}
+
+.content .contentImage a.link1{
+    right: 12%;
+    background: #0375d6;
+    background: linear-gradient(180deg, #0375d6, #34eeff);
+    font-size: 20px;
+    color: #fff;
+    border-radius: 50px;
+    padding: 15px 40px;
+    height: 54px;
+    font-family: Veneer, sans-serif;
+    box-shadow: 10px 11px 30px #129ae4;
+    -webkit-box-shadow: 10px 11px 30px #129ae4;
+}
+
+.content .contentImage a.link2{
+    left: 11%;
+    background: #980606;
+    background: linear-gradient(180deg, #980606, #f62123);
+    font-size: 20px;
+    color: #fff;
+    border-radius: 50px;
+    padding: 15px 40px;
+    height: 54px;
+    font-family: Veneer, sans-serif;
+    box-shadow: 10px 11px 30px #aa2f34;
+    -webkit-box-shadow: 10px 11px 30px #aa2f34;
+}
+
+.content2 img{
+    height: auto;
+    max-width: 500px;
+}

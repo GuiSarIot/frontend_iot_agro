@@ -1,0 +1,95 @@
+.mainForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+}
+
+/*styles to info from zone fields form*/
+.sectionFields{
+    width: 100%;
+}
+
+/*styles to section inputs zone form*/
+.mainForm section{
+    margin: 30px 0;
+}
+
+.sectionTitle{
+    margin: 15px;
+}
+
+.sectionTitle h1{
+    color: var(--text-color-primary);
+    font-weight: lighter;
+    font-size: 2rem;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.sectionTitle h1 span{
+    color: var(--text-color-secondary);
+    font-size: 1.2rem;
+}
+
+.sectionTitle h2{
+    color: var(--text-color-secondary);
+    font-weight: lighter;
+    font-size: 1.5rem;
+}
+
+.descriptionSection{
+    margin: 20px 0;
+    font-size: 13px;
+}
+
+.descriptionSection p{
+    margin: 18px 0;
+    line-height: 25px;
+}
+
+.descriptionSection span{
+    color: var(--text-color-secondary);
+    font-style: italic;
+    font-weight: bold;
+}
+
+.sectionSubmit{
+    width: 100%;    
+    display: flex;
+    flex-direction: row-reverse;
+    
+}
+
+.sectionInputs{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+
+/*styles to submit zone*/
+.sectionSubmit input{
+    color: var(--text-color-secondary);
+    padding: 5px 25px;
+    background-color: transparent;
+    background-color: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid var(--text-color-secondary);
+}
+
+.sectionSubmit input:hover{
+    background-color: var(--background-color-primary);
+}
+
+
+/* responsive tablets */
+@media screen and (max-width: 1380px) and (min-width: 750px){
+    
+}
+
+/* responsive mobile */

@@ -1,0 +1,43 @@
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    width: 100%;
+    padding: 30px 0;
+}
+.content .table{
+    width: 80%;
+}
+
+
+.nav {
+display: flex;
+border-bottom: 1px solid #ccc;
+margin-bottom: 10px;
+margin-top: 20px;
+flex-wrap: wrap;
+}
+
+.contentSection {
+margin: 20px auto;
+width: 90%;
+text-align: justify
+}
+
+.tabButton {
+padding: 10px 40px;
+cursor: pointer;
+background: none;
+border: none;
+border-bottom: 3px solid transparent;
+outline: none;
+transition: border-bottom 0.3s, color 0.3s;
+color: var(--text-color-primary);
+font-weight: bold;
+}
+
+.activeTab {
+border-bottom: 3px solid #5ba730;
+color: var(--text-color-secondary);
+}

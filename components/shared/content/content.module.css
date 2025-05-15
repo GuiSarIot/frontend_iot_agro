@@ -1,0 +1,23 @@
+
+.title{
+    border-bottom: 1px solid var(--border-color-primary);
+    display: flex;
+    align-items: center;
+}
+
+.title h1{
+    padding: 5px 20px;
+    font-size: 1.7rem;
+    font-weight: lighter;
+    display: inline;
+}
+
+
+.title button{
+    display: inline;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-primary);
+    margin-right: 20px;
+}

@@ -1,0 +1,47 @@
+.content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 70vh;
+    width: 100%;
+}
+
+.content .table {
+    width: 90%;
+}
+
+.itemData {
+    color: var(--text-color-third);
+    background-color: var(--background-color-fifth);
+    margin: 3px 2px;
+    padding: 5px 11px;
+    border-radius: 4px;
+    font-size: 10px;
+    width: fit-content;
+    display: inline-block;
+}
+
+.btnNewRolin {
+    margin: 20px auto;
+    text-align: right;
+    width: 100%;
+    padding: 0 62px;
+}
+
+.btnNewRolin a{
+    text-decoration: none;
+    color: var(--text-color-secondary);
+    padding: 5px 25px;
+    background-color: transparent;
+    background-color: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid var(--text-color-secondary);
+}
+
+.btnNewRolin a:hover{
+    background-color: var(--background-color-primary);
+}

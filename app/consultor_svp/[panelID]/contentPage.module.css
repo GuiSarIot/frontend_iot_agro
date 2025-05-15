@@ -1,0 +1,12 @@
+
+.content{
+    min-height: 70vh;
+    padding: 30px;
+}
+
+.content iframe{
+    margin: 15px auto;
+    border: none;
+    min-height: 65vh;
+    width: 100%;
+}

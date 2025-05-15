@@ -1,0 +1,17 @@
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    width: 100%;
+}
+
+.content h2{
+    font-size: 2rem;
+    text-align: center;
+    font-weight: lighter;
+}
+
+.content h2 span{
+    color: var(--text-color-secondary)
+}
