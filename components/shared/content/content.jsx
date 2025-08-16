@@ -14,9 +14,6 @@ const Container = ({ children, title }) => {
                     {children}
                 </div>
             </div>
-            {/* <footer className="main-footer">
-                <p>SENAVANCE | Dirección de la formación profesional</p>
-            </footer> */}
         </div>
     )
 }
