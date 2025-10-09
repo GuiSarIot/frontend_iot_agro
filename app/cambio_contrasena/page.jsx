@@ -1,18 +1,19 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useContext, useEffect, useState } from 'react'
-import Swal from 'sweetalert2'
 
-import ConsumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
-import AppContext from '@/context/appContext'
-
-import InputForm from '@/components/shared/inputForm/inputForm'
-import MainForm from '@/components/shared/mainForm/mainForm'
-import StyleMainForm from '@/components/shared/mainForm/mainform.module.css'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import CloudSyncIcon from '@mui/icons-material/CloudSync'
 import Alert from '@mui/material/Alert'
+import Swal from 'sweetalert2'
+
+import ConsumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
+import InputForm from '@/components/shared/inputForm/inputForm'
+import MainForm from '@/components/shared/mainForm/mainForm'
+import StyleMainForm from '@/components/shared/mainForm/mainform.module.css'
+import AppContext from '@/context/appContext'
+
 import stylesPage from './stylesPage.module.css'
 
 const ResetPasswordForm = () => {
@@ -25,7 +26,7 @@ const ResetPasswordForm = () => {
         }
         changeTitle('Cambiar contraseña')
         showLoader(false)
-    }, [])
+    }, [changeTitle, showLoader, showNavbar])
 
     const router = useRouter()
     const searchParams = useSearchParams()

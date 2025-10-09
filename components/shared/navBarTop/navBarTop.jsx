@@ -1,10 +1,13 @@
 'use client'
 
 import { useContext } from 'react'
-import AppContext from '@/context/appContext'
+
 import MenuIcon from '@mui/icons-material/Menu'
-import stylesNavBarTop from './navBarTop.module.css'
+
 import SearchBar from '@/components/shared/searchBar/searchBar'
+import AppContext from '@/context/appContext'
+
+import stylesNavBarTop from './navBarTop.module.css'
 import ProfilePopup from './profilePopup/profilePopup'
 
 const NavBarTop = () => {
