@@ -31,7 +31,7 @@ export async function POST(request: Request) {
             JSON.stringify({ message: 'Uploading file...' }),
             { status: 200 }
         )
-      
+    
     } catch (error: unknown) {
         let errorMessage = 'Unknown error'
         if (error instanceof Error) {
