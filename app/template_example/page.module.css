@@ -1,9 +1,0 @@
-.content{
-    /* yourcontent module styles */
-
-    /* Initial styles bellow */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-}

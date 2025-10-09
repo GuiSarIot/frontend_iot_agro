@@ -7,9 +7,9 @@ export interface UserInfo {
     id: string | number | null;
     roles: string[];
     nameImage: string;
-    hasRolIntitutional: boolean;
-    nameRolIntitutional: string;
-    levelAccessRolIntitutional: string | number;
+    hasRolSistema: boolean;
+    nameRolSistema: string;
+    levelAccessRolSistema: string | number;
 }
 
 export interface AuthContextState {

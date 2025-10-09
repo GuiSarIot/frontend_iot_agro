@@ -1,169 +1,268 @@
+/* ================================
+    GLOBAL STYLES
+    Estilo consistente con login.module.css
+================================ */
+
 :root {
-    --background-color-primary: #ecf0f4;
-    --background-color-secondary: #ffffff;
-    --background-color-third: #e8ecf5;
-    --background-color-fourth: #5ca73026;
-    --background-color-fifth: #5ca730bd;
-    --text-color-primary: #76809a;
-    --text-color-secondary: #5ba730;
-    --text-color-third: #ffffff;
-    --text-color-fourth: #9e9e9e;
-    --border-color-primary: #cfd4de;
-    --border-color-secondary: #74809cbb;
-    --shadow-color-primary: #e7ecf6;
-    --shadow-color-secondary: #74809c42;
-    --scroll-bar-color: #5ca7306d;
-    --blocked-content: #ffffffb3;
-    --header-color: #9e9e9e;
+    /* 🎨 Colores principales */
+    --color-primary: #147910;
+    --color-primary-light: #4f834a;
+    --color-secondary: #2c3e50;
+
+    /* 🌫️ Tonos neutros */
+    --color-bg-light: #f5f7fa;
+    --color-bg-medium: #e4e8eb;
+    --color-bg-dark: #d8dde1;
+    --color-text-main: #333333;
+    --color-text-secondary: #5a6a7a;
+
+    /* 🟢 Estados */
+    --color-success: #20c997;
+    --color-warning: #f1c40f;
+    --color-error: #e74c3c;
+    --color-info: #3498db;
+
+    /* 🌈 Gradientes */
+    --gradient-primary: linear-gradient(45deg, #4a5a6a 0%, #2a3a4a 100%);
+    --gradient-hover: linear-gradient(45deg, #4f834a 0%, #147910 100%);
+
+    /* 🧱 Sombras */
+    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.08), 0 20px 40px rgba(0, 0, 0, 0.05);
+
+    /* 🔤 Tipografía */
+    --font-main: 'Montserrat', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
-* {
+
+/* --------- Reset y base --------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    outline: none;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif !important;
 }
 
-*::selection {
-    background-color: var(--background-color-fifth);
-    color: var(--text-color-third);
-    font-family: 'Poppins', sans-serif !important;
+html,
+body {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 50%, #d8dde1 100%);
+    color: #333333;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--background-color-primary);
-    color: var(--text-color-primary);
-}
-
-
-a {
-    text-decoration: none;
-    color: var(--text-color-primary);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease-in-out;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-svg {
-    user-select: none;
-    pointer-events: none;
-}
-
-.App {
     display: flex;
-    align-items: stretch;
-    min-height: 100vh;
-}
-
-.main {
-    flex-grow: 1;
+    flex-direction: column;
     overflow-x: hidden;
-    position: relative;
-    max-height: 100vh;
-    overflow-y: auto;
 }
 
-.main::-webkit-scrollbar {
-    width: 5px;
+/* --------- Tipografía --------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #2c3e50;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.main::-webkit-scrollbar-thumb {
-    background: var(--scroll-bar-color);
-    border-radius: 10px;
+p {
+    color: #4e5d6c;
+    line-height: 1.6;
 }
 
-footer.main-footer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border-radius: 8px;
-    color: var(--text-color-secondary);
-    background-color: var(--background-color-secondary);
-}
-
-footer.main-footer p {
-    margin: 10px;
-    text-align: right;
-    font-size: 13px;
-}
-
-.container {
-    margin: 50px 40px;
-    padding: 20px;
-    background-color: var(--background-color-secondary);
-    border-radius: 20px;
-    min-height: 40vh;
-    box-shadow: 4px 4px 13px var(--shadow-color-secondary);
-}
-
-.container-public {
-    margin: 20px;
-    padding: 20px;
-    background-color: var(--background-color-secondary);
-    border-radius: 20px;
-    min-height: 95vh;
-    box-shadow: 4px 4px 13px var(--shadow-color-secondary);
-}
-
-.content-public {
+/* --------- Layouts --------- */
+.main-container {
+    flex-grow: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+}
+
+/* --------- Tarjetas / Paneles --------- */
+.panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        0 20px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.4s ease;
+    animation: float 6s ease-in-out infinite;
+}
+
+.panel:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.12),
+        0 25px 50px rgba(0, 0, 0, 0.08);
+    animation-play-state: paused;
+}
+
+/* --------- Inputs globales --------- */
+input,
+select,
+textarea {
     width: 100%;
+    padding: 0.8rem 1rem;
+    background: rgba(245, 247, 250, 0.8);
+    border: 1px solid #e0e4e8;
+    border-radius: 10px;
+    color: #2c3e50;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 input:focus,
-textarea:focus,
 select:focus,
-input:active,
-textarea:active,
-select:active,
-input:hover,
-textarea:hover,
-select:hover {
+textarea:focus {
     outline: none;
-    box-shadow: none;
-    border-color: initial;
-}
-
-
-/* responsive tablets */
-@media screen and (max-width: 1380px) {
-    .App {
-        flex-direction: column;
-    }
-}
-
-/* Responsive mobile */
-@media screen and (max-width: 768px) {
-    .container {
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: none;
-    }
-}
-
-.p-stepper .p-stepper-header.p-highlight .p-stepper-number {
+    border-color: #a0b3c6;
+    box-shadow:
+        0 0 0 2px rgba(160, 179, 198, 0.2),
+        inset 0 1px 3px rgba(0, 0, 0, 0.05);
     background: #ffffff;
-    color: var(--background-color-fifth);
 }
 
-.p-stepper .p-stepper-header:has(~ .p-highlight) .p-stepper-separator {
-    background-color: var(--background-color-fifth);
+/* --------- Botones --------- */
+button,
+.btn {
+    cursor: pointer;
+    border: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    text-transform: none;
 }
 
-input.p-dropdown-filter.p-inputtext.p-component {
-    height: 2.4rem !important;
-    position:absolute;
-    top: -40px;
-    box-shadow: 0 0 0 0.2rem #d4dafc;
-    border: none
+.btn-primary {
+    background: linear-gradient(45deg, #4f834a 0%, #147910 100%);
+    color: #fff;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.1);
 }
-svg.p-dropdown-filter-icon {
-    top: -28px;
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(45deg, #4a5a6a 0%, #2a3a4a 100%);
+    box-shadow:
+        0 7px 14px rgba(0, 0, 0, 0.12),
+        0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* --------- Tablas --------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.05),
+        0 10px 20px rgba(0, 0, 0, 0.03);
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e4e8;
+}
+
+th {
+    background: #eef1f4;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+tr:hover {
+    background: rgba(240, 244, 247, 0.6);
+}
+
+/* --------- Footer global --------- */
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    color: #4e4e4e;
+    gap: 10px;
+}
+
+footer a {
+    color: #4e4e4e;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #147910;
+}
+
+/* --------- Animaciones --------- */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* --------- Scrollbar estilizada --------- */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #e4e8eb;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a0b3c6;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5a6a7a;
+}
+
+/* --------- Responsivo --------- */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 1rem;
+    }
+
+    .panel {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
 }

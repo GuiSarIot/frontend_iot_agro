@@ -22,13 +22,15 @@ const Login: React.FC = () => {
     return (
         <div className={stylesLogin.container}>
             <main className={stylesLogin.loginContent}>
-                <div className={stylesLogin.logoOverPanel}>
+                <div className={stylesLogin.logoContainer}>
                     <Image
                         src="/logoH.png"
                         alt="Logo de IOTCorpSAS"
                         className={stylesLogin.logo}
                         width={200}  // Ajusta según tu diseño
                         height={60}  // Ajusta según tu diseño
+                        priority
+                        style={{ height: 'auto' }}
                     />
                 </div>
 
@@ -47,12 +49,12 @@ const Login: React.FC = () => {
 
                         <div className={stylesLogin.sectionForgotPassword}>
                             <a href="/recuperar_contrasena" className={stylesLogin.forgotPasswordLink}>
-                              ¿Recordar usuario o cambiar contraseña?
+                                ¿Olvido su contraseña?
                             </a>
                         </div>
 
                         <Button type="submit" variant="contained" color="primary" fullWidth className={stylesLogin.primaryButton}>
-                          Ingresar
+                            Ingresar
                         </Button>
                     </form>
                 </div>
