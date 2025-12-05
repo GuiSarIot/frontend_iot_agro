@@ -43,21 +43,20 @@ const Custom404: React.FC = () => {
         const loaderSAVA = document.querySelector(`.${StylesLoaders.pageLoader}`)
         if (loaderSAVA) loaderSAVA.remove()
 
-        // Deshabilitado temporalmente para evitar ciclo infinito
-        // void loadUserInfo()
+        void loadUserInfo()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     /* ============================
-      🔍 Función auxiliar
+        🔍 Función auxiliar
     ============================ */
-    const _loadUserInfo = async (): Promise<void> => {
+    const loadUserInfo = async (): Promise<void> => {
         try {
             const { isLogged, user } = (await GetRoute()) as GetRouteResult
 
             if (isLogged && isLogged !== 'false' && user && user !== 'false') {
                 const { status, data } = (await consumerPublicAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/users/me/`,
                 })) as ConsumerAPIResult<UserInfoResponse>
 
                 if (status === 'error') {
@@ -75,7 +74,7 @@ const Custom404: React.FC = () => {
     }
 
     /* ============================
-      🎨 Renderizado condicional
+        🎨 Renderizado condicional
     ============================ */
     return (
         <>
@@ -84,7 +83,7 @@ const Custom404: React.FC = () => {
                     <div>
                         <div className={stylesPage.contentPage}>
                             <h1>
-                              404 <span>página no encontrada</span>
+                                404 <span>página no encontrada</span>
                             </h1>
                             <p>La página que buscas no existe o ha sido eliminada.</p>
                         </div>
@@ -107,7 +106,7 @@ const Custom404: React.FC = () => {
                                     window.location.href = 'https://www.youtube.com/watch?v=f_WuRfuMXQw'
                                 }}
                             >
-                              Ir a soporte
+                                Ir a soporte
                             </Link>
 
                             <Link
@@ -118,7 +117,7 @@ const Custom404: React.FC = () => {
                                     router.back()
                                 }}
                             >
-                              Regresar
+                                Regresar
                             </Link>
                         </div>
                     </div>
@@ -128,7 +127,7 @@ const Custom404: React.FC = () => {
                     <Image src="/logoH.png" alt="logo sava" width={160} height={48} priority />
                     <div className={stylesPage.contentPage2}>
                         <h1>
-                          404 <span>página no encontrada</span>
+                            404 <span>página no encontrada</span>
                         </h1>
                         <p>La página que buscas no existe o ha sido eliminada.</p>
                     </div>

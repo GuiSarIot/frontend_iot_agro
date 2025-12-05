@@ -49,12 +49,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
     const currentUrl = usePathname()
 
     useEffect(() => {
-        // Deshabilitado temporalmente para evitar ciclos infinitos
-        // _loadUserInfo()
+        loadUserInfo()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const _loadUserInfo = async () => {
+    const loadUserInfo = async () => {
         const { isLogged, route, user, title, role } = await GetRoute()
 
         if (!isLogged || !user) {
@@ -64,7 +63,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
         }
 
         const { data, status } = await consumerPublicAPI<UserData>({
-            url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
+            url: `${process.env.NEXT_PUBLIC_API_URL}/users/me/`,
         })
 
         if (status === 'error' || !data) {

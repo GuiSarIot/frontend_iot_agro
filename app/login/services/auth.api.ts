@@ -20,9 +20,10 @@ export async function loginRequest(body: LoginRequestBody) {
 }
 
 export async function encryptUserId(id: string) {
-    // TODO: Implementar cifrado en el backend nuevo
-    // Por ahora retornamos el ID directamente
-    return id
+    const res = (await ConsumerPublicAPI({
+        url: `${process.env.NEXT_PUBLIC_API_URL}/login/cifrar_id/${id}`,
+    })) as ConsumerAPIResult<string>
+    return res.data
 }
 
 export async function saveRoute(params: Parameters<typeof SaveRoute>[0]) {
