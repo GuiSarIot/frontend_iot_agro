@@ -28,7 +28,6 @@ const consumerPublicAPI = async <T = unknown>({
         headers: {
             ...headers,
             'Content-Type': 'application/json',
-            'Referrer-Policy': 'no-referrer',
         },
     }
 

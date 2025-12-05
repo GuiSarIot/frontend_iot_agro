@@ -36,8 +36,6 @@ const Loader: React.FC<LoaderProps> = ({ children }) => {
                             />
                         </div>
                     </div>
-
-                    <div className={StylesLoaders.text}>Cargando...</div>
                 </div>
             )}
             {children}

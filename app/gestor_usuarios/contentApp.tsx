@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 import Link from 'next/link'
 
@@ -8,7 +8,7 @@ import ProtectedRoute from '@/components/protectedRoute/protectedRoute'
 import Content from '@/components/shared/content/content'
 import SideBarLeft from '@/components/shared/sideBarLeft/sideBarLeft'
 import stylesSideBar from '@/components/shared/sideBarLeft/sideBarLeft.module.css'
-import AppContext from '@/context/appContext'
+import { useAppContext } from '@/context/appContext'
 
 // ---- Interfaces ----
 interface ContentAppProps {
@@ -18,7 +18,7 @@ interface ContentAppProps {
 // ---- Componente principal ----
 const ContentApp: React.FC<ContentAppProps> = ({ children }) => {
     // * context
-    const { appState } = useContext(AppContext)
+    const { appState } = useAppContext()
     const { userInfo } = appState
 
     // * renders
@@ -35,13 +35,6 @@ const ContentApp: React.FC<ContentAppProps> = ({ children }) => {
                     <li className={stylesSideBar.item}>
                         <Link href="/gestor_usuarios">Listado de usuarios</Link>
                     </li>
-                    {userInfo.levelAccessRolIntitutional === 'ROOT' && (
-                        <li className={stylesSideBar.item}>
-                            <Link href="/gestor_usuarios/roles_institucionales">
-                                Gestión roles institucionales
-                            </Link>
-                        </li>
-                    )}
                 </SideBarLeft>
                 <Content title={appState.title}>
                     {children}

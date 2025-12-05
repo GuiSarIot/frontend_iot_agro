@@ -10,6 +10,7 @@ import Swal from 'sweetalert2'
 import { useAppContext } from '@/context/appContext' // si exportaste el hook
 
 import { loginRequest, encryptUserId, getRoute, saveRoute } from '../services/auth.api'
+import { tokenService } from '../services/token.service'
 
 import type { LoginRequestBody } from '../services/auth.types'
 
@@ -44,10 +45,10 @@ export function useLogin() {
         event.preventDefault()
         showLoader(true)
 
-        const userName = DOMPurify.sanitize(usernameRef.current?.value ?? '')
+        const username = DOMPurify.sanitize(usernameRef.current?.value ?? '')
         const password = DOMPurify.sanitize(passwordRef.current?.value ?? '')
 
-        const body: LoginRequestBody = { userName, password }
+        const body: LoginRequestBody = { username, password }
         const { status, data } = await loginRequest(body)
 
         if (status === 'error') {
@@ -60,37 +61,41 @@ export function useLogin() {
             return
         }
 
-        const idEncrypted = await encryptUserId(String(data.id))
+        const idEncrypted = await encryptUserId(String(data.user.id))
+
+        // Almacenar tokens JWT
+        tokenService.setAccessToken(data.access)
+        tokenService.setRefreshToken(data.refresh)
 
         changeAuthContext({
             ...appState.authContext,
             isLoggedIn: true,
         })
 
+        // Extraer los códigos de permisos para compatibilidad
+        const permissionCodes = data.user.rol_detail.permisos.map(p => p.codigo)
+
         changeUserInfo({
-            name: data.name,
-            email: data.email,
-            role: data.role.role,
-            module: data.module,
-            id: data.id,
-            roles: data.roles,
-            hasRolIntitutional: data.has_rol_intitutional,
-            nameRolIntitutional: data.rol_intitutional,
-            levelAccessRolIntitutional: data.rol_intitutional_level_access,
+            name: data.user.full_name,
+            email: data.user.email,
+            role: data.user.rol_detail.nombre_display,
+            module: '/', 
+            id: data.user.id,
+            roles: permissionCodes
         })
 
-        changeTitle(data.role.role)
+        changeTitle(data.user.rol_detail.nombre_display)
         await saveRoute({
-            routeInfo: data.module,
-            title: data.role.role,
-            isLogged: true,
+            routeInfo: '/', 
+            title: data.user.rol_detail.nombre_display,
+            isLogged: 'true',
             user: idEncrypted,
-            token: data.token,
-            role: data.role.role,
+            token: data.access,
+            role: data.user.rol_detail.nombre_display,
         })
 
         showLoader(false)
-        router.push(data.module)
+        router.push('/') 
     }
 
     return {

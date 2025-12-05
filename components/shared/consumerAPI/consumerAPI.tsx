@@ -34,8 +34,7 @@ const ConsumerAPI = async <T = unknown>({
         headers: {
             ...headers,
             'Content-Type': 'application/json',
-            'Authorization': `token ${token}`,
-            'Referrer-Policy': 'no-referrer'
+            'Authorization': `token ${token}`
         }
     }
 

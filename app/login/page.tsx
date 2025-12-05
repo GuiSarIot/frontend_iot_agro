@@ -27,8 +27,8 @@ const Login: React.FC = () => {
                         src="/logoH.png"
                         alt="Logo de IOTCorpSAS"
                         className={stylesLogin.logo}
-                        width={200}  // Ajusta según tu diseño
-                        height={60}  // Ajusta según tu diseño
+                        width={200}  
+                        height={60}  
                         priority
                         style={{ height: 'auto' }}
                     />
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                         className={stylesLogin.socialButton}
                         onClick={() => router.push('/crear_cuenta')}
                     >
-                      Crear cuenta
+                        Crear cuenta
                     </Button>
 
                     <Button
@@ -78,7 +78,7 @@ const Login: React.FC = () => {
                         className={stylesLogin.socialButton}
                         onClick={() => alert('Login con Facebook')}
                     >
-                      Continuar con Facebook
+                        Continuar con Facebook
                     </Button>
 
                     <Button
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
                         className={stylesLogin.socialButton}
                         onClick={() => alert('Login con Google')}
                     >
-                      Continuar con Google
+                        Continuar con Google
                     </Button>
                 </div>
             </main>

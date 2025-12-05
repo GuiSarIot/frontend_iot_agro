@@ -43,20 +43,21 @@ const Custom404: React.FC = () => {
         const loaderSAVA = document.querySelector(`.${StylesLoaders.pageLoader}`)
         if (loaderSAVA) loaderSAVA.remove()
 
-        void loadUserInfo()
+        // Deshabilitado temporalmente para evitar ciclo infinito
+        // void loadUserInfo()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     /* ============================
       🔍 Función auxiliar
     ============================ */
-    const loadUserInfo = async (): Promise<void> => {
+    const _loadUserInfo = async (): Promise<void> => {
         try {
             const { isLogged, user } = (await GetRoute()) as GetRouteResult
 
             if (isLogged && isLogged !== 'false' && user && user !== 'false') {
                 const { status, data } = (await consumerPublicAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/login/userInfo/${user}`,
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
                 })) as ConsumerAPIResult<UserInfoResponse>
 
                 if (status === 'error') {

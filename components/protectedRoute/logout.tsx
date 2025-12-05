@@ -3,6 +3,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 import SaveRoute from '@/components/protectedRoute/saveRoute'
+import { tokenService } from '@/app/login/services/token.service'
 import { UserInfo, AuthContextState } from '@/context/types/app.types'
 
 interface LogoutParams {
@@ -12,6 +13,9 @@ interface LogoutParams {
 }
 
 const Logout = ({ changeAuthContext, changeUserInfo, router }: LogoutParams) => {
+    // 🔹 Limpiar tokens JWT
+    tokenService.clearTokens()
+
     // 🔹 Limpiar contexto de autenticación
     changeAuthContext({
         token: '',

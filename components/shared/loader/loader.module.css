@@ -55,7 +55,7 @@
   border: 6px solid rgba(255,255,255,0.1);
   border-top: 6px solid var(--background-color-primary);
   border-radius: 50%;
-  animation: spin 2s linear infinite;
+  animation: spin 5s linear infinite;
 }
 
 @keyframes spin {
@@ -75,12 +75,12 @@
   width: 90px;
   height: auto;
   object-fit: contain;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 7s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.9; }
+  50% { transform: scale(1.5); opacity: 0.9; }
 }
 
 /* === Texto de carga === */

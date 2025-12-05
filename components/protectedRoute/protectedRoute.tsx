@@ -49,11 +49,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
     const currentUrl = usePathname()
 
     useEffect(() => {
-        loadUserInfo()
+        // Deshabilitado temporalmente para evitar ciclos infinitos
+        // _loadUserInfo()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const loadUserInfo = async () => {
+    const _loadUserInfo = async () => {
         const { isLogged, route, user, title, role } = await GetRoute()
 
         if (!isLogged || !user) {
@@ -63,7 +64,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
         }
 
         const { data, status } = await consumerPublicAPI<UserData>({
-            url: `${process.env.NEXT_PUBLIC_API_URL}/login/userInfo/${user}`,
+            url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
         })
 
         if (status === 'error' || !data) {
@@ -89,9 +90,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             email: '',
             role: '',
             module: null,
-            hasRolIntitutional: null,
-            nameRolIntitutional: null,
-            levelAccessRolIntitutional: null,
             nameImage: null,
             id: '',
             roles: [],
@@ -117,9 +115,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             module: typeof data.module === 'string' ? data.module : '',
             id: data.id,
             roles: data.roles.map(r => r.url),
-            hasRolIntitutional: data.has_rol_intitutional,
-            nameRolIntitutional: data.rol_intitutional,
-            levelAccessRolIntitutional: data.rol_intitutional_level_access,
             nameImage: data.name_image,
         })
 
