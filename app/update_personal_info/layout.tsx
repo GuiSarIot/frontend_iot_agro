@@ -1,12 +1,8 @@
+'use client'
+
 import { ReactNode } from 'react'
 
-import ContentApp from './contentApp'
-
-//* metadata info
-export const metadata = {
-    title: 'Editar informacion personal',
-    description: 'Editar informacion personal'
-}
+import AppLayout from '@/components/shared/layout/AppLayout'
 
 //* Props tipadas
 interface LayoutMainProps {
@@ -16,11 +12,9 @@ interface LayoutMainProps {
 //* main module layout
 const LayoutMain: React.FC<LayoutMainProps> = ({ children }) => {
     return (
-        <div className="App">
-            <ContentApp>
-                {children}
-            </ContentApp>
-        </div>
+        <AppLayout showMainMenu={true}>
+            {children}
+        </AppLayout>
     )
 }
 

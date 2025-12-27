@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import GetRoute from '@/components/protectedRoute/getRoute'
-import consumerPublicAPI from '@/components/shared/consumerAPI/consumerAPI'
+import consumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
 import StylesLoaders from '@/components/shared/loader/loader.module.css'
 import stylesPage from '@/styles/not-found.module.css'
 
@@ -19,10 +19,29 @@ interface GetRouteResult {
   user?: string
   title?: string
   route?: string
+  token?: string
+}
+
+interface RolDetail {
+    id: number
+    nombre: string
+    nombre_display: string
+    descripcion: string
 }
 
 interface UserInfoResponse {
-  rol_intitutional_level_access?: string
+    id: number
+    username: string
+    email: string
+    first_name: string
+    last_name: string
+    full_name: string
+    tipo_usuario: string
+    is_active: boolean
+    is_staff: boolean
+    is_superuser: boolean
+    rol: number
+    rol_detail: RolDetail
 }
 
 interface ConsumerAPIResult<T = unknown> {
@@ -37,6 +56,7 @@ interface ConsumerAPIResult<T = unknown> {
 const Custom404: React.FC = () => {
     const router = useRouter()
     const [isDeveloper, setIsDeveloper] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         // Elimina el loader si sigue visible
@@ -51,12 +71,18 @@ const Custom404: React.FC = () => {
         🔍 Función auxiliar
     ============================ */
     const loadUserInfo = async (): Promise<void> => {
+        if (isLoading) return // Prevenir múltiples llamadas
+        
         try {
-            const { isLogged, user } = (await GetRoute()) as GetRouteResult
+            setIsLoading(true)
+            const { isLogged, user, token } = (await GetRoute()) as GetRouteResult
 
-            if (isLogged && isLogged !== 'false' && user && user !== 'false') {
+            if (isLogged && isLogged !== 'false' && user && user !== 'false' && token && token !== 'false') {
                 const { status, data } = (await consumerPublicAPI({
                     url: `${process.env.NEXT_PUBLIC_API_URL}/users/me/`,
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 })) as ConsumerAPIResult<UserInfoResponse>
 
                 if (status === 'error') {
@@ -64,12 +90,15 @@ const Custom404: React.FC = () => {
                     return
                 }
 
-                if (data?.rol_intitutional_level_access === 'ROOT') {
+                // Verificar si el usuario es superusuario o tiene rol ROOT
+                if (data?.is_superuser || data?.rol_detail?.nombre === 'ROOT') {
                     setIsDeveloper(true)
                 }
             }
         } catch (error) {
             console.error('Error al cargar la información del usuario:', error)
+        } finally {
+            setIsLoading(false)
         }
     }
 

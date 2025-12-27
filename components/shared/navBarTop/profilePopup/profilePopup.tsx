@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 import EditIcon from '@mui/icons-material/Edit'
 import LogoutIcon from '@mui/icons-material/Logout'
+import PersonIcon from '@mui/icons-material/Person'
 
 import Logout from '@/components/protectedRoute/logout'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
@@ -18,23 +19,23 @@ import stylesProfilePopup from './profilePopup.module.css'
 
 interface ProfilePopupProps {
     nameImage: string
+    showProfile: boolean
+    setShowProfile: (show: boolean) => void
 }
 
-const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage }) => {
+const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage, showProfile, setShowProfile }) => {
     //* context
     const { appState, changeAuthContext, changeTitle, changeUserInfo } = useContext(AppContext.Context)
     const { userInfo } = appState
 
     //* hooks
     const router = useRouter()
-
-    //* states
-    const [showInfoProfile, setShowInfoProfile] = useState(false)
+    const [imageError, setImageError] = useState(false)
 
     const imgProfile = GetProfileImage(nameImage)
 
     //* styles
-    const activeInfoProfile = showInfoProfile
+    const activeInfoProfile = showProfile
         ? `${stylesProfilePopup.boxInfo} ${stylesProfilePopup.active}`
         : stylesProfilePopup.boxInfo
 
@@ -65,17 +66,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage }) => {
 
     return (
         <div className={stylesProfilePopup.profilePopup}>
-            <div className={stylesProfilePopup.boxImage} onClick={() => setShowInfoProfile(!showInfoProfile)}>
-                <Image
-                    src={imgProfile}       // tu URL o path
-                    alt="imagen de perfil"
-                    width={50}
-                    height={50}
-                    style={{ borderRadius: '50%' }} // si quieres borde redondeado
-                />
-            </div>
-
-            <div className={activeInfoProfile} onMouseLeave={() => setShowInfoProfile(false)}>
+            <div className={activeInfoProfile} onMouseLeave={() => setShowProfile(false)}>
                 <div className={stylesProfilePopup.sectionTop}>
                     <div>
                         <p>{userInfo.role}</p>
@@ -92,13 +83,29 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage }) => {
 
                 <div className={stylesProfilePopup.sectionBottom}>
                     <div className={stylesProfilePopup.imageProfile}>
-                        <Image
-                            src={imgProfile}      // URL o path de la imagen
-                            alt="imagen de perfil"
-                            width={50}
-                            height={50}
-                            style={{ borderRadius: '50%' }} // opcional, si quieres bordes redondeados
-                        />
+                        {imageError ? (
+                            <div style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#e0e0e0',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#757575'
+                            }}>
+                                <PersonIcon style={{ fontSize: '30px' }} />
+                            </div>
+                        ) : (
+                            <Image
+                                src={imgProfile}
+                                alt="imagen de perfil"
+                                width={50}
+                                height={50}
+                                style={{ borderRadius: '50%' }}
+                                onError={() => setImageError(true)}
+                            />
+                        )}
                     </div>
 
                     <div className={stylesProfilePopup.descriptionProfile}>

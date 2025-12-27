@@ -61,11 +61,12 @@ export function useLogin() {
             return
         }
 
-        const idEncrypted = await encryptUserId(String(data.user.id))
-
-        // Almacenar tokens JWT
+        // Almacenar tokens JWT primero
         tokenService.setAccessToken(data.access)
         tokenService.setRefreshToken(data.refresh)
+
+        // Ahora cifrar el ID con el token
+        const idEncrypted = await encryptUserId(String(data.user.id), data.access)
 
         changeAuthContext({
             ...appState.authContext,

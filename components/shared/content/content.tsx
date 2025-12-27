@@ -3,24 +3,23 @@
 import React, { ReactNode } from 'react'
 
 import stylesContent from './content.module.css'
-import NavBarTop from '../navBarTop/navBarTop'
 
 interface ContainerProps {
     children: ReactNode
-    title: string
+    title?: string
+    showTitle?: boolean
 }
 
-const Container: React.FC<ContainerProps> = ({ children, title }) => {
+const Container: React.FC<ContainerProps> = ({ children, title, showTitle = false }) => {
     return (
-        <div className="main">
-            <NavBarTop />
-            <div className="container">
+        <div className="container">
+            {showTitle && title && (
                 <div className={stylesContent.title}>
                     <h1>{title}</h1>
                 </div>
-                <div className="content">
-                    {children}
-                </div>
+            )}
+            <div className="content">
+                {children}
             </div>
         </div>
     )

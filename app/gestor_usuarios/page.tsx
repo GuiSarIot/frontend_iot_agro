@@ -1,20 +1,23 @@
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { FilterMatchMode } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { InputText } from 'primereact/inputtext'
 import Swal from 'sweetalert2'
 
+import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
-import ConsumerAPI from '@/components/shared/consumerAPI/consumerAPI'
-import AppContext from '@/context/appContext'
+import consumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
+import { useAppContext } from '@/context/appContext'
 
 
 import stylesPage from './mainPage.module.css'
@@ -34,6 +37,18 @@ interface User {
     userCenter: string
     centerName: string
     userCode: string
+    [key: string]: unknown
+}
+
+interface BackendUser {
+    id: number
+    first_name: string
+    last_name: string
+    email: string
+    rol_detail?: {
+        nombre: string
+        nombre_display: string
+    }
     [key: string]: unknown
 }
 
@@ -58,8 +73,11 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
     }
 }) => {
     // * context
-    const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useContext(AppContext)
+    const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
+
+    // * hooks
+    const router = useRouter()
 
     // * states
     const [listUsers, setListUsers] = useState<User[]>([])
@@ -88,22 +106,79 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
 
     // * methods
     const loadUsers = async () => {
-        const { data, status, message } = await ConsumerAPI({
-            url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/usuarios`,
-            method: 'POST',
-            body: {
-                idCurrentUser: userInfo.id
-            }
-        })
-
-        if (status === 'error') {
-            console.log(message)
+        // Validar que el usuario esté autenticado
+        if (!userInfo.id) {
+            console.error('Usuario no autenticado')
             showLoader(false)
+            Swal.fire({
+                title: 'Error',
+                text: 'Usuario no autenticado. Por favor inicia sesión nuevamente.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
             return false
         }
 
-        setListUsers(data as User[])
-        showLoader(false)
+        try {
+            // Obtener token desde GetRoute
+            const { token } = await GetRoute()
+            
+            if (!token || token === 'false') {
+                console.error('Token no disponible')
+                showLoader(false)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Sesión expirada. Por favor inicia sesión nuevamente.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+                return false
+            }
+
+            const { data, status, message } = await consumerPublicAPI({
+                url: `${process.env.NEXT_PUBLIC_API_URL}/users/`,
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (status === 'error') {
+                console.error('Error al cargar usuarios:', message)
+                Swal.fire({
+                    title: 'Error',
+                    text: message || 'No se pudieron cargar los usuarios',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+                showLoader(false)
+                return false
+            }
+
+            // Adaptar la estructura de datos del backend al formato esperado por la tabla
+            const adaptedUsers = Array.isArray(data) ? data.map((user: BackendUser) => ({
+                userNumDoc: user.id || '',
+                userName: user.first_name || '',
+                userLastName: user.last_name || '',
+                userEmailInstitutional: user.email || '',
+                userCenter: user.rol_detail?.nombre || '',
+                centerName: user.rol_detail?.nombre_display || '',
+                userCode: user.id || '',
+                ...user
+            })) : []
+
+            setListUsers(adaptedUsers as User[])
+            showLoader(false)
+        } catch (error) {
+            console.error('Error al cargar usuarios:', error)
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al cargar los usuarios',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+            showLoader(false)
+        }
     }
 
     const setGlobalFilterValue = (value) => {
@@ -142,19 +217,33 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                     allowEnterKey: false
                 })
 
-                const { status } = await ConsumerAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/deleteRecord/${idRow}`,
-                    method: 'DELETE'
+                // Obtener token
+                const { token } = await GetRoute()
+                
+                if (!token || token === 'false') {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Sesión expirada. Por favor inicia sesión nuevamente.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                    return false
+                }
+
+                const { status, message } = await consumerPublicAPI({
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/users/${idRow}/`,
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 })
 
                 if (status === 'error') {
                     Swal.fire({
                         title: 'Error',
-                        text: 'No se pudo eliminar el usuario',
+                        text: message || 'No se pudo eliminar el usuario',
                         icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true
+                        confirmButtonText: 'Ok'
                     })
                     return false
                 }
@@ -202,6 +291,16 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
     return (
         <div className={stylesPage.content}>
             <div className="dataTableCustom">
+                <div className={stylesPage.tableHeader}>
+                    <button 
+                        className={stylesPage.btnBack}
+                        onClick={() => router.push('/dashboard')}
+                        title="Volver al dashboard"
+                    >
+                        <ArrowBackIcon />
+                    </button>
+                    <h2>Listado de usuarios</h2>
+                </div>
                 <DataTable
                     value={listUsers}
                     tableStyle={{ width: '100%' }}

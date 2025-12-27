@@ -1,0 +1,51 @@
+/* Reset y estilos globales para el Editor de PrimeReact */
+
+.p-editor-container {
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    background-color: var(--bg-primary);
+}
+
+.p-editor-toolbar {
+    background-color: var(--bg-secondary);
+    border-bottom: var(--border-width) solid var(--border-color);
+    padding: var(--spacing-sm);
+}
+
+.p-editor-content {
+    min-height: 200px;
+}
+
+.p-editor-content .ql-editor {
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+}
+
+.p-editor-content .ql-editor.ql-blank::before {
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.p-editor-toolbar .ql-stroke {
+    stroke: var(--text-primary);
+}
+
+.p-editor-toolbar .ql-fill {
+    fill: var(--text-primary);
+}
+
+.p-editor-toolbar .ql-picker-label {
+    color: var(--text-primary);
+}
+
+.p-editor-toolbar button:hover,
+.p-editor-toolbar button:focus,
+.p-editor-toolbar button.ql-active {
+    background-color: var(--bg-hover);
+}
+
+.p-editor-toolbar .ql-picker-label:hover,
+.p-editor-toolbar .ql-picker-item:hover {
+    background-color: var(--bg-hover);
+}

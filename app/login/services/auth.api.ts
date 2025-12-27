@@ -13,15 +13,18 @@ import type {
 
 export async function loginRequest(body: LoginRequestBody) {
     return (await ConsumerPublicAPI({
-        url: `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login/`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/auth/login/`,
         method: 'POST',
         body,
     })) as ConsumerAPIResult<LoginResponseData>
 }
 
-export async function encryptUserId(id: string) {
+export async function encryptUserId(id: string, token: string) {
     const res = (await ConsumerPublicAPI({
-        url: `${process.env.NEXT_PUBLIC_API_URL}/login/cifrar_id/${id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/login/cifrar_id/${id}/`,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
     })) as ConsumerAPIResult<string>
     return res.data
 }

@@ -2,6 +2,12 @@
 const nextConfig = {
     images: {
         domains: ['www.readytogosurvival.com'],
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+            },
+        ],
     },
 }
 

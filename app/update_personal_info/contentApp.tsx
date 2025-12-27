@@ -1,51 +1,43 @@
 'use client'
 
-import { ReactNode, useContext, MouseEvent } from 'react'
-
-import Link from 'next/link'
+import { ReactNode, MouseEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
-import ProtectedRoute from '@/components/protectedRoute/protectedRoute'
-import Content from '@/components/shared/content/content'
-import SideBarLeft from '@/components/shared/sideBarLeft/sideBarLeft'
-import stylesSideBar from '@/components/shared/sideBarLeft/sideBarLeft.module.css'
-import AppContext from '@/context/appContext'
+import AppLayout from '@/components/shared/layout/AppLayout'
+import SidebarMenu from '@/components/shared/layout/SidebarMenu'
 
-// Props tipadas
+// ---- Interfaces ----
 interface ContentAppProps {
     children?: ReactNode
 }
 
+// ---- Componente principal ----
 const ContentApp: React.FC<ContentAppProps> = ({ children }) => {
-    //* context
-    const { appState } = useContext(AppContext.Context)
-
     //* hooks
     const router = useRouter()
 
     //* handlers
-    const handleLink = (event: MouseEvent<HTMLAnchorElement>) => {
+    const handleBack = (event: MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         router.back()
     }
 
+    // Configuración del menú
+    const menuItems = [
+        {
+            label: 'Volver',
+            href: '/',
+            onClick: handleBack
+        }
+    ]
+
     //* renders
     return (
-        <ProtectedRoute>
-            <>
-                <SideBarLeft>
-                    <li className={stylesSideBar.title}>
-                        <h3>Edición información personal</h3>
-                    </li>
-                    <li className={stylesSideBar.item}>
-                        <Link onClick={handleLink} href="/">
-                            Volver
-                        </Link>
-                    </li>
-                </SideBarLeft>
-                <Content title={appState.title}>{children}</Content>
-            </>
-        </ProtectedRoute>
+        <AppLayout 
+            sidebarContent={<SidebarMenu title="Edición información personal" items={menuItems} />}
+        >
+            {children}
+        </AppLayout>
     )
 }
 

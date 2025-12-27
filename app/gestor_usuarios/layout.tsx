@@ -2,12 +2,6 @@ import { ReactNode } from 'react'
 
 import ContentApp from './contentApp'
 
-// * metadata info
-export const metadata = {
-    title: 'Gestion de usuarios',
-    description: 'Gestion de usuarios'
-}
-
 // ---- Interfaces ----
 
 interface LayoutManageUserProps {

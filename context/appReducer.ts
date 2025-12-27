@@ -30,6 +30,18 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         case 'SHOW_NAVBAR':
             return { ...state, navBarState: action.isActive }
 
+        case 'TOGGLE_SIDEBAR_COLLAPSE':
+            return { ...state, sidebarCollapsed: !state.sidebarCollapsed }
+
+        case 'TOGGLE_THEME': {
+            const newTheme = state.theme === 'light' ? 'dark' : 'light'
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('theme', newTheme)
+                document.documentElement.setAttribute('data-theme', newTheme)
+            }
+            return { ...state, theme: newTheme }
+        }
+
         case 'SHOW_LOADER':
             return { ...state, isLoading: action.isActive }
 

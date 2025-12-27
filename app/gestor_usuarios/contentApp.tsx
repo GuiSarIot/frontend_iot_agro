@@ -2,45 +2,55 @@
 
 import { ReactNode } from 'react'
 
-import Link from 'next/link'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import PeopleIcon from '@mui/icons-material/People'
+import HomeIcon from '@mui/icons-material/Home'
+import SecurityIcon from '@mui/icons-material/Security'
 
-import ProtectedRoute from '@/components/protectedRoute/protectedRoute'
-import Content from '@/components/shared/content/content'
-import SideBarLeft from '@/components/shared/sideBarLeft/sideBarLeft'
-import stylesSideBar from '@/components/shared/sideBarLeft/sideBarLeft.module.css'
-import { useAppContext } from '@/context/appContext'
+import AppLayout from '@/components/shared/layout/AppLayout'
+import SidebarMenu from '@/components/shared/layout/SidebarMenu'
 
 // ---- Interfaces ----
 interface ContentAppProps {
     children: ReactNode
 }
 
+// ---- Configuración del menú ----
+const menuItems = [
+    {
+        icon: <HomeIcon />,
+        label: 'Módulos del Sistema',
+        href: '/dashboard',
+        title: 'Volver al menú principal'
+    },
+    {
+        icon: <PeopleIcon />,
+        label: 'Listado de usuarios',
+        href: '/gestor_usuarios',
+        title: 'Listado de usuarios'
+    },
+    {
+        icon: <PersonAddIcon />,
+        label: 'Nuevo Usuario',
+        href: '/gestor_usuarios/crear',
+        title: 'Nuevo Usuario'
+    },
+    {
+        icon: <SecurityIcon />,
+        label: 'Roles Institucionales',
+        href: '/gestor_usuarios/roles_institucionales',
+        title: 'Gestión de Roles'
+    }
+]
+
 // ---- Componente principal ----
 const ContentApp: React.FC<ContentAppProps> = ({ children }) => {
-    // * context
-    const { appState } = useAppContext()
-    const { userInfo } = appState
-
-    // * renders
     return (
-        <ProtectedRoute>
-            <>
-                <SideBarLeft>
-                    <li className={stylesSideBar.title}>
-                        <h3>Gestión de usuarios</h3>
-                    </li>
-                    <li className={stylesSideBar.item}>
-                        <Link href="/gestor_usuarios/crear">Nuevo Usuario</Link>
-                    </li>
-                    <li className={stylesSideBar.item}>
-                        <Link href="/gestor_usuarios">Listado de usuarios</Link>
-                    </li>
-                </SideBarLeft>
-                <Content title={appState.title}>
-                    {children}
-                </Content>
-            </>
-        </ProtectedRoute>
+        <AppLayout 
+            sidebarContent={<SidebarMenu title="Gestión de usuarios" items={menuItems} />}
+        >
+            {children}
+        </AppLayout>
     )
 }
 

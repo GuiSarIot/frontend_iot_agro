@@ -5,7 +5,6 @@ import { useContext, ReactNode } from 'react'
 import Image from 'next/image'
 
 import AppContext from '@/context/appContext'
-import logo from '@/public/Logo.png'
 
 import StylesLoaders from './loader.module.css'
 
@@ -27,7 +26,7 @@ const Loader: React.FC<LoaderProps> = ({ children }) => {
                         <div className={StylesLoaders.spinner}></div>
                         <div className={StylesLoaders.logoWrapper}>
                             <Image
-                                src={logo}
+                                src="/Logo.png"
                                 alt="Logo IOTCorp SAS"
                                 className={StylesLoaders.logo}
                                 width={100}

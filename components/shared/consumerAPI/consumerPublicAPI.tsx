@@ -26,8 +26,8 @@ const consumerPublicAPI = async <T = unknown>({
     const params: RequestInit = {
         method,
         headers: {
-            ...headers,
             'Content-Type': 'application/json',
+            ...headers,
         },
     }
 

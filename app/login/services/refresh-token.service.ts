@@ -24,7 +24,7 @@ export async function refreshAccessToken(): Promise<string | null> {
 
     try {
         const response = (await ConsumerPublicAPI({
-            url: `${process.env.NEXT_PUBLIC_API_URL}/api/auth/token/refresh/`,
+            url: `${process.env.NEXT_PUBLIC_API_URL}/auth/token/refresh/`,
             method: 'POST',
             body: {
                 refresh: refreshToken,

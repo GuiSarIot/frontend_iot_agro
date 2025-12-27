@@ -23,6 +23,8 @@ export interface AuthContextState {
 export interface AppState {
     title: string;
     navBarState: boolean;
+    sidebarCollapsed: boolean;
+    theme: 'light' | 'dark';
     isLoading: boolean;
     userInfo: UserInfo;
     authContext: AuthContextState;
@@ -37,6 +39,8 @@ export type AppAction =
         newAuthContext: Partial<AuthContextState> | AuthContextState;
         }
     | { type: 'SHOW_NAVBAR'; isActive: boolean }
+    | { type: 'TOGGLE_SIDEBAR_COLLAPSE' }
+    | { type: 'TOGGLE_THEME' }
     | { type: 'SHOW_LOADER'; isActive: boolean };
 
 // API expuesta por el Context
@@ -48,6 +52,8 @@ export interface AppContextValue {
         newAuthContext: Partial<AuthContextState> | AuthContextState
     ) => void;
     showNavbar: (isActive: boolean) => void;
+    toggleSidebarCollapse: () => void;
+    toggleTheme: () => void;
     showLoader: (isActive: boolean) => void;
     dispatch?: React.Dispatch<AppAction>;
 }

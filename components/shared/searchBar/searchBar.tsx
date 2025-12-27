@@ -84,7 +84,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ roles }) => {
                 <div className={stylesSearchBar.optionSearch}>
                     <ul ref={optionsSearch}>
                         {roles
-                            .sort((a, b) => a.role.localeCompare(b.role))
+                            .filter(r => r && typeof r === 'object' && r.role) // Filtrar solo objetos válidos
+                            .sort((a, b) => (a.role || '').localeCompare(b.role || ''))
                             .map(({ role, description, url }, index) => (
                                 <li title={description} key={index}>
                                     <Link href={`/${url}`}>{role}</Link>

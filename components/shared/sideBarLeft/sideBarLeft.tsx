@@ -5,8 +5,6 @@ import { useContext, ReactNode } from 'react'
 import Image from 'next/image'
 
 import AppContext from '@/context/appContext'
-import LogoIotCorpSas from '@/images/logos/LogoIOTCorpSAS.png'
-
 
 import stylesSideBar from './sideBarLeft.module.css'
 
@@ -17,12 +15,12 @@ interface SideBarLeftProps {
 const SideBarLeft: React.FC<SideBarLeftProps> = ({ children }) => {
     // Context
     const { appState, showNavbar } = useContext(AppContext.Context)
-    const { navBarState } = appState
+    const { navBarState, sidebarCollapsed } = appState
 
     // Styles
-    const sideBarLeft = navBarState
-        ? `${stylesSideBar.sideBarLeft} ${stylesSideBar.active}`
-        : stylesSideBar.sideBarLeft
+    const sideBarLeft = `${stylesSideBar.sideBarLeft} ${
+        navBarState ? stylesSideBar.active : ''
+    } ${sidebarCollapsed ? stylesSideBar.collapsed : ''}`
 
     // Handlers
     const handleClick = () => {
@@ -33,7 +31,13 @@ const SideBarLeft: React.FC<SideBarLeftProps> = ({ children }) => {
         <>
             <div className={sideBarLeft}>
                 <div className={stylesSideBar.boxImage}>
-                    <Image src={LogoIotCorpSas} alt="Logo IOTCorpSAS" />
+                    <Image 
+                        src="/api/get_file?folder=images/logos&file=LogoIOTCorpSAS.png" 
+                        alt="Logo IOTCorpSAS"
+                        width={150}
+                        height={50}
+                        unoptimized
+                    />
                 </div>
                 <ul className={stylesSideBar.sideBarList}>{children}</ul>
             </div>

@@ -22,11 +22,13 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const changeAuthContext = (newAuthContext: Partial<AuthContextState> | AuthContextState) =>
         dispatch({ type: 'CHANGE_AUTH_CONTEXT', newAuthContext })
     const showNavbar = (isActive: boolean) => dispatch({ type: 'SHOW_NAVBAR', isActive })
+    const toggleSidebarCollapse = () => dispatch({ type: 'TOGGLE_SIDEBAR_COLLAPSE' })
+    const toggleTheme = () => dispatch({ type: 'TOGGLE_THEME' })
     const showLoader = (isActive: boolean) => dispatch({ type: 'SHOW_LOADER', isActive })
 
     return (
         <AppContext.Provider
-            value={{ appState, changeTitle, changeUserInfo, changeAuthContext, showNavbar, showLoader, dispatch }}
+            value={{ appState, changeTitle, changeUserInfo, changeAuthContext, showNavbar, toggleSidebarCollapse, toggleTheme, showLoader, dispatch }}
         >
             {children}
         </AppContext.Provider>

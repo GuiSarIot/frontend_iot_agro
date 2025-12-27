@@ -1,43 +1,79 @@
 .sideBarLeft {
-    background-color: var(--background-color-secondary);
-    width: 18%;
-    min-width: 340px;
-    box-shadow: 3px 0px 15px var(--shadow-color-primary);
-    min-height: 100vh;
-    z-index: 10;
+    background-color: var(--bg-primary);
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px;
+    box-shadow: var(--shadow-md);
+    height: calc(100vh - 70px);
+    z-index: var(--z-fixed);
     display: none;
     position: relative;
+    border-right: var(--border-width) solid var(--border-color);
+    flex-shrink: 0;
+    transition: width var(--transition-base), min-width var(--transition-base);
+}
+
+.sideBarLeft.collapsed {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
 }
 
 .sideBarLeft.active {
     display: block;
 }
 
+/* Mostrar sidebar en pantallas grandes */
+@media screen and (min-width: 1381px) {
+    .sideBarLeft {
+        display: block !important;
+    }
+}
+
 .boxImage {
-    position: sticky;
-    top: 0;
-    padding: 12px 30px;
+    position: relative;
+    padding: var(--spacing-lg) var(--spacing-xl);
     width: 100%;
+    height: auto;
+    min-height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 15;
-    background-color: var(--background-color-secondary);
-    border-bottom: 2px solid var(--background-color-third);
+    background-color: var(--bg-primary);
+    border-bottom: var(--border-width) solid var(--border-color);
+    overflow: hidden;
+    transition: padding var(--transition-base);
+}
+
+.sideBarLeft.collapsed .boxImage {
+    padding: var(--spacing-md);
 }
 
 .boxImage img {
     height: auto;
     width: 100%;
     max-width: 146px;
+    transition: opacity var(--transition-fast);
+}
+
+.sideBarLeft.collapsed .boxImage img {
+    opacity: 0;
+    width: 0;
 }
 
 .sideBarList {
-    padding: 20px 40px;
-    padding-top: 60px;
+    padding: var(--spacing-xl);
+    padding-top: var(--spacing-2xl);
     list-style: none;
-    max-height: 85vh;
+    height: calc(100% - 90px);
     overflow-y: auto;
+    transition: padding var(--transition-base);
+}
+
+.sideBarLeft.collapsed .sideBarList {
+    padding: var(--spacing-md);
+    padding-top: var(--spacing-xl);
 }
 
 .sideBarList::-webkit-scrollbar {
@@ -59,12 +95,49 @@
 .sideBarList>li.item {
     margin-bottom: 8px;
     color: var(--text-color-primary);
+    overflow: hidden;
 }
 
 .sideBarList>li.item>a {
     color: var(--text-color-primary);
     display: flex;
     align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-base);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    position: relative;
+}
+
+.sideBarList>li.item>a:hover {
+    background-color: var(--bg-hover);
+}
+
+.sideBarLeft.collapsed .sideBarList>li.item>a {
+    justify-content: center;
+    padding: var(--spacing-sm);
+}
+
+/* Tooltip para iconos en sidebar colapsado */
+.sideBarLeft.collapsed .sideBarList>li.item>a::after {
+    content: attr(title);
+    position: absolute;
+    left: 100%;
+    margin-left: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--neutral-900);
+    color: var(--text-inverse);
+    border-radius: var(--border-radius-base);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    z-index: 1000;
+}
+
+.sideBarLeft.collapsed .sideBarList>li.item>a:hover::after {
+    opacity: 1;
 }
 
 .sideBarList>li.item>a>svg {
@@ -72,6 +145,18 @@
     width: 20px;
     fill: var(--text-color-secondary);
     margin-right: 5px;
+    flex-shrink: 0;
+}
+
+.sideBarLeft.collapsed .sideBarList>li.item>a>svg {
+    margin-right: 0;
+}
+
+.sideBarLeft.collapsed .sideBarList>li.item>a>span,
+.sideBarLeft.collapsed .sideBarList>li.title {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
 }
 
 .sideBarList .subMenu {
@@ -155,10 +240,10 @@
 .overlay {
     z-index: 5;
     position: fixed;
-    top: 0;
+    top: 70px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 70px);
     opacity: 0;
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.5);
@@ -170,9 +255,10 @@
     .sideBarLeft {
         position: fixed;
         left: 0;
-        top: 0;
-        height: 100%;
-        box-shadow: none;
+        top: 70px;
+        height: calc(100vh - 70px);
+        box-shadow: var(--shadow-xl);
+        z-index: var(--z-modal);
     }
 
     .sideBarLeft.active~.overlay {
@@ -181,6 +267,6 @@
     }
 
     .sideBarList {
-        max-height: 100vh;
+        height: calc(100% - 90px);
     }
 }
