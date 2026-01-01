@@ -72,18 +72,19 @@
 
 /*styles to submit zone*/
 .sectionSubmit input{
-    color: var(--text-color-secondary);
+    color: white;
     padding: 5px 25px;
-    background-color: transparent;
-    background-color: none;
+    background-color: var(--primary);
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    border: 1px solid var(--text-color-secondary);
+    border: 1px solid var(--primary);
 }
 
 .sectionSubmit input:hover{
-    background-color: var(--background-color-primary);
+    background-color: var(--primary-dark, var(--primary));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 

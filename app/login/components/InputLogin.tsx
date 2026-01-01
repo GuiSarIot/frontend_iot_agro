@@ -35,6 +35,10 @@ const InputLogin = forwardRef<HTMLInputElement, InputLoginProps>(
                         name={name}
                         onChange={onChange}
                         className={`${stylesLogin.inputField} ${className ?? ''}`}
+                        style={{ 
+                            color: '#2c3e50',
+                            WebkitTextFillColor: '#2c3e50'
+                        }}
                     />
                     {type === 'password' && (
                         <button

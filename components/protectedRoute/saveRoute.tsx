@@ -33,7 +33,6 @@ const SaveRoute = async ({
     if (user) cooki.set('user', user, options)
     if (role) cooki.set('role', role, options)
     if (token) cooki.set('token', token, options)
-
 }
 
 export default SaveRoute

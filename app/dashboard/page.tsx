@@ -17,7 +17,8 @@ const DashboardPage: React.FC = () => {
         showNavbar(window.innerWidth > 1380)
         changeTitle('Panel de Control')
         showLoader(false)
-    }, [changeTitle, showNavbar, showLoader])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <AppLayout showMainMenu={true}>

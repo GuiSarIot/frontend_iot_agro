@@ -10,6 +10,8 @@ export interface UserInfo {
     hasRolSistema: boolean;
     nameRolSistema: string;
     levelAccessRolSistema: string | number;
+    phone?: string;
+    profession?: string;
 }
 
 export interface AuthContextState {

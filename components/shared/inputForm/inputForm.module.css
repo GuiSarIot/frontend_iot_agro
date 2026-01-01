@@ -19,7 +19,16 @@
     font-size: 12px;
     min-height: 35px;
     color: var(--text-color-primary);
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-color-primary);
+    border-radius: var(--border-radius-base);
+    transition: all var(--transition-fast);
+}
+
+.inputForm .customedInput:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: var(--bg-primary);
 }
 
 .inputForm .customedInputButton{
@@ -53,17 +62,17 @@
     justify-content: center;
     width: 100%;
     height: 35px;
-    background-color: var(--bg-color-primary);
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-color-primary);
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    color: var(--text-color-primary);
 }
 
 .inputFileLabel:hover{
-    background-color: var(--background-color-fifth);
-    color: var(--text-color-third);
-    border-color: var(--text-color-third);
+    background-color: var(--bg-hover);
+    border-color: var(--primary);
 }
 
 .inputFile{

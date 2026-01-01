@@ -4,19 +4,49 @@
     min-width: 280px;
     max-width: 280px;
     box-shadow: var(--shadow-md);
-    height: calc(100vh - 70px);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: var(--z-fixed);
     display: none;
-    position: relative;
     border-right: var(--border-width) solid var(--border-color);
     flex-shrink: 0;
-    transition: width var(--transition-base), min-width var(--transition-base);
+    transition: width var(--transition-base), min-width var(--transition-base), transform var(--transition-base);
+    overflow-y: auto;
 }
 
 .sideBarLeft.collapsed {
     width: 80px;
     min-width: 80px;
     max-width: 80px;
+}
+
+/* Overlay para cerrar sidebar en móviles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-overlay);
+    z-index: calc(var(--z-fixed) - 1);
+    display: none;
+}
+
+@media screen and (max-width: 1380px) {
+    .sideBarLeft {
+        transform: translateX(-100%);
+    }
+    
+    .sideBarLeft.active {
+        display: block;
+        transform: translateX(0);
+    }
+    
+    .sideBarLeft.active ~ .overlay {
+        display: block;
+    }
 }
 
 .sideBarLeft.active {
@@ -86,10 +116,18 @@
 }
 
 .sideBarList>li.title {
-    font-weight: bold;
-    color: var(--text-color-secondary);
-    font-size: 15px;
-    margin: 15px 0 20px 0;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-size-lg);
+    margin: 0 0 var(--spacing-lg) 0;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.sideBarList>li.title h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
 }
 
 .sideBarList>li.item {
@@ -107,10 +145,25 @@
     transition: all var(--transition-fast);
     white-space: nowrap;
     position: relative;
+    text-decoration: none;
 }
 
 .sideBarList>li.item>a:hover {
     background-color: var(--bg-hover);
+    text-decoration: none;
+}
+
+.sideBarList>li.item>a.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.sideBarList>li.item>a.active svg {
+    fill: white;
+}
+
+.sideBarList>li.item>a.active:hover {
+    background-color: var(--primary-dark, var(--primary));
 }
 
 .sideBarLeft.collapsed .sideBarList>li.item>a {

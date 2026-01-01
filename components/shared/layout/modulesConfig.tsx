@@ -35,7 +35,7 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         priority: 1
     },
     usuarios: {
-        permissions: [], // Acceso para todos temporalmente
+        permissions: ['gestionar_usuarios', 'ver_usuarios'],
         icon: <PeopleIcon />,
         label: 'Usuarios',
         href: '/gestor_usuarios',
@@ -118,6 +118,24 @@ export const getAvailableModules = (userPermissions: string[]): SidebarMenuItem[
         userPermissions = []
     }
 
+    // Si el usuario no tiene permisos cargados, mostrar solo módulos sin restricción
+    if (userPermissions.length === 0) {
+        const publicModules = Object.entries(MODULES_CONFIG)
+            .filter(([_key, config]) => config.permissions.length === 0)
+            .map(([_key, config]) => ({
+                icon: config.icon,
+                label: config.label,
+                href: config.href,
+                title: config.description
+            }))
+            .sort((a, b) => {
+                const configA = Object.values(MODULES_CONFIG).find(c => c.label === a.label)
+                const configB = Object.values(MODULES_CONFIG).find(c => c.label === b.label)
+                return (configA?.priority || 99) - (configB?.priority || 99)
+            })
+        return publicModules
+    }
+
     const availableModules: SidebarMenuItem[] = []
 
     Object.entries(MODULES_CONFIG).forEach(([key, config]) => {
@@ -134,6 +152,7 @@ export const getAvailableModules = (userPermissions: string[]): SidebarMenuItem[
             })
         }
     })
+
 
     // Ordenar por prioridad
     return availableModules.sort((a, b) => {

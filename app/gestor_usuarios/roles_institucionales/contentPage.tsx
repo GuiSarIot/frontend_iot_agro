@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import Link from 'next/link'
 
@@ -14,7 +14,7 @@ import Swal from 'sweetalert2'
 
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import ConsumerAPI from '@/components/shared/consumerAPI/consumerAPI'
-import AppContext from '@/context/appContext'
+import { useAppContext } from '@/context/appContext'
 
 import stylesPage from './contentPage.module.css'
 
@@ -52,7 +52,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
     }
 }) => {
     // * context
-    const { changeTitle, showNavbar, showLoader } = useContext(AppContext)
+    const { changeTitle, showNavbar, showLoader } = useAppContext()
 
     // * states
     const [listRolIn, setListRolIn] = useState<InstitutionalRole[]>([])

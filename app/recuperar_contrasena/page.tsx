@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Image from 'next/image'
 
@@ -14,6 +14,16 @@ import 'primeflex/primeflex.scss'
 
 const RecuperarContrasena: React.FC = () => {
     const { userEmail, handleSubmit } = useRecoveryPasswordLogin()
+
+    // Forzar tema claro en la página de recuperar contraseña
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        return () => {
+            // Restaurar el tema guardado al salir
+            const savedTheme = localStorage.getItem('theme') || 'light'
+            document.documentElement.setAttribute('data-theme', savedTheme)
+        }
+    }, [])
 
     return (
         <div className={stylesLogin.container}>

@@ -2,9 +2,8 @@
 
 import { ReactNode } from 'react'
 
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import PeopleIcon from '@mui/icons-material/People'
-import HomeIcon from '@mui/icons-material/Home'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import SecurityIcon from '@mui/icons-material/Security'
 
 import AppLayout from '@/components/shared/layout/AppLayout'
@@ -17,12 +16,6 @@ interface ContentAppProps {
 
 // ---- Configuración del menú ----
 const menuItems = [
-    {
-        icon: <HomeIcon />,
-        label: 'Módulos del Sistema',
-        href: '/dashboard',
-        title: 'Volver al menú principal'
-    },
     {
         icon: <PeopleIcon />,
         label: 'Listado de usuarios',

@@ -1,0 +1,53 @@
+/* ================================
+    LAYOUT PRINCIPAL DEL DASHBOARD
+================================ */
+
+.main {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-secondary);
+    position: relative;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100vh;
+    width: 100%;
+    transition: margin-left var(--transition-base);
+}
+
+/* Cuando el sidebar está visible en desktop */
+@media screen and (min-width: 1381px) {
+    .container {
+        margin-left: 280px;
+    }
+    
+    .container.containerCollapsed {
+        margin-left: 80px;
+    }
+}
+
+/* ================================
+    RESPONSIVE
+================================ */
+
+/* Tablets y móviles */
+@media screen and (max-width: 1380px) {
+    .container {
+        margin-left: 0 !important;
+    }
+    
+    .main {
+        position: relative;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+    .main {
+        flex-direction: column;
+    }
+}

@@ -1,10 +1,10 @@
 import GetRoute from '@/components/protectedRoute/getRoute'
 
-interface ConsumerAPIParams {
+interface ConsumerAPIFormDataParams {
     url: string
-    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | string
+    method?: 'POST' | 'PUT' | 'PATCH' | 'DELETE' | string
     headers?: Record<string, string>
-    body?: Record<string, unknown>
+    body: FormData
 }
 
 interface ConsumerAPIResponse<T = unknown> {
@@ -13,12 +13,12 @@ interface ConsumerAPIResponse<T = unknown> {
     data: T
 }
 
-const ConsumerAPI = async <T = unknown>({
+const ConsumerAPIFormData = async <T = unknown>({
     url,
-    method = 'GET',
+    method = 'POST',
     headers = {},
-    body = {}
-}: ConsumerAPIParams): Promise<ConsumerAPIResponse<T>> => {
+    body
+}: ConsumerAPIFormDataParams): Promise<ConsumerAPIResponse<T>> => {
     const { token } = await GetRoute()
 
     if (!token || token === 'false' || token.trim() === '') {
@@ -33,13 +33,11 @@ const ConsumerAPI = async <T = unknown>({
         method,
         headers: {
             ...headers,
-            'Content-Type': 'application/json',
+            // No establecer Content-Type para FormData
+            // El navegador lo establece automáticamente con el boundary correcto
             'Authorization': `Bearer ${token}`
-        }
-    }
-
-    if (method !== 'GET') {
-        params.body = JSON.stringify(body)
+        },
+        body
     }
 
     try {
@@ -77,4 +75,4 @@ const ConsumerAPI = async <T = unknown>({
     }
 }
 
-export default ConsumerAPI
+export default ConsumerAPIFormData

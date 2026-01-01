@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { FilterMatchMode } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
@@ -45,6 +45,7 @@ interface BackendUser {
     first_name: string
     last_name: string
     email: string
+    username?: string
     rol_detail?: {
         nombre: string
         nombre_display: string
@@ -52,11 +53,18 @@ interface BackendUser {
     [key: string]: unknown
 }
 
+interface BackendUsersResponse {
+    count?: number
+    next?: string | null
+    previous?: string | null
+    results?: BackendUser[]
+}
+
 // Define FilterState type for filters state
 type FilterState = {
     global: {
         value: string | null
-        matchMode: string
+        matchMode: FilterMatchMode
     }
 }
 
@@ -106,19 +114,6 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
 
     // * methods
     const loadUsers = async () => {
-        // Validar que el usuario esté autenticado
-        if (!userInfo.id) {
-            console.error('Usuario no autenticado')
-            showLoader(false)
-            Swal.fire({
-                title: 'Error',
-                text: 'Usuario no autenticado. Por favor inicia sesión nuevamente.',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-            })
-            return false
-        }
-
         try {
             // Obtener token desde GetRoute
             const { token } = await GetRoute()
@@ -136,7 +131,7 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
             }
 
             const { data, status, message } = await consumerPublicAPI({
-                url: `${process.env.NEXT_PUBLIC_API_URL}/users/`,
+                url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/`,
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -145,39 +140,51 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
 
             if (status === 'error') {
                 console.error('Error al cargar usuarios:', message)
+                showLoader(false)
                 Swal.fire({
                     title: 'Error',
                     text: message || 'No se pudieron cargar los usuarios',
                     icon: 'error',
                     confirmButtonText: 'Ok'
                 })
-                showLoader(false)
                 return false
             }
 
             // Adaptar la estructura de datos del backend al formato esperado por la tabla
-            const adaptedUsers = Array.isArray(data) ? data.map((user: BackendUser) => ({
-                userNumDoc: user.id || '',
-                userName: user.first_name || '',
-                userLastName: user.last_name || '',
-                userEmailInstitutional: user.email || '',
-                userCenter: user.rol_detail?.nombre || '',
-                centerName: user.rol_detail?.nombre_display || '',
-                userCode: user.id || '',
-                ...user
-            })) : []
-
+            // La API retorna { count, next, previous, results }
+            console.log('Datos recibidos del backend:', data)
+            const backendResponse = data as BackendUsersResponse | BackendUser[]
+            const usersData = Array.isArray(backendResponse) ? backendResponse : (backendResponse?.results || [])
+            console.log('Users data extraído:', usersData)
+            
+            const adaptedUsers = Array.isArray(usersData) ? usersData.map((user: BackendUser) => {
+                console.log('Adaptando usuario:', user)
+                return {
+                    userNumDoc: user.id?.toString() || '',
+                    userName: user.first_name || user.username || '',
+                    userLastName: user.last_name || '',
+                    userEmailInstitutional: user.email || '',
+                    userCenter: user.rol_detail?.nombre || 'Sin rol',
+                    centerName: user.rol_detail?.nombre || 'Sin rol',
+                    userCode: user.id?.toString() || '',
+                    ...user
+                }
+            }) : []
+            
+            console.log('Usuarios adaptados:', adaptedUsers)
             setListUsers(adaptedUsers as User[])
             showLoader(false)
+            return true
         } catch (error) {
             console.error('Error al cargar usuarios:', error)
+            showLoader(false)
             Swal.fire({
                 title: 'Error',
                 text: 'Ocurrió un error al cargar los usuarios',
                 icon: 'error',
                 confirmButtonText: 'Ok'
             })
-            showLoader(false)
+            return false
         }
     }
 
@@ -269,7 +276,7 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                 <InputText
                     type="search"
                     onChange={event => setGlobalFilterValue(event.target.value)}
-                    placeholder="Buscar..."
+                    placeholder="Buscar por nombre, apellido o correo..."
                 />
             </div>
         )
@@ -309,6 +316,9 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                     dataKey="userNumDoc"
                     header={header()}
                     emptyMessage="No hay usuarios encontrados"
+                    filters={filters}
+                    globalFilterFields={['userName', 'userLastName', 'userEmailInstitutional']}
+                    onFilter={(e) => setFilters(e.filters as FilterState)}
                 >
                     <Column field="userNumDoc" header="Num. doc" />
                     <Column field="userName" header="Nombres" />

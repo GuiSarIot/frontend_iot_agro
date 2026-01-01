@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -15,7 +15,7 @@ import ConsumerAPI from '@/components/shared/consumerAPI/consumerAPI'
 import InputForm from '@/components/shared/inputForm/inputForm'
 import MainForm from '@/components/shared/mainForm/mainForm'
 import stylesMainForm from '@/components/shared/mainForm/mainform.module.css'
-import AppContext from '@/context/appContext'
+import { useAppContext } from '@/context/appContext'
 
 import stylesPage from './crearPage.module.css'
 import ManageImage from '../manageImage'
@@ -85,7 +85,7 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
     }
 }) => {
     // * context
-    const { changeTitle, showNavbar, showLoader } = useContext(AppContext)
+    const { changeTitle, showNavbar, showLoader } = useAppContext()
 
     // * hooks
     const router = useRouter()
@@ -198,6 +198,7 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
 
         if (status === 'error') {
             console.error(message)
+            showLoader(false)
             return false
         }
 

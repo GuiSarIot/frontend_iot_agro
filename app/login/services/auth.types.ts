@@ -16,7 +16,6 @@ export interface Permission {
 export interface RolDetail {
     id: number;
     nombre: string;
-    nombre_display: string;
     descripcion: string;
     permisos: Permission[];
     created_at: string;
@@ -40,6 +39,11 @@ export interface User {
     created_at: string;
     updated_at: string;
     last_login: string | null;
+    telegram_chat_id?: string;
+    telegram_username?: string;
+    telegram_notifications_enabled?: boolean;
+    telegram_verified?: boolean;
+    can_receive_telegram?: boolean;
 }
 
 export interface LoginResponseData {
@@ -47,6 +51,12 @@ export interface LoginResponseData {
     refresh: string;
     access: string;
     message: string;
+}
+
+export interface EncryptedIdResponse {
+    encrypted_id: string;
+    user_id: number;
+    username: string;
 }
 
 // Interfaces anteriores para compatibilidad con el código existente

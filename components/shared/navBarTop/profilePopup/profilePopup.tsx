@@ -68,11 +68,11 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage, showProfile, set
         <div className={stylesProfilePopup.profilePopup}>
             <div className={activeInfoProfile} onMouseLeave={() => setShowProfile(false)}>
                 <div className={stylesProfilePopup.sectionTop}>
-                    <div>
-                        <p>{userInfo.role}</p>
+                    <div className={stylesProfilePopup.roleContainer}>
+                        <p className={stylesProfilePopup.roleText}>{userInfo.role}</p>
                     </div>
-                    <div>
-                        <Link href="#" onClick={handleLogout}>
+                    <div className={stylesProfilePopup.logoutContainer}>
+                        <Link href="#" onClick={handleLogout} className={stylesProfilePopup.logoutLink}>
                             <span>Cerrar sesión</span>
                             <span>
                                 <LogoutIcon />
@@ -85,8 +85,8 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage, showProfile, set
                     <div className={stylesProfilePopup.imageProfile}>
                         {imageError ? (
                             <div style={{ 
-                                width: '50px', 
-                                height: '50px', 
+                                width: '70px', 
+                                height: '70px', 
                                 borderRadius: '50%', 
                                 backgroundColor: '#e0e0e0',
                                 display: 'flex',
@@ -94,27 +94,36 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ nameImage, showProfile, set
                                 justifyContent: 'center',
                                 color: '#757575'
                             }}>
-                                <PersonIcon style={{ fontSize: '30px' }} />
+                                <PersonIcon style={{ fontSize: '40px' }} />
                             </div>
                         ) : (
                             <Image
                                 src={imgProfile}
                                 alt="imagen de perfil"
-                                width={50}
-                                height={50}
-                                style={{ borderRadius: '50%' }}
+                                width={70}
+                                height={70}
+                                style={{ borderRadius: '50%', objectFit: 'cover' }}
                                 onError={() => setImageError(true)}
                             />
                         )}
                     </div>
 
                     <div className={stylesProfilePopup.descriptionProfile}>
-                        <h4>{truncateName(userInfo.name, 23)}</h4>
-                        <p>{userInfo.email}</p>
-                        <Link href="/update_personal_info" onClick={handleUpdatePersonalInfo}>
-                            <EditIcon /> Editar información personal
-                        </Link>
+                        <h4>{truncateName(userInfo.name, 25)}</h4>
+                        <p className={stylesProfilePopup.email}>{userInfo.email}</p>
+                        {userInfo.phone && (
+                            <p className={stylesProfilePopup.phone}>📞 {userInfo.phone}</p>
+                        )}
+                        {userInfo.profession && (
+                            <p className={stylesProfilePopup.profession}>🎓 {userInfo.profession}</p>
+                        )}
                     </div>
+                </div>
+                
+                <div className={stylesProfilePopup.actionButtons}>
+                    <Link href="/update_personal_info" onClick={handleUpdatePersonalInfo} className={stylesProfilePopup.editButton}>
+                        <EditIcon /> Editar perfil
+                    </Link>
                 </div>
 
                 <div className={stylesProfilePopup.decorator}></div>

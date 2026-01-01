@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -19,9 +19,19 @@ const Login: React.FC = () => {
     const router = useRouter()
     const { usernameRef, passwordRef, handleSubmit } = useLogin()
 
+    // Forzar tema claro en la página de login
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        return () => {
+            // Restaurar el tema guardado al salir
+            const savedTheme = localStorage.getItem('theme') || 'light'
+            document.documentElement.setAttribute('data-theme', savedTheme)
+        }
+    }, [])
+
     return (
         <div className={stylesLogin.container}>
-            <main className={stylesLogin.loginContent}>
+            <div className={stylesLogin.loginContent}>
                 <div className={stylesLogin.logoContainer}>
                     <Image
                         src="/logoH.png"
@@ -38,7 +48,11 @@ const Login: React.FC = () => {
                     <h2 className={stylesLogin.loginFormContent}>Inicio de sesión</h2>
 
                     <form onSubmit={handleSubmit}>
-                        <InputLogin label="Número de documento" ref={usernameRef} name="username" />
+                        <InputLogin 
+                            className={stylesLogin.InputLoginData}
+                            label="Número de documento" 
+                            ref={usernameRef} name="username" 
+                        />
                         <InputLogin
                             className={stylesLogin.InputLoginData}
                             type="password"
@@ -53,7 +67,13 @@ const Login: React.FC = () => {
                             </a>
                         </div>
 
-                        <Button type="submit" variant="contained" color="primary" fullWidth className={stylesLogin.primaryButton}>
+                        <Button 
+                            type="submit" 
+                            variant="contained" 
+                            color="primary" 
+                            fullWidth 
+                            className={stylesLogin.primaryButton}                            
+                        >
                             Ingresar
                         </Button>
                     </form>
@@ -66,6 +86,11 @@ const Login: React.FC = () => {
                         fullWidth
                         className={stylesLogin.socialButton}
                         onClick={() => router.push('/crear_cuenta')}
+                        sx={{
+                            '&:focus, &:focus-visible, &:hover, &:active': {
+                                color: 'white !important',
+                            }
+                        }}
                     >
                         Crear cuenta
                     </Button>
@@ -77,6 +102,11 @@ const Login: React.FC = () => {
                         fullWidth
                         className={stylesLogin.socialButton}
                         onClick={() => alert('Login con Facebook')}
+                        sx={{
+                            '&:focus, &:focus-visible, &:hover, &:active': {
+                                color: 'white !important',
+                            }
+                        }}
                     >
                         Continuar con Facebook
                     </Button>
@@ -88,11 +118,16 @@ const Login: React.FC = () => {
                         fullWidth
                         className={stylesLogin.socialButton}
                         onClick={() => alert('Login con Google')}
+                        sx={{
+                            '&:focus, &:focus-visible, &:hover, &:active': {
+                                color: 'white !important',
+                            }
+                        }}
                     >
                         Continuar con Google
                     </Button>
                 </div>
-            </main>
+            </div>
 
             <footer className={stylesLogin.footer}>
                 <p>© 2025 IOTCorpSAS. Todos los derechos reservados. 1.0.0</p>

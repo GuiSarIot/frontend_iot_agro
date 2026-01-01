@@ -14,8 +14,9 @@
     visibility: hidden;
     position: absolute;
     bottom: -290px;
-    left: -420px;
-    width: 520px;
+    right: 0;
+    width: 380px;
+    max-width: 95vw;
     padding: 22px;
     border-radius: 12px;
     background-color: var(--background-color-secondary);
@@ -31,8 +32,7 @@
 .decorator {
     position: absolute;
     top: -20px;
-    left: 91%;
-    transform: translateX(-50%);
+    right: 20px;
     width: 0;
     height: 0;
     z-index: 300;
@@ -46,19 +46,38 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.sectionTop a {
+.roleContainer {
+    flex: 1;
+}
+
+.roleText {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+}
+
+.logoutContainer {
+    display: flex;
+    align-items: center;
+}
+
+.logoutLink {
     min-width: 130px;
     font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
 }
 
-.sectionTop a:hover {
-    color: var(--text-color-secondary);
-    text-decoration: underline;
+.logoutLink:hover {
+    color: var(--error);
 }
 
 .sectionTop span {
@@ -73,25 +92,20 @@
 /* section botton */
 .sectionBottom {
     width: 100%;
-    margin: 30px auto 20px auto;
-    padding: 0 30px;
+    margin: var(--spacing-lg) auto;
+    padding: 0;
     display: flex;
-    align-items: stretch;
-    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-lg);
 }
 
 .imageProfile {
-    width: 150px;
-    height: 150px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     overflow: hidden;
-    cursor: pointer;
-}
-
-.imageProfile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    flex-shrink: 0;
+    border: 3px solid var(--primary);
 }
 
 .imageProfile img {
@@ -103,31 +117,64 @@
 .descriptionProfile {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    gap: var(--spacing-xs);
+    flex: 1;
 }
 
 .descriptionProfile h4 {
-    font-size: 20px;
+    font-size: var(--font-size-lg);
     font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
 }
 
 .descriptionProfile p {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 400;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
-.descriptionProfile a {
-    font-size: 14px;
-    font-weight: 400;
+.email {
+    color: var(--text-secondary);
+    word-break: break-word;
+}
+
+.phone,
+.profession {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: center;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.editButton {
     display: flex;
     align-items: center;
-    color: var(--text-color-secondary);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background-color: var(--primary);
+    color: white;
+    border-radius: var(--border-radius-base);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all var(--transition-fast);
 }
 
-.descriptionProfile a svg {
+.editButton:hover {
+    background-color: var(--primary-dark, var(--primary));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.editButton svg {
     width: 18px;
     height: 18px;
-    margin-right: 5px;
 }
 
 
@@ -152,46 +199,50 @@
     .boxInfo {
         z-index: 4;
         opacity: 0;
-        bottom: -174px;
-        left: -245px;
+        bottom: -250px;
+        right: 0;
         width: 320px;
+        max-width: 90vw;
     }
 
     .boxInfo.active {
         opacity: 1;
         visibility: visible;
     }
+    
+    .decorator {
+        right: 15px;
+    }
 
-    .sectionTop a {
+    .logoutLink {
         min-width: max-content;
     }
 
-    .sectionTop p, .sectionTop a {
+    .roleText,
+    .logoutLink {
         font-size: 13px;
     }
 
     .sectionBottom {
-        margin: 10px auto 5px auto;
+        margin: var(--spacing-md) auto;
+        gap: var(--spacing-md);
     }
 
     .imageProfile {
-        width: 80px;
-        height: 80px;
-    }
-
-    .descriptionProfile{
-        margin-left: 10px;
+        width: 60px;
+        height: 60px;
     }
 
     .descriptionProfile h4 {
-        font-size: 12px;
+        font-size: var(--font-size-base);
     }
 
     .descriptionProfile p {
-        font-size: 10px;
+        font-size: var(--font-size-xs);
     }
 
-    .descriptionProfile a {
-        font-size: 10px;
+    .editButton {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-md);
     }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -11,7 +11,7 @@ import ConsumerAPI from '@/components/shared/consumerAPI/consumerAPI'
 import InputForm from '@/components/shared/inputForm/inputForm'
 import MainForm from '@/components/shared/mainForm/mainForm'
 import stylesMainForm from '@/components/shared/mainForm/mainform.module.css'
-import AppContext from '@/context/appContext'
+import { useAppContext } from '@/context/appContext'
 
 // ---- Interfaces ----
 interface InfoPage {
@@ -45,7 +45,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
     }
 }) => {
     // * context
-    const { changeTitle, showNavbar, showLoader } = useContext(AppContext)
+    const { changeTitle, showNavbar, showLoader } = useAppContext()
 
     // * hooks
     const router = useRouter()

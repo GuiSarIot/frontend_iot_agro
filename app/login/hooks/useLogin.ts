@@ -67,6 +67,9 @@ export function useLogin() {
 
         // Ahora cifrar el ID con el token
         const idEncrypted = await encryptUserId(String(data.user.id), data.access)
+        
+        console.log('useLogin - ID cifrado:', idEncrypted)
+        console.log('useLogin - Datos del usuario:', data.user)
 
         changeAuthContext({
             ...appState.authContext,
@@ -75,28 +78,41 @@ export function useLogin() {
 
         // Extraer los códigos de permisos para compatibilidad
         const permissionCodes = data.user.rol_detail.permisos.map(p => p.codigo)
+        
+        console.log('useLogin - Permisos extraídos:', permissionCodes)
 
         changeUserInfo({
             name: data.user.full_name,
             email: data.user.email,
-            role: data.user.rol_detail.nombre_display,
-            module: '/', 
-            id: data.user.id,
-            roles: permissionCodes
+            role: data.user.rol_detail.nombre,
+            module: '/dashboard', 
+            id: String(data.user.id),
+            roles: permissionCodes,
+            nameImage: '',
+            hasRolSistema: data.user.is_superuser || data.user.is_staff,
+            nameRolSistema: data.user.rol_detail.nombre,
+            levelAccessRolSistema: data.user.is_superuser ? 'ROOT' : 'NORMAL'
         })
 
-        changeTitle(data.user.rol_detail.nombre_display)
-        await saveRoute({
-            routeInfo: '/', 
-            title: data.user.rol_detail.nombre_display,
-            isLogged: 'true',
-            user: idEncrypted,
-            token: data.access,
-            role: data.user.rol_detail.nombre_display,
-        })
+        changeTitle('Dashboard')
+        
+        try {
+            console.log('useLogin - Guardando ruta...')
+            await saveRoute({
+                routeInfo: '/dashboard', 
+                title: 'Dashboard',
+                isLogged: 'true',
+                user: idEncrypted,
+                token: data.access,
+                role: data.user.rol_detail.nombre,
+            })
+            console.log('useLogin - Ruta guardada correctamente')
+        } catch (error) {
+            console.error('useLogin - Error guardando ruta:', error)
+        }
 
         showLoader(false)
-        router.push('/') 
+        router.push('/dashboard') 
     }
 
     return {

@@ -42,12 +42,15 @@ const SideBarLeft: React.FC<SideBarLeftProps> = ({ children }) => {
                 <ul className={stylesSideBar.sideBarList}>{children}</ul>
             </div>
 
-            <div
-                className={stylesSideBar.overlay}
-                onMouseDown={handleClick}
-                onMouseUp={handleClick}
-                onTouchStart={handleClick}
-            />
+            {/* Overlay solo visible en móviles/tablets cuando sidebar está activo */}
+            {navBarState && (
+                <div
+                    className={stylesSideBar.overlay}
+                    onMouseDown={handleClick}
+                    onMouseUp={handleClick}
+                    onTouchStart={handleClick}
+                />
+            )}
         </>
     )
 }

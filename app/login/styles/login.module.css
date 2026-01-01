@@ -8,9 +8,9 @@
     width: 100vw;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg-medium) 50%, var(--color-bg-dark) 100%);
-    color: var(--color-text-main);
-    font-family: var(--font-main);
+    background: --bg-primary;
+    color: var(--text-primary);
+    font-family: var(--font-family-base);
     box-sizing: border-box;
     overflow-x: hidden;
 }
@@ -71,7 +71,7 @@
     font-size: 1.8rem;
     font-weight: 400;
     letter-spacing: 0.5px;
-    color: var(--color-secondary);
+    color: var(--secondary);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -84,7 +84,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     font-weight: 500;
 }
 
@@ -103,26 +103,43 @@
     align-items: center;
 }
 
+.inputWrapper .inputField,
 .inputField {
     width: 100%;
     padding: 0.8rem 1rem;
     padding-right: 2.5rem;
-    background: var(--color-bg-light);
-    border: 1px solid var(--color-bg-medium);
+    background: #ffffff !important;
+    border: 1px solid var(--neutral-300);
     border-radius: 10px;
-    color: var(--color-secondary);
+    color: #2c3e50 !important;
     font-size: 1rem;
     transition: all 0.3s ease;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    -webkit-text-fill-color: #2c3e50 !important;
 }
 
+.inputWrapper .inputField:focus,
 .inputField:focus {
     outline: none;
-    border-color: var(--color-primary-light);
+    border-color: var(--primary-500);
     box-shadow: 
         0 0 0 2px rgba(79, 131, 74, 0.2),
         inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    background: #ffffff;
+    background: #ffffff !important;
+    color: #2c3e50 !important;
+    -webkit-text-fill-color: #2c3e50 !important;
+}
+
+.inputWrapper .inputField::placeholder,
+.inputField::placeholder {
+    color: #95a5a6 !important;
+    opacity: 0.7;
+}
+
+/* Clase adicional para inputs con color de texto forzado */
+.InputLoginData {
+    color: #2c3e50 !important;
+    -webkit-text-fill-color: #2c3e50 !important;
 }
 
 .eyeButton {
@@ -130,7 +147,7 @@
     right: 10px;
     background: transparent;
     border: none;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 0.5rem;
     display: flex;
@@ -140,7 +157,7 @@
 }
 
 .eyeButton:hover {
-    color: var(--color-secondary);
+    color: var(--secondary);
 }
 
 /* Sección de contraseña olvidada */
@@ -150,7 +167,7 @@
 }
 
 .forgotPasswordLink {
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     font-size: 0.85rem;
     text-decoration: none;
     transition: all 0.2s;
@@ -158,14 +175,14 @@
 }
 
 .forgotPasswordLink:hover {
-    color: var(--color-secondary);
+    color: var(--secondary);
     text-decoration: underline;
 }
 
 /* Botones - usando variables del global */
 .primaryButton {
     /* btn-primary styles can be copied here if needed */
-    background: var(--gradient-primary);
+    background: var(--gradient-primary) !important;
     padding: 0.9rem !important;
     border-radius: 12px !important;
     font-weight: 500 !important;
@@ -179,11 +196,43 @@
 }
 
 .primaryButton:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) !important;
     box-shadow: 
         0 7px 14px rgba(0, 0, 0, 0.12),
         0 3px 6px rgba(0, 0, 0, 0.1) !important;
     background: var(--gradient-hover) !important;
+    color: white !important;
+}
+
+.primaryButton:focus,
+.primaryButton:focus-visible {
+    outline: none !important;
+    background: var(--gradient-primary) !important;
+    color: white !important;
+    box-shadow: 
+        0 0 0 3px rgba(79, 131, 74, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.primaryButton:active {
+    transform: translateY(0) !important;
+    background: var(--gradient-primary) !important;
+    color: white !important;
+}
+
+/* Estilos para iconos dentro de botones */
+.primaryButton svg,
+.socialButton svg {
+    margin-right: 8px;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.primaryButton:hover svg,
+.socialButton:hover svg {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
 }
 
 .socialLogin {
@@ -206,7 +255,7 @@
 }
 
 .socialButton:first-of-type {
-    background: linear-gradient(45deg, var(--color-success) 0%, #12b886 100%) !important;
+    background: linear-gradient(45deg, var(--success-500) 0%, #12b886 100%) !important;
 }
 
 .socialButton:nth-of-type(2) {
@@ -214,12 +263,27 @@
 }
 
 .socialButton:nth-of-type(3) {
-    background: linear-gradient(45deg, var(--color-error) 0%, #c1351b 100%) !important;
+    background: linear-gradient(45deg, var(--error-500) 0%, #c1351b 100%) !important;
 }
 
 .socialButton:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) !important;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+    color: white !important;
+}
+
+.socialButton:focus,
+.socialButton:focus-visible {
+    outline: none !important;
+    color: white !important;
+    box-shadow: 
+        0 0 0 3px rgba(79, 131, 74, 0.2),
+        0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.socialButton:active {
+    transform: translateY(0) !important;
+    color: white !important;
 }
 
 /* Footer - usando estilos del global */
@@ -232,7 +296,7 @@
     padding: 15px 20px;
     background-color: rgba(255, 255, 255, 0.2); 
     font-size: 14px;
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     gap: 10px; 
 }
 
@@ -243,13 +307,13 @@
 }
 
 .footerLinks a {
-    color: var(--color-text-secondary);
+    color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .footerLinks a:hover {
-    color: var(--color-primary);
+    color: var(--primary);
 }
 
 /* Efectos futuristas */

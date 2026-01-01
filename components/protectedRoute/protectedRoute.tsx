@@ -59,8 +59,8 @@ interface ProtectedRouteWithoutChildren {
 
 type ProtectedRouteProps = ProtectedRouteWithChildren | ProtectedRouteWithoutChildren
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirection }) => {
-    const { appState, changeUserInfo, changeAuthContext } = useContext(AppContext.Context)
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirection: _autoRedirection }) => {
+    const { appState, changeUserInfo, changeAuthContext, showLoader } = useContext(AppContext.Context)
     const { authContext } = appState
     const router = useRouter()
     const currentUrl = usePathname()
@@ -80,38 +80,51 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
         
         try {
             setIsValidating(true)
+            showLoader(true)
             const { isLogged, route, user, title, role, token } = await GetRoute()
+            
+            console.log('ProtectedRoute - Datos de GetRoute:', { isLogged, route, user, title, role, hasToken: !!token })
 
             if (!isLogged || isLogged === 'false' || !user || user === 'false') {
+                console.log('ProtectedRoute - No hay sesión, redirigiendo a login')
                 SaveRoute({ isLogged: 'false', user: 'false', token: 'false' })
-                if (autoRedirection) router.push('/login')
+                showLoader(false)
+                router.push('/login')
                 return
             }
 
             if (!token || token === 'false') {
+                console.log('ProtectedRoute - No hay token, cerrando sesión')
                 logoutAndRedirect()
                 return
             }
 
+            console.log('ProtectedRoute - Llamando a /api/users/me/ con token')
             const { data, status } = await consumerPublicAPI<UserData>({
-                url: `${process.env.NEXT_PUBLIC_API_URL}/users/me/`,
+                url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
 
+            console.log('ProtectedRoute - Respuesta de /api/users/me/:', { status, hasData: !!data })
+
             if (status === 'error' || !data) {
+                console.log('ProtectedRoute - Error o sin datos, cerrando sesión')
                 logoutAndRedirect()
                 return
             }
 
             updateUserInfo(data, title, role)
             redirectUserBasedOnRole(data, route)
+            showLoader(false)
         } catch (error) {
             console.error('Error validando usuario:', error)
-            if (autoRedirection) router.push('/login')
+            showLoader(false)
+            router.push('/login')
         } finally {
             setIsValidating(false)
+            showLoader(false)
         }
     }
 
@@ -143,21 +156,27 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             role: 'false',
         })
 
-        if (autoRedirection) router.push('/login')
+        router.push('/login')
     }
 
-    const updateUserInfo = (data: UserData, title?: string, role?: string) => {
+    const updateUserInfo = (data: UserData, _title?: string, _role?: string) => {
         // Extraer los códigos de permisos del usuario
         const permissionCodes = data.rol_detail?.permisos?.map(p => p.codigo) || []
+        
+        console.log('ProtectedRoute - Datos del usuario:', data)
+        console.log('ProtectedRoute - Permisos extraídos:', permissionCodes)
         
         changeUserInfo({
             name: data.full_name || `${data.first_name} ${data.last_name}`,
             email: data.email,
-            role: title === 'Login' ? data.rol_detail?.nombre : role || data.rol_detail?.nombre || '',
-            module: '', // No existe en la nueva estructura
+            role: data.rol_detail?.nombre || '',
+            module: '/dashboard',
             id: data.id.toString(),
-            roles: permissionCodes, // Ahora roles contiene los códigos de permisos
-            nameImage: null, // No existe en la nueva estructura
+            roles: permissionCodes,
+            nameImage: '',
+            hasRolSistema: data.is_superuser || data.is_staff,
+            nameRolSistema: data.rol_detail?.nombre || '',
+            levelAccessRolSistema: data.is_superuser ? 'ROOT' : 'NORMAL'
         })
 
         changeAuthContext({
@@ -170,21 +189,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
     }
 
     const redirectUserBasedOnRole = (data: UserData, route?: string) => {
-        // Si hay una ruta guardada y no es login, ir a esa ruta
-        if (route && route !== '/login' && route !== '/') {
-            router.push(route)
-        } 
-        // Si está en la raíz o en login, ir al dashboard
-        else if (currentUrl === '/' || currentUrl === '/login') {
-            router.push('/dashboard')
+        // Solo redirigir si estamos en la página de login o raíz
+        if (currentUrl === '/' || currentUrl === '/login') {
+            // Si hay una ruta guardada y no es login, ir a esa ruta
+            if (route && route !== '/login' && route !== '/') {
+                router.push(route)
+            } else {
+                // Si no hay ruta guardada, ir al dashboard
+                router.push('/dashboard')
+            }
         }
-        // De lo contrario, permanecer en la ruta actual
-        else {
-            router.push(currentUrl)
-        }
+        // De lo contrario, permanecer en la ruta actual (no redirigir)
     }
 
-    if (!authContext.isLoggedIn) {
+    // Si no está autenticado, no mostrar nada (el componente redirige en loadUserInfo)
+    if (!authContext.isLoggedIn && hasValidated.current) {
         return null
     }
 

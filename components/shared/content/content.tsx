@@ -12,13 +12,13 @@ interface ContainerProps {
 
 const Container: React.FC<ContainerProps> = ({ children, title, showTitle = false }) => {
     return (
-        <div className="container">
-            {showTitle && title && (
-                <div className={stylesContent.title}>
-                    <h1>{title}</h1>
-                </div>
-            )}
-            <div className="content">
+        <div className={stylesContent.content}>
+            <div className={stylesContent.contentInner}>
+                {showTitle && title && (
+                    <div className={stylesContent.title}>
+                        <h1>{title}</h1>
+                    </div>
+                )}
                 {children}
             </div>
         </div>

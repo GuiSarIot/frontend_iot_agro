@@ -1,8 +1,42 @@
 /* removing default styles from primereact classes */
 .p-datatable-header {
     border: none;
-    
+    background-color: var(--bg-secondary);
     border-radius: 5px 5px 0 0;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.p-datatable .p-datatable-tbody > tr {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    border-color: var(--border-color);
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.p-paginator {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page {
+    color: var(--text-primary);
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background-color: var(--primary);
+    color: white;
 }
 
 /* datatable custom */
@@ -18,8 +52,19 @@
 }
 
 .dataTableCustom .table-header input{
-    padding: 5px;
+    padding: 8px 12px;
+    min-width: 300px;
+    width: 40%;
+    max-width: 500px;
     color: var(--text-color-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    font-size: var(--font-size-sm);
+}
+
+.dataTableCustom .table-header input::placeholder {
+    color: var(--text-tertiary);
 }
 
 /* table content */
@@ -33,6 +78,7 @@
 .dataTableCustom table th {
     font-weight: 600;
     color: var(--text-color-primary);
+    background-color: var(--bg-secondary);
     border: none;
 }
 
@@ -46,8 +92,13 @@
 .dataTableCustom table td {
     text-align: left;
     color: var(--text-color-primary);
+    background-color: var(--bg-primary);
     border: none;
     border-bottom: 1px solid var(--border-color-primary);
+}
+
+.dataTableCustom table tbody tr:hover td {
+    background-color: var(--bg-hover);
 }
 
 .dataTableCustom table td,
@@ -99,8 +150,9 @@
     
     /* table header */
     .dataTableCustom .table-header input{
-        width: 40%;
-        padding: 5px;
+        min-width: 250px;
+        width: 50%;
+        padding: 6px 10px;
         margin: 0 auto;
         color: var(--text-color-primary);
         font-size: 13px;
