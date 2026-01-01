@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 
 import { UserInfoForm } from './types'
-import styles from '../styles.module.css'
+import styles from './UpdateProfileTab.module.css'
 
 interface UpdateProfileTabProps {
     userInfo: UserInfoForm
@@ -35,11 +35,10 @@ export default function UpdateProfileTab({
 }: UpdateProfileTabProps) {
     return (
         <div className={styles.contentLayout}>
-            {/* Panel izquierdo - Formulario */}
             <div className={styles.infoPanel}>
                 <div className={styles.infoSection}>
                     <h2 className={styles.sectionTitle}>Actualiza tú perfil</h2>
-                    <p className="text-secondary" style={{ marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                    <p style={{ marginBottom: '1.5rem', fontSize: '0.9rem', color: 'var(--text-color-secondary)' }}>
                         Edita los datos, como correo, teléfono, nombre, etc.
                     </p>
 
@@ -104,25 +103,29 @@ export default function UpdateProfileTab({
                             />
                         </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>
-                                Imágen de perfil actual
-                                <span className={styles.labelSubtext}>Imágen de perfil actual</span>
-                            </label>
-                            
-                            <div className={styles.imagePreviewContainer}>
-                                <div className={styles.imagePreview}>
-                                    {previewImage ? (
-                                        <Image src={previewImage} alt="Preview" className={styles.previewImg} width={200} height={200} />
-                                    ) : (
-                                        <div className={styles.placeholderImage}>
-                                            👤
-                                        </div>
-                                    )}
+                        <div className={styles.imageSection}>
+                            <div className={styles.imagePreview}>
+                                {previewImage ? (
+                                    <Image src={previewImage} alt="Preview" className={styles.previewImg} width={160} height={160} />
+                                ) : (
+                                    <div className={styles.placeholderImage}>
+                                        <svg viewBox="0 0 24 24" fill="currentColor" width="80" height="80">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={styles.imageUploadSection}>
+                                <div className={styles.imageInfoGroup}>
+                                    <label className={styles.imageLabel}>
+                                        Imágen de perfil actual
+                                    </label>
+                                    <span className={styles.imageLabelSubtext}>Imágen de perfil actual</span>
                                 </div>
 
-                                <div className={styles.imageUploadSection}>
-                                    <label className={styles.formLabel}>
+                                <div className={styles.imageInfoGroup}>
+                                    <label className={styles.imageLabel}>
                                         Nueva imágen
                                     </label>
                                     <div className={styles.fileInputWrapper}>
@@ -148,7 +151,7 @@ export default function UpdateProfileTab({
                         </div>
 
                         <div className={styles.formActions}>
-                            <button type="submit" className={styles.submitButton}>
+                            <button type="submit" className="btn-primary">
                                 Guardar
                             </button>
                         </div>
@@ -166,13 +169,13 @@ export default function UpdateProfileTab({
                     </div>
 
                     <div className={styles.roleBadge}>
-                        {userInfo.rol_detail?.nombre?.toUpperCase() || 'ADMINISTRADOR'}
+                        {userInfo.rol_detail?.nombre?.toUpperCase() || 'SUPERUSUARIO'}
                     </div>
                 </div>
 
                 <div className={styles.profileCardInfo}>
                     <h3 className={styles.profileName}>
-                        {userInfo.full_name || `${userInfo.first_name || ''} ${userInfo.last_name || ''}`.trim() || 'Sin nombre'}
+                        {userInfo.full_name || `${userInfo.first_name || ''} ${userInfo.last_name || ''}`.trim() || 'Super Admin 2'}
                     </h3>
 
                     <div className={styles.profileDetails}>
@@ -181,28 +184,36 @@ export default function UpdateProfileTab({
                         </div>
                         <div className={styles.detailRow}>
                             <span className={styles.detailLabel}>Username:</span>
-                            <span className={styles.detailValue}>{userInfo.username || 'Memo'}</span>
+                            <span className={styles.detailValue}>{userInfo.username || 'admin'}</span>
                         </div>
                         <div className={styles.detailRow}>
                             <span className={styles.detailLabel}>Última conexión:</span>
                             <span className={styles.detailValue}>
-                                {userInfo.last_login ? formatDate(userInfo.last_login) : '2026-01-01 11:36:56'}
+                                {userInfo.last_login ? formatDate(userInfo.last_login) : '01/01/2026, 02:25:35 p. m.'}
                             </span>
                         </div>
                     </div>
 
                     <div className={styles.profileActions}>
-                        <button className={styles.actionButton} title="Desactivar notificaciones">
-                            🔕
+                        <button className={styles.actionButton} title="Desactivar notificaciones" type="button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 18.69L7.84 6.14 5.27 3.49 4 4.76l2.8 2.8v.01c-.52.99-.8 2.16-.8 3.42v5l-2 2v1h13.73l2 2L21 19.72l-1-1.03zM12 22c1.11 0 2-.89 2-2h-4c0 1.11.89 2 2 2zm6-7.32V11c0-3.08-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68c-.15.03-.29.08-.42.12-.1.03-.2.07-.3.11h-.01c-.01 0-.01 0-.02.01-.23.09-.46.2-.68.31 0 0-.01 0-.01.01L18 14.68z"/>
+                            </svg>
                         </button>
-                        <button className={styles.actionButton} title="Enviar mensaje">
-                            ✉️
+                        <button className={styles.actionButton} title="Enviar mensaje" type="button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
                         </button>
-                        <button className={styles.actionButton} title="Descargar información">
-                            ☁️
+                        <button className={styles.actionButton} title="Comentar" type="button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                            </svg>
                         </button>
-                        <button className={styles.actionButton} title="Guardar">
-                            🔖
+                        <button className={styles.actionButton} title="Guardar" type="button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+                            </svg>
                         </button>
                     </div>
                 </div>

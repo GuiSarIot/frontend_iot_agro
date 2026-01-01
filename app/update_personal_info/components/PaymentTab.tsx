@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import { UserInfoForm } from './types'
 import ProfileCardCentered from './ProfileCardCentered'
 import { useAppContext } from '@/context/appContext'
-import styles from '../styles.module.css'
+import styles from './PaymentTab.module.css'
 
 interface PaymentTabProps {
     userInfo: UserInfoForm

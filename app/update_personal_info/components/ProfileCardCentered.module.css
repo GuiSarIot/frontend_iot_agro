@@ -1,0 +1,164 @@
+/* ProfileCardCentered - Estilos específicos */
+
+.profileCard {
+    background: var(--background-color-secondary);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 2rem;
+}
+
+.profileCardNotifications {
+    max-width: 380px;
+}
+
+.profileCardHeaderCentered {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.avatarContainerCentered {
+    margin-bottom: 1rem;
+}
+
+.avatarLarge {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.roleBadgeCentered {
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    background: #e8e8e8;
+    color: #666;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='dark'] .roleBadgeCentered {
+    background: rgba(128, 128, 128, 0.2);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profileCardInfoCentered {
+    text-align: center;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profileNameLarge {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color-primary);
+    margin: 0;
+}
+
+.profileDetailsCentered {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.emailPrimary {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+}
+
+.detailRowCentered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    line-height: 1.6;
+}
+
+.detailLabelCentered {
+    font-weight: 600;
+    color: var(--text-color-secondary);
+}
+
+.detailValueCentered {
+    color: var(--text-color-primary);
+    font-weight: 400;
+}
+
+.profileActionsCentered {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color-primary);
+}
+
+.actionButtonRound {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border-color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    color: var(--text-color-secondary);
+}
+
+.actionButtonRound svg {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.actionButtonRound:hover {
+    background: var(--background-color-primary);
+    border-color: #00a86b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.2);
+}
+
+.actionButtonRound:hover svg {
+    opacity: 1;
+}
+
+[data-theme='dark'] .actionButtonRound {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme='dark'] .actionButtonRound:hover {
+    background: rgba(0, 168, 107, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+}
+
+@media (max-width: 1200px) {
+    .profileCardNotifications {
+        max-width: 100%;
+    }
+}

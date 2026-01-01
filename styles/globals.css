@@ -259,6 +259,67 @@ a:hover {
 }
 
 /* ================================
+    BOTONES GLOBALES
+================================ */
+
+/* Botón primario verde */
+.btn-primary {
+    padding: 0.65rem 1.5rem;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary:hover {
+    background: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:active {
+    background: var(--primary-700);
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    background: var(--bg-disabled);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Botón secundario */
+.btn-secondary {
+    padding: 0.65rem 1.5rem;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary-500);
+    color: var(--primary-500);
+}
+
+/* ================================
     FIN DEL ARCHIVO
     Todos los demás estilos deben definirse en módulos específicos
 ================================ */
