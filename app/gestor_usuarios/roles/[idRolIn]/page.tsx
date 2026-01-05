@@ -2,8 +2,8 @@ import ContentPage from './contentPage'
 import StylesPage from './contentPage.module.css'
 
 export const metadata = {
-    title: 'Roles institucionales - editar',
-    description: 'Edición de un rol institucional'
+    title: 'Roles - editar',
+    description: 'Edición de un rol'
 }
 
 // Definimos la interfaz para las props

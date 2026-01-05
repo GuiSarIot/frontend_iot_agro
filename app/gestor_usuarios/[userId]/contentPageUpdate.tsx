@@ -51,8 +51,8 @@ interface ContentPageProps {
 // -------------------------------------
 const ContentPage: React.FC<ContentPageProps> = ({
     infoPage = {
-        title: 'Roles institucionales',
-        route: '/gestor_usuarios/roles_institucionales'
+        title: 'Roles',
+        route: '/gestor_usuarios/roles'
     }
 }) => {
     // * context
@@ -179,7 +179,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
     const renderActions = (idRow: string) => {
         return (
             <div>
-                <Link href={`/gestor_usuarios/roles_institucionales/${idRow}`}>
+                <Link href={`/gestor_usuarios/roles/${idRow}`}>
                     <EditIcon />
                 </Link>
                 <button className="btn btn-danger" onClick={() => handleDelete(idRow)}>
@@ -200,8 +200,8 @@ const ContentPage: React.FC<ContentPageProps> = ({
     return (
         <div className={stylesPage.content}>
             <div className={stylesPage.btnNewRolin}>
-                <Link href="/gestor_usuarios/roles_institucionales/crear">
-                    Nuevo rol institucional
+                <Link href="/gestor_usuarios/roles/crear">
+                    Nuevo rol
                 </Link>
             </div>
             <div className={`dataTableCustom ${stylesPage.table}`}>

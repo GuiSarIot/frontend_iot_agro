@@ -30,8 +30,8 @@ const menuItems = [
     },
     {
         icon: <SecurityIcon />,
-        label: 'Roles Institucionales',
-        href: '/gestor_usuarios/roles_institucionales',
+        label: 'Roles',
+        href: '/gestor_usuarios/roles',
         title: 'Gestión de Roles'
     }
 ]

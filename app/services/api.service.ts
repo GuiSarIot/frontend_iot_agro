@@ -216,3 +216,51 @@ export const lecturasService = {
         return authenticatedPost<Lectura>(`${API_BASE_URL}/api/lecturas/`, data)
     },
 }
+
+/**
+ * Servicio para gestionar roles
+ */
+
+export interface Rol {
+    id: number
+    nombre: string
+    descripcion?: string
+    permisos?: string[]
+}
+
+export const rolesService = {
+    /**
+     * Obtiene todos los roles disponibles
+     */
+    getAll: async (): Promise<Rol[]> => {
+        return authenticatedGet<Rol[]>(`${API_BASE_URL}/api/roles/`)
+    },
+
+    /**
+     * Obtiene un rol por ID
+     */
+    getById: async (id: number): Promise<Rol> => {
+        return authenticatedGet<Rol>(`${API_BASE_URL}/api/roles/${id}/`)
+    },
+
+    /**
+     * Crea un nuevo rol
+     */
+    create: async (data: Omit<Rol, 'id'>): Promise<Rol> => {
+        return authenticatedPost<Rol>(`${API_BASE_URL}/api/roles/`, data)
+    },
+
+    /**
+     * Actualiza un rol
+     */
+    update: async (id: number, data: Partial<Rol>): Promise<Rol> => {
+        return authenticatedPatch<Rol>(`${API_BASE_URL}/api/roles/${id}/`, data)
+    },
+
+    /**
+     * Elimina un rol
+     */
+    delete: async (id: number): Promise<void> => {
+        return authenticatedDelete<void>(`${API_BASE_URL}/api/roles/${id}/`)
+    },
+}

@@ -77,20 +77,26 @@ export function useLogin() {
         })
 
         // Extraer los códigos de permisos para compatibilidad
-        const permissionCodes = data.user.rol_detail.permisos.map(p => p.codigo)
+        // Manejar el caso cuando rol_detail o permisos son null/undefined
+        const permissionCodes = data.user.rol_detail?.permisos 
+            ? data.user.rol_detail.permisos.map(p => p.codigo)
+            : []
         
         console.log('useLogin - Permisos extraídos:', permissionCodes)
+
+        // Obtener el nombre del rol de forma segura
+        const roleName = data.user.rol_detail?.nombre || 'Usuario'
 
         changeUserInfo({
             name: data.user.full_name,
             email: data.user.email,
-            role: data.user.rol_detail.nombre,
+            role: roleName,
             module: '/dashboard', 
             id: String(data.user.id),
             roles: permissionCodes,
             nameImage: '',
             hasRolSistema: data.user.is_superuser || data.user.is_staff,
-            nameRolSistema: data.user.rol_detail.nombre,
+            nameRolSistema: roleName,
             levelAccessRolSistema: data.user.is_superuser ? 'ROOT' : 'NORMAL'
         })
 
@@ -104,7 +110,7 @@ export function useLogin() {
                 isLogged: 'true',
                 user: idEncrypted,
                 token: data.access,
-                role: data.user.rol_detail.nombre,
+                role: roleName,
             })
             console.log('useLogin - Ruta guardada correctamente')
         } catch (error) {

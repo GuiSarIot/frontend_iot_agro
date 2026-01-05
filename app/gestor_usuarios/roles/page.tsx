@@ -2,11 +2,11 @@ import ContentPage from './contentPage'
 import stylesPage from './contentPage.module.css'
 
 export const metadata = {
-    title: 'Roles institucionales',
-    description: 'Gestión de roles institucionales'
+    title: 'Roles',
+    description: 'Gestión de roles'
 }
 
-const ManageRolInPage: React.FC = () => {
+const ManageRolesPage: React.FC = () => {
     return (
         <div className={stylesPage.content}>
             <ContentPage />
@@ -14,4 +14,4 @@ const ManageRolInPage: React.FC = () => {
     )
 }
 
-export default ManageRolInPage
+export default ManageRolesPage

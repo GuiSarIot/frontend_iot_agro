@@ -2,6 +2,8 @@
 
 import { ReactNode, useEffect } from 'react'
 
+import { PrimeReactProvider } from 'primereact/api'
+
 import AppContext, { useAppContext } from '@/context/appContext'
 
 interface AppProps {
@@ -20,9 +22,11 @@ const ThemeApplier: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 const App: React.FC<AppProps> = ({ children }) => {
     return (
-        <AppContext.Provider>
-            <ThemeApplier>{children}</ThemeApplier>
-        </AppContext.Provider>
+        <PrimeReactProvider>
+            <AppContext.Provider>
+                <ThemeApplier>{children}</ThemeApplier>
+            </AppContext.Provider>
+        </PrimeReactProvider>
     )
 }
 

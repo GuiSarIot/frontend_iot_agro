@@ -3,6 +3,7 @@
 import React from 'react'
 
 import InputDate from './Calendar/inputCalendar'
+import InputCheckbox from './Checkbox/inputCheckbox'
 import InputEditorAdvanced from './Editor/inputEditor'
 import InputEmail from './Email/inputEmail'
 import InputFile from './File/inputFile'
@@ -30,6 +31,7 @@ type InputType =
     | 'file'
     | 'email'
     | 'editor'
+    | 'checkbox'
 
 // 🔹 Props esperadas por InputForm
 interface InputFormProps {
@@ -39,12 +41,13 @@ interface InputFormProps {
     name: string
     specialConf?: Record<string, unknown>
     required?: boolean
-    valueProp?: string | number
+    valueProp?: string | number | string[] | unknown[] | null
     disabled?: boolean
     styles?: React.CSSProperties
 }
 
 // 🔹 Mapeo de tipo → componente
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const inputComponents: Record<InputType, React.ComponentType<any>> = {
     text: InputText,
     number: InputNumber,
@@ -58,6 +61,7 @@ const inputComponents: Record<InputType, React.ComponentType<any>> = {
     file: InputFile,
     email: InputEmail,
     editor: InputEditorAdvanced,
+    checkbox: InputCheckbox,
 }
 
 const getLocalISODate = () => {
@@ -80,7 +84,10 @@ const InputForm: React.FC<InputFormProps> = ({
     const InputComponent = inputComponents[type]
 
     const validValueProp =
-        type === 'date' && (!valueProp || isNaN(new Date(valueProp).getFullYear()))
+        type === 'date' &&
+        (!valueProp ||
+            Array.isArray(valueProp) ||
+            isNaN(new Date(valueProp as string | number | Date).getFullYear()))
             ? getLocalISODate()
             : valueProp
 

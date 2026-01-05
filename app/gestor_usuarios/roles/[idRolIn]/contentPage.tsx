@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 
 import Swal from 'sweetalert2'
 
-import SaveRoute from '@/components/protectedRoute/saveRoute'
 import ConsumerAPI from '@/components/shared/consumerAPI/consumerAPI'
 import InputForm from '@/components/shared/inputForm/inputForm'
 import MainForm from '@/components/shared/mainForm/mainForm'
@@ -14,87 +13,94 @@ import stylesMainForm from '@/components/shared/mainForm/mainform.module.css'
 import { useAppContext } from '@/context/appContext'
 
 // ---- Interfaces ----
-interface InfoPage {
-    title: string
-    route: string
-}
-
 interface Rol {
     code: string
     name: string
 }
 
+interface RolInData {
+    name: string
+    state: string
+    description: string
+    access_roles: string[]
+    access_level: string
+}
+
 interface InputValues {
+    [key: string]: unknown
     nameRol?: string
     rolState?: string
     rolDescription?: string
     rolesAccess?: string[]
     rolLevelAccess?: string
-    [key: string]: unknown
 }
 
 interface ContentPageProps {
-    infoPage?: InfoPage
+    rolId: string
 }
 
 // ---- Componente principal ----
-const ContentPage: React.FC<ContentPageProps> = ({
-    infoPage = {
-        title: 'Roles institucionales - crear',
-        route: '/gestor_usuarios/roles_institucionales/crear'
-    }
-}) => {
-    // * context
+const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
     const { changeTitle, showNavbar, showLoader } = useAppContext()
-
-    // * hooks
     const router = useRouter()
 
-    // * states
     const [rolsList, setRolsList] = useState<Rol[]>([])
     const [inputValues, setInputValues] = useState<InputValues>({})
 
-    // * effects
     useEffect(() => {
         showLoader(true)
-        if (window.innerWidth <= 1380) {
-            showNavbar(false)
-        } else {
-            showNavbar(true)
-        }
-        changeTitle(infoPage.title)
-        SaveRoute({
-            title: infoPage.title,
-            routeInfo: infoPage.route
-        })
-        loadRols()
+        showNavbar(window.innerWidth > 1380)
+        changeTitle('Roles - editar')
+        loadRoles()
+        loadRoleInfo()
         // eslint-disable-next-line
     }, [])
 
-    // * methods
-    const loadRols = async () => {
+    const loadRoles = async () => {
         const { data, status, message } = await ConsumerAPI({
             url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/roles_usuario`
         })
+        
         if (status === 'error') {
-            console.log(message)
+            console.error(message)
+            return false
+        }
+        
+        setRolsList(data as Rol[])
+    }
+
+    const loadRoleInfo = async () => {
+        const { data, status, message } = await ConsumerAPI({
+            url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/get_roles_institucional/${rolId}`
+        })
+        
+        if (status === 'error') {
+            console.error(message)
             showLoader(false)
             return false
         }
-        setRolsList(data as Rol[])
+        
+        const rolData = data as RolInData
+        setInputValues({
+            nameRol: rolData.name,
+            rolState: rolData.state,
+            rolDescription: rolData.description,
+            rolesAccess: rolData.access_roles,
+            rolLevelAccess: rolData.access_level
+        })
         showLoader(false)
     }
 
-    const onSuccesResponse = () => {
+    const onSuccessResponse = () => {
         Swal.fire({
             icon: 'success',
             title: 'Proceso exitoso',
-            text: 'Se ha creado el rol institucional',
+            text: 'Se ha actualizado el rol',
             timer: 2000,
             showConfirmButton: false,
             timerProgressBar: true
         }).then(() => {
-            router.push('/gestor_usuarios/roles_institucionales')
+            router.push('/gestor_usuarios/roles')
         })
     }
 
@@ -112,7 +118,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
             Swal.fire({
                 icon: 'info',
                 title: 'Opps...',
-                text: 'El campo nombre rol institucional es obligatorio',
+                text: 'El campo nombre rol es obligatorio',
                 showConfirmButton: false,
                 timerProgressBar: true,
                 timer: 2500
@@ -156,18 +162,6 @@ const ContentPage: React.FC<ContentPageProps> = ({
             return false
         }
 
-        if (inputValues.rolDescription.length < 10) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Opps...',
-                text: 'La descripción debe ser mayor a 10 caracteres',
-                showConfirmButton: false,
-                timerProgressBar: true,
-                timer: 2500
-            })
-            return false
-        }
-
         if (!inputValues.rolLevelAccess) {
             Swal.fire({
                 icon: 'info',
@@ -179,17 +173,17 @@ const ContentPage: React.FC<ContentPageProps> = ({
             })
             return false
         }
+        
         return true
     }
 
-    // * renders
     return (
         <div>
             <MainForm
-                submitText="Guardar"
-                url={`${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/crear_rol_institucional`}
-                method="POST"
-                onSuccesResponse={onSuccesResponse}
+                submitText="Actualizar"
+                url={`${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/actualizar_rol_institucional/${rolId}`}
+                method="PUT"
+                onSuccesResponse={onSuccessResponse}
                 onErrorResponse={onErrorResponse}
                 inputsValues={inputValues}
                 onValidate={validateForm}
@@ -197,22 +191,26 @@ const ContentPage: React.FC<ContentPageProps> = ({
             >
                 <section>
                     <div className={stylesMainForm.sectionTitle}>
-                        <h2>Roles institucionales</h2>
+                        <h2>Roles</h2>
                     </div>
                     <div className={stylesMainForm.sectionInputs}>
                         <InputForm
-                            label="Nombre rol institucional*"
+                            label="Nombre rol"
                             name="nameRol"
                             type="text"
+                            valueProp={inputValues.nameRol}
+                            required={true}
                             specialConf={{
                                 setValueState: setInputValues,
                                 valueState: inputValues
                             }}
                         />
                         <InputForm
-                            label="Roles asignados*"
+                            label="Roles asignados"
                             name="rolesAccess"
                             type="multiselect"
+                            valueProp={inputValues.rolesAccess}
+                            required={true}
                             specialConf={{
                                 options: rolsList.map(({ code, name }) => ({ code, name })),
                                 setValueState: setInputValues,
@@ -220,9 +218,11 @@ const ContentPage: React.FC<ContentPageProps> = ({
                             }}
                         />
                         <InputForm
-                            label="Estado*"
+                            label="Estado"
                             name="rolState"
                             type="select"
+                            valueProp={inputValues.rolState}
+                            required={true}
                             specialConf={{
                                 options: [
                                     { code: 'Activo', name: 'Activo' },
@@ -233,9 +233,10 @@ const ContentPage: React.FC<ContentPageProps> = ({
                             }}
                         />
                         <InputForm
-                            label="Descripción*"
+                            label="Descripción"
                             name="rolDescription"
                             type="textarea"
+                            valueProp={inputValues.rolDescription}
                             specialConf={{
                                 setValueState: setInputValues,
                                 valueState: inputValues
@@ -245,6 +246,8 @@ const ContentPage: React.FC<ContentPageProps> = ({
                             label="Nivel de acceso*"
                             name="rolLevelAccess"
                             type="select"
+                            required={true}
+                            valueProp={inputValues.rolLevelAccess}
                             specialConf={{
                                 options: [
                                     { code: 'CENTRO', name: 'CENTRO' },

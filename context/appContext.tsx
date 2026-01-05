@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useReducer, ReactNode } from 'react'
+import React, { useReducer, ReactNode, useCallback } from 'react'
 
 import { initialState } from './appInitialState'
 import { appReducer } from './appReducer'
@@ -16,15 +16,15 @@ interface AppProviderProps {
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [appState, dispatch] = useReducer(appReducer, initialState)
 
-    const changeTitle = (newTitle: string) => dispatch({ type: 'CHANGE_TITLE', newTitle })
-    const changeUserInfo = (newUserInfo: Partial<UserInfo> | UserInfo) =>
-        dispatch({ type: 'CHANGE_USER_INFO', newUserInfo })
-    const changeAuthContext = (newAuthContext: Partial<AuthContextState> | AuthContextState) =>
-        dispatch({ type: 'CHANGE_AUTH_CONTEXT', newAuthContext })
-    const showNavbar = (isActive: boolean) => dispatch({ type: 'SHOW_NAVBAR', isActive })
-    const toggleSidebarCollapse = () => dispatch({ type: 'TOGGLE_SIDEBAR_COLLAPSE' })
-    const toggleTheme = () => dispatch({ type: 'TOGGLE_THEME' })
-    const showLoader = (isActive: boolean) => dispatch({ type: 'SHOW_LOADER', isActive })
+    const changeTitle = useCallback((newTitle: string) => dispatch({ type: 'CHANGE_TITLE', newTitle }), [])
+    const changeUserInfo = useCallback((newUserInfo: Partial<UserInfo> | UserInfo) =>
+        dispatch({ type: 'CHANGE_USER_INFO', newUserInfo }), [])
+    const changeAuthContext = useCallback((newAuthContext: Partial<AuthContextState> | AuthContextState) =>
+        dispatch({ type: 'CHANGE_AUTH_CONTEXT', newAuthContext }), [])
+    const showNavbar = useCallback((isActive: boolean) => dispatch({ type: 'SHOW_NAVBAR', isActive }), [])
+    const toggleSidebarCollapse = useCallback(() => dispatch({ type: 'TOGGLE_SIDEBAR_COLLAPSE' }), [])
+    const toggleTheme = useCallback(() => dispatch({ type: 'TOGGLE_THEME' }), [])
+    const showLoader = useCallback((isActive: boolean) => dispatch({ type: 'SHOW_LOADER', isActive }), [])
 
     return (
         <AppContext.Provider

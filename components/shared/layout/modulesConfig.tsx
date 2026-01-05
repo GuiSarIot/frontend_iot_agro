@@ -1,16 +1,15 @@
 'use client'
 
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import PeopleIcon from '@mui/icons-material/People'
-import DevicesIcon from '@mui/icons-material/Devices'
-import SensorsIcon from '@mui/icons-material/Sensors'
 import AssessmentIcon from '@mui/icons-material/Assessment'
-import SettingsIcon from '@mui/icons-material/Settings'
-import SecurityIcon from '@mui/icons-material/Security'
-import RouterIcon from '@mui/icons-material/Router'
-import VpnKeyIcon from '@mui/icons-material/VpnKey'
-import PersonIcon from '@mui/icons-material/Person'
 import CodeIcon from '@mui/icons-material/Code'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import DevicesIcon from '@mui/icons-material/Devices'
+import PeopleIcon from '@mui/icons-material/People'
+import PersonIcon from '@mui/icons-material/Person'
+import RouterIcon from '@mui/icons-material/Router'
+import SecurityIcon from '@mui/icons-material/Security'
+import SensorsIcon from '@mui/icons-material/Sensors'
+import VpnKeyIcon from '@mui/icons-material/VpnKey'
 
 import { SidebarMenuItem } from './SidebarMenu'
 
@@ -86,8 +85,8 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         permissions: ['gestionar_roles'],
         icon: <SecurityIcon />,
         label: 'Roles',
-        href: '/gestor_usuarios/roles_institucionales',
-        description: 'Gestión de roles institucionales',
+        href: '/gestor_usuarios/roles',
+        description: 'Gestión de roles',
         priority: 8
     },
     permisos: {
@@ -169,10 +168,10 @@ export const getAvailableModules = (userPermissions: string[]): SidebarMenuItem[
  * @returns true si tiene acceso, false en caso contrario
  */
 export const hasModuleAccess = (moduleKey: string, userPermissions: string[]): boolean => {
-    const module = MODULES_CONFIG[moduleKey]
-    if (!module || !Array.isArray(userPermissions)) {
+    const moduleConfig = MODULES_CONFIG[moduleKey]
+    if (!moduleConfig || !Array.isArray(userPermissions)) {
         return false
     }
 
-    return module.permissions.some(permission => userPermissions.includes(permission))
+    return moduleConfig.permissions.some(permission => userPermissions.includes(permission))
 }

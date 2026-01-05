@@ -11,7 +11,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import { FilterMatchMode } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
+import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
+import { Tooltip } from 'primereact/tooltip'
 import Swal from 'sweetalert2'
 
 import GetRoute from '@/components/protectedRoute/getRoute'
@@ -37,6 +39,7 @@ interface User {
     userCenter: string
     centerName: string
     userCode: string
+    isActive: boolean
     [key: string]: unknown
 }
 
@@ -46,6 +49,7 @@ interface BackendUser {
     last_name: string
     email: string
     username?: string
+    is_active?: boolean
     rol_detail?: {
         nombre: string
         nombre_display: string
@@ -167,6 +171,7 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                     userCenter: user.rol_detail?.nombre || 'Sin rol',
                     centerName: user.rol_detail?.nombre || 'Sin rol',
                     userCode: user.id?.toString() || '',
+                    isActive: user.is_active ?? true,
                     ...user
                 }
             }) : []
@@ -238,7 +243,7 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                 }
 
                 const { status, message } = await consumerPublicAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/users/${idRow}/`,
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/${idRow}/`,
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -269,6 +274,82 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
         })
     }
 
+    const handleToggleActive = async (userId: string, currentStatus: boolean) => {
+        const action = currentStatus ? 'desactivar' : 'activar'
+        const endpoint = currentStatus ? 'deactivate' : 'activate'
+
+        const result = await Swal.fire({
+            title: `¿${action.charAt(0).toUpperCase() + action.slice(1)} usuario?`,
+            text: `Está a punto de ${action} este usuario`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--primary)',
+            cancelButtonColor: 'var(--text-color-secondary)',
+            confirmButtonText: `Sí, ${action}`,
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (result.isConfirmed) {
+            showLoader(true)
+
+            try {
+                const { token } = await GetRoute()
+
+                if (!token || token === 'false') {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Sesión expirada. Por favor inicia sesión nuevamente.',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                    showLoader(false)
+                    return
+                }
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/${endpoint}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                showLoader(false)
+
+                if (!response.ok) {
+                    const errorData = await response.json()
+                    Swal.fire({
+                        title: 'Error',
+                        text: errorData.detail || `No se pudo ${action} el usuario`,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                    return
+                }
+
+                await loadUsers()
+
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: `Usuario ${action}do correctamente`,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                })
+            } catch (error) {
+                showLoader(false)
+                console.error(`Error al ${action} usuario:`, error)
+                Swal.fire({
+                    title: 'Error',
+                    text: `Ocurrió un error al ${action} el usuario`,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+            }
+        }
+    }
+
     // * renders
     const header = () => {
         return (
@@ -292,6 +373,26 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                     <DeleteIcon />
                 </button>
             </div>
+        )
+    }
+
+    const renderActiveStatus = (rowData: User) => {
+        const tooltipId = `switch-${rowData.userCode}`
+        const tooltipText = rowData.isActive ? 'Desactivar usuario' : 'Activar usuario'
+        const switchClass = rowData.isActive ? 'user-switch-active' : 'user-switch-inactive'
+        
+        return (
+            <>
+                <InputSwitch 
+                    id={tooltipId}
+                    checked={rowData.isActive}
+                    onChange={() => handleToggleActive(rowData.userCode, rowData.isActive)}
+                    data-pr-tooltip={tooltipText}
+                    data-pr-position="top"
+                    className={switchClass}
+                />
+                <Tooltip target={`#${tooltipId}`} />
+            </>
         )
     }
 
@@ -320,18 +421,24 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                     globalFilterFields={['userName', 'userLastName', 'userEmailInstitutional']}
                     onFilter={(e) => setFilters(e.filters as FilterState)}
                 >
-                    <Column field="userNumDoc" header="Num. doc" />
+                    <Column field="userNumDoc" header="ID" />
                     <Column field="userName" header="Nombres" />
                     <Column field="userLastName" header="Apellidos" />
                     <Column field="userEmailInstitutional" header="Correo" />
                     <Column
                         field="centerName"
-                        header="Centro"
-                        body={rowData => `${rowData.userCenter} - ${rowData.centerName}`}
+                        header="Rol"
+                        body={rowData => rowData.centerName}
+                    />
+                    <Column
+                        header="Estado"
+                        body={renderActiveStatus}
+                        style={{ width: '100px', textAlign: 'center' }}
                     />
                     <Column
                         header="Acciones"
                         body={rowData => renderActions(rowData.userCode)}
+                        style={{ width: '120px' }}
                     />
                 </DataTable>
             </div>
