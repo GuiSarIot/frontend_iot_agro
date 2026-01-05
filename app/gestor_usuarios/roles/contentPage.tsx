@@ -24,6 +24,30 @@ import { useAppContext } from '@/context/appContext'
 import stylesPage from './contentPage.module.css'
 
 // ---- Interfaces ----
+interface Permiso {
+    id: number
+    nombre: string
+    codigo: string
+    descripcion: string
+    created_at: string
+}
+
+interface RolFromBackend {
+    id: number
+    nombre: string
+    descripcion: string
+    permisos: Permiso[]
+    created_at: string
+    updated_at: string
+}
+
+interface RolesApiResponse {
+    count: number
+    next: string | null
+    previous: string | null
+    results: RolFromBackend[]
+}
+
 interface InstitutionalRole {
     code: string
     name: string
@@ -34,6 +58,7 @@ interface InstitutionalRole {
     users_count?: number
     assigned_users?: Array<{ username: string; full_name: string }>
 }
+
 
 // ---- Componente principal ----
 const ContentPage: React.FC = () => {
@@ -70,77 +95,9 @@ const ContentPage: React.FC = () => {
 
     const loadRolesData = async () => {
         try {
-            // TODO: Reemplazar con llamada real al API cuando el endpoint esté disponible
-            // const { data, status, message } = await ConsumerAPI({
-            //     url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/get_roles_institucionales`
-            // })
-            
-            // DATOS DE PRUEBA - Remover cuando el backend esté listo
-            const mockData: InstitutionalRole[] = [
-                {
-                    code: 'ROL001',
-                    name: 'Administrador General',
-                    description: 'Rol con acceso completo al sistema, puede gestionar todos los módulos y usuarios',
-                    state: 'Activo',
-                    access_level: 'ROOT',
-                    access_roles: ['gestionar_usuarios', 'gestionar_dispositivos', 'gestionar_sensores'],
-                    users_count: 3,
-                    assigned_users: [
-                        { username: 'admin', full_name: 'Super Admin 2' },
-                        { username: 'jperez', full_name: 'Juan Pérez' },
-                        { username: 'mrodriguez', full_name: 'María Rodríguez' }
-                    ]
-                },
-                {
-                    code: 'ROL002',
-                    name: 'Supervisor de Campo',
-                    description: 'Rol para supervisores que gestionan operadores y dispositivos en campo',
-                    state: 'Activo',
-                    access_level: 'SUPERVISOR',
-                    access_roles: ['ver_dispositivos', 'asignar_operadores', 'ver_sensores'],
-                    users_count: 5,
-                    assigned_users: [
-                        { username: 'cgomez', full_name: 'Carlos Gómez' },
-                        { username: 'amartinez', full_name: 'Ana Martínez' },
-                        { username: 'lsanchez', full_name: 'Luis Sánchez' },
-                        { username: 'plopez', full_name: 'Patricia López' },
-                        { username: 'rgarcia', full_name: 'Roberto García' }
-                    ]
-                },
-                {
-                    code: 'ROL003',
-                    name: 'Operador',
-                    description: 'Rol básico para operadores que solo pueden ver y crear lecturas',
-                    state: 'Activo',
-                    access_level: 'OPERADOR',
-                    access_roles: ['ver_lecturas', 'crear_lecturas'],
-                    users_count: 0,
-                    assigned_users: []
-                },
-                {
-                    code: 'ROL004',
-                    name: 'Técnico de Mantenimiento',
-                    description: 'Rol para técnicos que gestionan el mantenimiento de dispositivos',
-                    state: 'Inactivo',
-                    access_level: 'TECNICO',
-                    access_roles: ['ver_dispositivos', 'gestionar_dispositivos'],
-                    users_count: 2,
-                    assigned_users: [
-                        { username: 'fhernandez', full_name: 'Fernando Hernández' },
-                        { username: 'dmorales', full_name: 'Diana Morales' }
-                    ]
-                }
-            ]
-
-            console.log('Roles cargados (MOCK):', mockData)
-            setListRolIn(mockData)
-            setFilteredRoles(mockData)
-            showLoader(false)
-            
-            // Descomentar cuando el endpoint esté listo:
-            /*
+            showLoader(true)
             const { data, status, message } = await ConsumerAPI({
-                url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/get_roles_institucionales`
+                url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/`
             })
             
             if (status === 'error') {
@@ -148,19 +105,36 @@ const ContentPage: React.FC = () => {
                 showLoader(false)
                 Swal.fire({
                     title: 'Error al cargar roles',
-                    text: message || 'No se pudieron cargar los roles institucionales',
+                    text: message || 'No se pudieron cargar los roles',
                     icon: 'error',
                     confirmButtonText: 'Aceptar'
                 })
                 return false
             }
             
-            const roles = data as InstitutionalRole[]
-            console.log('Roles cargados:', roles)
-            setListRolIn(roles || [])
-            setFilteredRoles(roles || [])
+            // Extraer el array de results de la respuesta paginada
+            const apiResponse = data as RolesApiResponse
+            const rolesFromBackend = apiResponse?.results || []
+            
+            console.log('Roles cargados desde backend:', rolesFromBackend)
+
+            // Transformar los roles del backend al formato esperado por el frontend
+            const rolesTransformed: InstitutionalRole[] = rolesFromBackend.map(rol => ({
+                code: String(rol.id),
+                name: rol.nombre,
+                description: rol.descripcion,
+                state: 'Activo', // Por defecto, ajustar según el backend si tiene este campo
+                access_level: 'OPERADOR', // Ajustar según lógica de tu backend
+                access_roles: rol.permisos?.map(p => p.codigo) || [],
+                users_count: 0, // Ajustar si el backend incluye este dato
+                assigned_users: [] // Ajustar si el backend incluye este dato
+            }))
+            
+            console.log('Roles transformados:', rolesTransformed)
+            setListRolIn(rolesTransformed)
+            setFilteredRoles(rolesTransformed)
             showLoader(false)
-            */
+            
         } catch (error) {
             console.error('Error en loadRolesData:', error)
             showLoader(false)
@@ -240,7 +214,7 @@ const ContentPage: React.FC = () => {
             const usersList = rol.assigned_users && rol.assigned_users.length > 0
                 ? `<ul style="text-align: left; margin-top: 10px;">
                     ${rol.assigned_users.map(user => `<li>${user.full_name} (${user.username})</li>`).join('')}
-                   </ul>`
+                </ul>`
                 : ''
 
             Swal.fire({
@@ -259,8 +233,8 @@ const ContentPage: React.FC = () => {
             text: 'No podrás revertir los cambios',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: 'var(--text-color-secondary)',
-            cancelButtonColor: 'var(--border-color-secondary)',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, borrar',
             cancelButtonText: 'Cancelar',
             focusCancel: true
@@ -280,7 +254,7 @@ const ContentPage: React.FC = () => {
                 })
 
                 const { status } = await ConsumerAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/deleteRecordRol/${rol.code}`,
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/${rol.code}/`,
                     method: 'DELETE'
                 })
 
@@ -444,16 +418,14 @@ const ContentPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className={stylesPage.rolesMainContainer}>
-                    <div className={stylesPage.cardsContainer}>
-                        {filteredRoles.length > 0 ? (
-                            filteredRoles.map(role => renderRoleCard(role))
-                        ) : (
-                            <div className={stylesPage.emptyState}>
-                                <p>No se encontraron roles</p>
-                            </div>
-                        )}
-                    </div>
+                <div className={stylesPage.cardsContainer}>
+                    {filteredRoles.length > 0 ? (
+                        filteredRoles.map(role => renderRoleCard(role))
+                    ) : (
+                        <div className={stylesPage.emptyState}>
+                            <p>No se encontraron roles</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Modal de Usuarios */}

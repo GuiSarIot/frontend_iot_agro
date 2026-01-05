@@ -96,7 +96,7 @@
 
 .formInput:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
 }
 
@@ -121,7 +121,7 @@
 
 .formTextarea:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
 }
 
@@ -145,13 +145,168 @@
 
 .formSelect:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
 }
 
 .formInputWrapper {
     width: 100%;
     max-width: min(600px, 100%);
+}
+
+/* Estilos para el multiselect */
+.formGroup :global(.p-multiselect) {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    background: var(--background-color-secondary);
+}
+
+.formGroup :global(.p-multiselect:not(.p-disabled):hover) {
+    border-color: var(--primary);
+}
+
+.formGroup :global(.p-multiselect:not(.p-disabled).p-focus) {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formGroup :global(.p-multiselect .p-multiselect-label) {
+    padding: 0.625rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+}
+
+.formGroup :global(.p-multiselect .p-multiselect-label.p-placeholder) {
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+}
+
+.formGroup :global(.p-multiselect .p-multiselect-trigger) {
+    width: 2.5rem;
+    color: var(--text-color-secondary);
+}
+
+.formGroup :global(.p-multiselect-panel) {
+    background: var(--background-color-secondary);
+    border: 1px solid var(--border-color-primary);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 4px;
+    min-width: 250px;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-header) {
+    padding: 1rem 1rem;
+    border-bottom: 1px solid var(--border-color-primary);
+    background: var(--background-color-secondary);
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-filter-container) {
+    position: relative;
+    margin: 0;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-filter) {
+    width: 100%;
+    padding: 0.75rem 2.75rem 0.75rem 1rem;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background: var(--background-color-secondary);
+    color: var(--text-color-primary);
+    transition: all 0.2s ease;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-filter:focus) {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-filter::placeholder) {
+    color: var(--text-color-secondary);
+    opacity: 0.5;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-filter-icon) {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-items-wrapper) {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-items) {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item) {
+    padding: 0.875rem 1.25rem;
+    margin: 0.125rem 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover) {
+    background: var(--hover-color, rgba(0, 168, 107, 0.08));
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item.p-highlight) {
+    background: rgba(0, 168, 107, 0.15);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item .p-checkbox) {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item .p-checkbox .p-checkbox-box) {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color-primary);
+    border-radius: 3px;
+    background: var(--background-color-secondary);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-item .p-checkbox .p-checkbox-box.p-highlight) {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-empty-message) {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.formGroup :global(.p-multiselect-panel .p-multiselect-close) {
+    display: none;
 }
 
 /* Botón de submit */
@@ -351,6 +506,33 @@
     font-size: 20px;
 }
 
+/* Estilos específicos para permisos */
+.permisoBadge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(255, 111, 0, 0.15) 100%);
+    color: #FF9800;
+    border-radius: 16px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.codeValue {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: var(--font-family-mono, 'Courier New', monospace);
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+[data-theme='dark'] .codeValue {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .contentLayout {
@@ -419,5 +601,3 @@
         font-size: 1.75rem;
     }
 }
-
-.content {}

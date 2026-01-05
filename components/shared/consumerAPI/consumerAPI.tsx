@@ -54,6 +54,25 @@ const ConsumerAPI = async <T = unknown>({
             }
         }
 
+        // Manejar respuestas sin contenido (204 No Content)
+        if (request.status === 204 || request.headers.get('content-length') === '0') {
+            return {
+                status: 'success',
+                message: 'Request successful',
+                data: {} as T
+            }
+        }
+
+        // Intentar parsear JSON solo si hay contenido
+        const contentType = request.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+            return {
+                status: 'success',
+                message: 'Request successful',
+                data: {} as T
+            }
+        }
+
         const response = await request.json()
         
         // Si la respuesta ya tiene un campo 'status', úsala tal cual

@@ -20,12 +20,12 @@ import styles from './contentPage.module.css'
 
 // ---- Interfaces ----
 interface Rol {
-    code: string
+    code: string | number
     name: string
 }
 
 interface InputValues {
-    nameRol: string
+    nombre: string
     rolState: string
     rolDescription: string
     rolesAccess: Rol[]
@@ -55,7 +55,7 @@ const ContentPage: React.FC = () => {
         rolesAccess: []
     })
     const [inputValues, setInputValues] = useState<InputValues>({
-        nameRol: '',
+        nombre: '',
         rolState: 'Activo',
         rolDescription: '',
         rolesAccess: [],
@@ -65,7 +65,7 @@ const ContentPage: React.FC = () => {
     useEffect(() => {
         showLoader(true)
         showNavbar(window.innerWidth > 1380)
-        changeTitle('Roles Institucionales - Crear')
+        changeTitle('Roles - Crear')
         loadRoles()
         // eslint-disable-next-line
     }, [])
@@ -85,14 +85,14 @@ const ContentPage: React.FC = () => {
             showLoader(true)
             
             const { data, status, message } = await ConsumerAPI({
-                url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/`
+                url: `${process.env.NEXT_PUBLIC_API_URL}/api/permisos/`
             })
 
             if (status === 'error') {
                 console.error('Error del servidor:', message)
                 Swal.fire({
                     title: 'Error',
-                    text: message || 'No se pudieron cargar los roles disponibles',
+                    text: message || 'No se pudieron cargar los permisos disponibles',
                     icon: 'error'
                 })
                 showLoader(false)
@@ -103,22 +103,22 @@ const ContentPage: React.FC = () => {
             const apiResponse = data as RolesAPIResponse | RolFromAPI[]
             const rolesData = Array.isArray(apiResponse) ? apiResponse : (apiResponse.results || [])
             
-            // Transformar los roles al formato esperado por el multiselect
+            // Transformar los permisos al formato esperado por el multiselect
             const rolesFormatted: Rol[] = Array.isArray(rolesData) 
-                ? rolesData.map((rol: RolFromAPI) => ({
-                    code: String(rol.id),
-                    name: rol.nombre || rol.name || ''
+                ? rolesData.map((permiso: RolFromAPI) => ({
+                    code: String(permiso.id),
+                    name: permiso.nombre || permiso.name || ''
                 }))
                 : []
             
-            console.log('Roles cargados:', rolesFormatted)
+            console.log('Permisos cargados:', rolesFormatted)
             setRolsList(rolesFormatted)
             showLoader(false)
         } catch (error) {
-            console.error('Error al cargar los roles:', error)
+            console.error('Error al cargar los permisos:', error)
             Swal.fire({
                 title: 'Error',
-                text: 'No se pudieron cargar los roles disponibles',
+                text: 'No se pudieron cargar los permisos disponibles',
                 icon: 'error'
             })
             showLoader(false)
@@ -148,7 +148,7 @@ const ContentPage: React.FC = () => {
     }
 
     const validateForm = () => {
-        if (!inputValues.nameRol || inputValues.nameRol.trim() === '') {
+        if (!inputValues.nombre || inputValues.nombre.trim() === '') {
             Swal.fire({
                 icon: 'warning',
                 title: 'Error en las validaciones',
@@ -214,10 +214,10 @@ const ContentPage: React.FC = () => {
     const prepareDataAndSubmit = async () => {
         // Preparar los datos
         const dataToSend = {
-            nameRol: inputValues.nameRol,
+            nombre: inputValues.nombre,
             rolState: inputValues.rolState,
             rolDescription: inputValues.rolDescription,
-            rolesAccess: inputValues.rolesAccess.map(rol => rol.code),
+            rolesAccess: inputValues.rolesAccess.map(rol => String(rol.code)),
             rolLevelAccess: inputValues.rolLevelAccess
         }
 
@@ -244,7 +244,7 @@ const ContentPage: React.FC = () => {
                 return
             }
 
-            const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/crear_rol_institucional`, {
+            const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -292,7 +292,7 @@ const ContentPage: React.FC = () => {
         <div className={styles.contentLayout}>
             {/* Panel izquierdo - Formulario */}
             <div className={styles.formPanel}>
-                <h2 className={styles.sectionTitle}>Crear nuevo rol institucional</h2>
+                <h2 className={styles.sectionTitle}>Crear nuevo rol </h2>
                 <p className={styles.sectionDescription}>
                     <strong>Nota:</strong> Configure los permisos, nivel de acceso y demás información del rol.
                 </p>
@@ -300,17 +300,17 @@ const ContentPage: React.FC = () => {
                 <form className={styles.createForm} onSubmit={handleSubmit}>
                     {/* Nombre del rol */}
                     <div className={styles.formGroup}>
-                        <label htmlFor="nameRol" className={styles.formLabel}>
+                        <label htmlFor="nombre" className={styles.formLabel}>
                             Nombre del rol*
                             <span className={styles.labelSubtext}>Nombre descriptivo del rol</span>
                         </label>
                         <input
                             type="text"
-                            id="nameRol"
+                            id="nombre"
                             required
                             className={styles.formInput}
-                            value={inputValues.nameRol}
-                            onChange={(e) => setInputValues({ ...inputValues, nameRol: e.target.value })}
+                            value={inputValues.nombre}
+                            onChange={(e) => setInputValues({ ...inputValues, nombre: e.target.value })}
                             placeholder="Ej: Administrador de Sistema"
                         />
                     </div>
@@ -394,7 +394,7 @@ const ContentPage: React.FC = () => {
 
                     <div className={styles.formActions}>
                         <button type="submit" className={styles.submitButton}>
-                            Crear rol institucional
+                            Crear rol
                         </button>
                     </div>
                 </form>
@@ -409,13 +409,13 @@ const ContentPage: React.FC = () => {
                         </div>
                     </div>
                     <div className={styles.roleBadge}>
-                        ROL INSTITUCIONAL
+                        ROL
                     </div>
                 </div>
 
                 <div className={styles.previewInfo}>
                     <h3 className={styles.previewName}>
-                        {inputValues.nameRol || 'Nuevo Rol'}
+                        {inputValues.nombre || 'Nuevo Rol'}
                     </h3>
 
                     <div className={styles.previewDetails}>

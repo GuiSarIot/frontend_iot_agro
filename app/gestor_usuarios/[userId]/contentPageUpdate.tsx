@@ -84,7 +84,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
     // * methods
     const loadRolsIn = async () => {
         const { data, status, message } = await ConsumerAPI({
-            url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/get_roles_institucionales`
+            url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/get_roles_`
         })
 
         if (status === 'error') {
@@ -108,7 +108,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
 
     const handleDelete = (idRow: string) => {
         Swal.fire({
-            title: '¿Estas seguro de eliminar este rol institucional?',
+            title: '¿Estas seguro de eliminar este rol?',
             text: 'No podrás revertir los cambios',
             icon: 'warning',
             showCancelButton: true,
@@ -120,7 +120,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
         }).then(async (result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Eliminando rol institucional...',
+                    title: 'Eliminando rol ...',
                     text: 'Espere un momento por favor',
                     icon: 'info',
                     didOpen: () => {
@@ -140,7 +140,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
                 if (status === 'error') {
                     Swal.fire({
                         title: 'Error',
-                        text: 'No se pudo eliminar el rol institucional',
+                        text: 'No se pudo eliminar el rol ',
                         icon: 'error',
                         showConfirmButton: false,
                         timer: 2000,
@@ -152,8 +152,8 @@ const ContentPage: React.FC<ContentPageProps> = ({
                 loadRolsIn()
 
                 Swal.fire({
-                    title: 'Rol institucional eliminado',
-                    text: 'El rol institucional se ha eliminado correctamente',
+                    title: 'Rol eliminado',
+                    text: 'El rol se ha eliminado correctamente',
                     icon: 'success',
                     showConfirmButton: false,
                     timer: 2000,

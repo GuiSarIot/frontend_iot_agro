@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react'
 
+import LockIcon from '@mui/icons-material/Lock'
 import PeopleIcon from '@mui/icons-material/People'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import SecurityIcon from '@mui/icons-material/Security'
@@ -33,6 +34,12 @@ const menuItems = [
         label: 'Roles',
         href: '/gestor_usuarios/roles',
         title: 'Gestión de Roles'
+    },  
+    {
+        icon: <LockIcon />,
+        label: 'Permisos',
+        href: '/gestor_usuarios/permisos',
+        title: 'Gestión de Permisos'
     }
 ]
 
