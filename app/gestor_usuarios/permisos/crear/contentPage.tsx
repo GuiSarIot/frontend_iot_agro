@@ -87,13 +87,13 @@ const ContentPage: React.FC = () => {
             return false
         }
 
-        // Validar formato del código (solo letras mayúsculas, números y guiones bajos)
-        const codigoRegex = /^[A-Z0-9_]+$/
+        // Validar formato del código (letras, números y guiones bajos)
+        const codigoRegex = /^[a-zA-Z0-9_]+$/
         if (!codigoRegex.test(inputValues.codigoPermiso)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Error en las validaciones',
-                text: 'El código debe contener solo letras mayúsculas, números y guiones bajos',
+                text: 'El código debe contener solo letras, números y guiones bajos',
                 confirmButtonText: 'Aceptar'
             })
             return false
@@ -193,9 +193,9 @@ const ContentPage: React.FC = () => {
         await prepareDataAndSubmit()
     }
 
-    // Función para convertir a mayúsculas y reemplazar espacios por guiones bajos
+    // Función para reemplazar espacios por guiones bajos
     const handleCodigoChange = (value: string) => {
-        const formattedValue = value.toUpperCase().replace(/\s+/g, '_')
+        const formattedValue = value.replace(/\s+/g, '_')
         setInputValues({ ...inputValues, codigoPermiso: formattedValue })
     }
 
@@ -230,7 +230,7 @@ const ContentPage: React.FC = () => {
                     <div className={styles.formGroup}>
                         <label htmlFor="codigoPermiso" className={styles.formLabel}>
                             Código*
-                            <span className={styles.labelSubtext}>Código único (mayúsculas, números, guiones bajos)</span>
+                            <span className={styles.labelSubtext}>Código único (letras, números, guiones bajos)</span>
                         </label>
                         <input
                             type="text"
@@ -239,7 +239,7 @@ const ContentPage: React.FC = () => {
                             className={styles.formInput}
                             value={inputValues.codigoPermiso}
                             onChange={(e) => handleCodigoChange(e.target.value)}
-                            placeholder="Ej: VER_USUARIOS"
+                            placeholder="Ej: ver_usuarios"
                         />
                     </div>
 

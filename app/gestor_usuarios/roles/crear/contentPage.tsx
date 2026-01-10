@@ -215,11 +215,12 @@ const ContentPage: React.FC = () => {
         // Preparar los datos
         const dataToSend = {
             nombre: inputValues.nombre,
-            rolState: inputValues.rolState,
-            rolDescription: inputValues.rolDescription,
-            rolesAccess: inputValues.rolesAccess.map(rol => String(rol.code)),
-            rolLevelAccess: inputValues.rolLevelAccess
+            descripcion: inputValues.rolDescription,
+            is_active: inputValues.rolState === 'Activo',
+            permisos_ids: inputValues.rolesAccess.map(rol => parseInt(String(rol.code)))
         }
+        
+        console.log('Datos a enviar:', dataToSend)
 
         // Mostrar loader
         Swal.fire({

@@ -17,6 +17,7 @@ const RecuperarContrasena: React.FC = () => {
 
     // Forzar tema claro en la página de recuperar contraseña
     useEffect(() => {
+        document.title = 'Recuperar Contraseña - IOTCorp'
         document.documentElement.setAttribute('data-theme', 'light')
         return () => {
             // Restaurar el tema guardado al salir

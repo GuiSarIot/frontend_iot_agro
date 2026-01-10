@@ -23,6 +23,7 @@ interface PermisoFromBackend {
     nombre: string
     codigo: string
     descripcion: string
+    is_active: boolean
 }
 
 interface InputValues {
@@ -75,11 +76,13 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             
             const permisoData = data as PermisoFromBackend
             
+            console.log('Datos del permiso recibidos:', permisoData)
+            
             setInputValues({
                 nombrePermiso: permisoData.nombre || '',
                 codigoPermiso: permisoData.codigo || '',
                 descripcionPermiso: permisoData.descripcion || '',
-                estadoPermiso: 'Activo'
+                estadoPermiso: permisoData.is_active ? 'Activo' : 'Inactivo'
             })
             
             showLoader(false)
@@ -137,12 +140,12 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             return false
         }
 
-        const codigoRegex = /^[A-Z0-9_]+$/
+        const codigoRegex = /^[a-zA-Z0-9_]+$/
         if (!codigoRegex.test(inputValues.codigoPermiso)) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Error en las validaciones',
-                text: 'El código debe contener solo letras mayúsculas, números y guiones bajos',
+                text: 'El código debe contener solo letras, números y guiones bajos',
                 confirmButtonText: 'Aceptar'
             })
             return false
@@ -175,8 +178,11 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
         const dataToSend = {
             nombre: inputValues.nombrePermiso,
             codigo: inputValues.codigoPermiso,
-            descripcion: inputValues.descripcionPermiso
+            descripcion: inputValues.descripcionPermiso,
+            is_active: inputValues.estadoPermiso === 'Activo'
         }
+        
+        console.log('Datos a enviar:', dataToSend)
 
         Swal.fire({
             title: 'Actualizando...',
@@ -201,7 +207,7 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             }
 
             const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/permisos/${permisoId.idPermiso}/`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
@@ -210,11 +216,13 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             })
 
             const jsonResponse = await request.json()
+            
+            console.log('Respuesta del servidor:', jsonResponse)
 
             Swal.close()
 
             if (!request.ok) {
-                const errorMessage = jsonResponse.detail || jsonResponse.message || 'Error al actualizar el permiso'
+                const errorMessage = jsonResponse.detail || jsonResponse.error || jsonResponse.message || 'Error al actualizar el permiso'
                 onErrorResponse(errorMessage)
                 return
             }
@@ -243,7 +251,7 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
     }
 
     const handleCodigoChange = (value: string) => {
-        const formattedValue = value.toUpperCase().replace(/\s+/g, '_')
+        const formattedValue = value.replace(/\s+/g, '_')
         setInputValues({ ...inputValues, codigoPermiso: formattedValue })
     }
 
@@ -278,7 +286,7 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
                     <div className={styles.formGroup}>
                         <label htmlFor="codigoPermiso" className={styles.formLabel}>
                             Código*
-                            <span className={styles.labelSubtext}>Código único (mayúsculas, números, guiones bajos)</span>
+                            <span className={styles.labelSubtext}>Código único (letras, números, guiones bajos)</span>
                         </label>
                         <input
                             type="text"
@@ -287,7 +295,7 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
                             className={styles.formInput}
                             value={inputValues.codigoPermiso}
                             onChange={(e) => handleCodigoChange(e.target.value)}
-                            placeholder="Ej: VER_USUARIOS"
+                            placeholder="Ej: ver_usuarios"
                         />
                     </div>
 

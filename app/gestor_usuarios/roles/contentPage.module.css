@@ -21,15 +21,76 @@
 
 .searchContainer {
     flex: 1;
-    max-width: 500px;
+    max-width: 600px;
+}
+
+.searchWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    color: var(--text-color-tertiary);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .searchInput {
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid var(--border-color-secondary);
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 12px 45px 12px 45px !important;
+    border: 2px solid var(--border-color-primary) !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    background: var(--background-color-primary) !important;
+    color: var(--text-color-primary) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.searchInput:hover {
+    border-color: var(--primary-500) !important;
+    box-shadow: 0 4px 8px rgba(63, 173, 50, 0.1) !important;
+}
+
+.searchInput:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.15) !important;
+}
+
+.searchInput::placeholder {
+    color: var(--text-color-tertiary);
+}
+
+.clearButton {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-color-tertiary);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clearButton:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-color-primary);
+}
+
+.clearButton:active {
+    transform: scale(0.95);
 }
 
 .btnNewRolin {
@@ -40,7 +101,7 @@
     text-decoration: none;
     color: white;
     padding: 10px 24px;
-    background: linear-gradient(135deg, var(--text-color-secondary) 0%, #2c7a4d 100%);
+    background: linear-gradient(135deg, #3fad32 0%, #2c7a4d 100%);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -50,12 +111,12 @@
     gap: 8px;
     font-weight: 600;
     font-size: 14px;
-    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    box-shadow: 0 4px 12px rgba(63, 173, 50, 0.3);
 }
 
 .btnNewRolin a:hover {
-    background: linear-gradient(135deg, #2c7a4d 0%, var(--text-color-secondary) 100%);
-    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+    background: linear-gradient(135deg, #2c7a4d 0%, #3fad32 100%);
+    box-shadow: 0 6px 16px rgba(63, 173, 50, 0.4);
     transform: translateY(-2px);
 }
 
@@ -189,12 +250,12 @@
 }
 
 .actionBtnToggleActive {
-    color: #2e7d32;
+    color: #3fad32;
 }
 
 .actionBtnToggleActive:hover {
     background-color: #e8f5e9;
-    color: #1b5e20;
+    color: #2c7a4d;
 }
 
 .actionBtnToggleInactive {
@@ -283,9 +344,9 @@
     justify-content: center;
     gap: 6px;
     padding: 8px 14px;
-    background-color: var(--text-color-secondary);
-    color: white;
-    border: none;
+    background-color: #ffffff !important;
+    color: #3fad32 !important;
+    border: 2px solid #3fad32 !important;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
@@ -295,8 +356,11 @@
     white-space: nowrap;
 }
 
-.viewDetailBtn:hover:not(:disabled) {
-    background-color: #2c7a4d;
+.viewDetailBtn:hover:not(:disabled),
+.viewDetailBtn:focus:not(:disabled) {
+    background-color: #3fad32 !important;
+    color: #ffffff !important;
+    border-color: #3fad32 !important;
     transform: translateY(-1px);
     box-shadow: 0 3px 10px rgba(46, 125, 50, 0.3);
 }
@@ -304,7 +368,9 @@
 .viewDetailBtn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
-    background-color: #999;
+    background-color: #f5f5f5 !important;
+    color: #999 !important;
+    border-color: #ccc !important;
 }
 
 .viewDetailBtn svg {
@@ -368,9 +434,9 @@
     justify-content: center;
     gap: 8px;
     padding: 10px 18px;
-    background-color: var(--text-color-secondary);
-    color: white;
-    border: none;
+    background-color: #ffffff !important;
+    color: #3fad32 !important;
+    border: 2px solid #3fad32 !important;
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
@@ -379,8 +445,11 @@
     width: 100%;
 }
 
-.viewUsersBtn:hover {
-    background-color: #2c7a4d;
+.viewUsersBtn:hover,
+.viewUsersBtn:focus {
+    background-color: #3fad32 !important;
+    color: #ffffff !important;
+    border-color: #3fad32 !important;
     transform: translateY(-1px);
     box-shadow: 0 3px 10px rgba(46, 125, 50, 0.3);
 }

@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import GroupIcon from '@mui/icons-material/Group'
 import LockIcon from '@mui/icons-material/Lock'
 import PersonIcon from '@mui/icons-material/Person'
+import SearchIcon from '@mui/icons-material/Search'
 import SecurityIcon from '@mui/icons-material/Security'
 import ToggleOffIcon from '@mui/icons-material/ToggleOff'
 import ToggleOnIcon from '@mui/icons-material/ToggleOn'
@@ -36,6 +37,7 @@ interface RolFromBackend {
     id: number
     nombre: string
     descripcion: string
+    is_active: boolean
     permisos: Permiso[]
     created_at: string
     updated_at: string
@@ -57,6 +59,23 @@ interface InstitutionalRole {
     access_roles: string[]
     users_count?: number
     assigned_users?: Array<{ username: string; full_name: string }>
+}
+
+interface UsuarioFromBackend {
+    username?: string
+    email?: string
+    full_name?: string
+    nombre?: string
+    first_name?: string
+    last_name?: string
+}
+
+interface UsuariosRolResponse {
+    rol?: string
+    total_usuarios?: number
+    usuarios_activos?: number
+    usuarios_inactivos?: number
+    usuarios?: UsuarioFromBackend[]
 }
 
 
@@ -81,14 +100,26 @@ const ContentPage: React.FC = () => {
     }, [])
 
     useEffect(() => {
+        console.log('=== FILTRO DE ROLES ===')
+        console.log('Término de búsqueda:', searchTerm)
+        console.log('Total de roles:', listRolIn.length)
+        
         if (searchTerm.trim() === '') {
+            console.log('Sin filtro - mostrando todos los roles')
             setFilteredRoles(listRolIn)
         } else {
-            const filtered = listRolIn.filter(role => 
-                role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                role.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                role.access_level.toLowerCase().includes(searchTerm.toLowerCase())
-            )
+            const searchLower = searchTerm.toLowerCase().trim()
+            const filtered = listRolIn.filter(role => {
+                const nameMatch = (role.name || '').toLowerCase().includes(searchLower)
+                const descMatch = (role.description || '').toLowerCase().includes(searchLower)
+                const accessMatch = (role.access_level || '').toLowerCase().includes(searchLower)
+                
+                console.log(`Rol: "${role.name}" - Nombre match: ${nameMatch}, Desc match: ${descMatch}, Access match: ${accessMatch}`)
+                
+                return nameMatch || descMatch || accessMatch
+            })
+            console.log('Roles filtrados:', filtered.length)
+            console.log('Nombres de roles filtrados:', filtered.map(r => r.name))
             setFilteredRoles(filtered)
         }
     }, [searchTerm, listRolIn])
@@ -112,23 +143,48 @@ const ContentPage: React.FC = () => {
                 return false
             }
             
-            // Extraer el array de results de la respuesta paginada
-            const apiResponse = data as RolesApiResponse
-            const rolesFromBackend = apiResponse?.results || []
+            console.log('Respuesta completa del backend:', data)
             
-            console.log('Roles cargados desde backend:', rolesFromBackend)
+            // Verificar si la respuesta tiene estructura de paginación o es un array directo
+            let rolesFromBackend: RolFromBackend[] = []
+            
+            if (Array.isArray(data)) {
+                // Si es un array directo
+                rolesFromBackend = data
+            } else if (data && typeof data === 'object' && 'results' in data) {
+                // Si tiene estructura de paginación
+                const apiResponse = data as RolesApiResponse
+                rolesFromBackend = apiResponse.results || []
+            } else {
+                console.error('Estructura de datos no esperada:', data)
+                showLoader(false)
+                return false
+            }
+            
+            console.log('Roles extraídos:', rolesFromBackend)
 
             // Transformar los roles del backend al formato esperado por el frontend
-            const rolesTransformed: InstitutionalRole[] = rolesFromBackend.map(rol => ({
-                code: String(rol.id),
-                name: rol.nombre,
-                description: rol.descripcion,
-                state: 'Activo', // Por defecto, ajustar según el backend si tiene este campo
-                access_level: 'OPERADOR', // Ajustar según lógica de tu backend
-                access_roles: rol.permisos?.map(p => p.codigo) || [],
-                users_count: 0, // Ajustar si el backend incluye este dato
-                assigned_users: [] // Ajustar si el backend incluye este dato
-            }))
+            const rolesTransformed: InstitutionalRole[] = await Promise.all(
+                rolesFromBackend.map(async (rol) => {
+                    console.log(`Rol: ${rol.nombre}, Permisos:`, rol.permisos)
+                    const permisosIds = rol.permisos?.map(p => p.codigo) || []
+                    console.log(`Códigos de permisos para ${rol.nombre}:`, permisosIds)
+                    
+                    // Obtener usuarios asignados a este rol
+                    const usuarios = await loadUsuariosByRol(rol.id)
+                    
+                    return {
+                        code: String(rol.id),
+                        name: rol.nombre || '',
+                        description: rol.descripcion || '',
+                        state: rol.is_active ? 'Activo' : 'Inactivo',
+                        access_level: 'OPERADOR', // Ajustar según lógica de tu backend
+                        access_roles: permisosIds,
+                        users_count: usuarios.length,
+                        assigned_users: usuarios
+                    }
+                })
+            )
             
             console.log('Roles transformados:', rolesTransformed)
             setListRolIn(rolesTransformed)
@@ -147,17 +203,60 @@ const ContentPage: React.FC = () => {
         }
     }
 
+    const loadUsuariosByRol = async (rolId: number): Promise<Array<{ username: string; full_name: string }>> => {
+        try {
+            console.log(`Cargando usuarios para el rol con ID: ${rolId}`)
+            const { data, status, message } = await ConsumerAPI({
+                url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/${rolId}/usuarios/`
+            })
+            
+            if (status === 'error') {
+                console.error(`Error al cargar usuarios del rol ${rolId}:`, message)
+                return []
+            }
+            
+            console.log(`Respuesta completa de usuarios del rol ${rolId}:`, data)
+            
+            // La respuesta tiene la estructura: { rol, total_usuarios, usuarios_activos, usuarios_inactivos, usuarios: [...] }
+            let usuarios: UsuarioFromBackend[] = []
+            
+            if (data && typeof data === 'object' && 'usuarios' in data) {
+                const responseData = data as UsuariosRolResponse
+                usuarios = Array.isArray(responseData.usuarios) ? responseData.usuarios : []
+                console.log(`Total de usuarios encontrados para el rol ${rolId}: ${usuarios.length}`)
+            } else if (Array.isArray(data)) {
+                usuarios = data
+            } else if (data && typeof data === 'object' && 'results' in data) {
+                usuarios = Array.isArray(data.results) ? data.results : []
+            } else {
+                console.warn(`Estructura de datos no esperada para usuarios del rol ${rolId}:`, data)
+                return []
+            }
+            
+            // Transformar los usuarios al formato esperado
+            const usuariosTransformados = usuarios.map((user: UsuarioFromBackend) => ({
+                username: user.username || user.email || '',
+                full_name: user.full_name || user.nombre || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Sin nombre'
+            }))
+            
+            console.log(`Usuarios transformados del rol ${rolId}:`, usuariosTransformados)
+            return usuariosTransformados
+            
+        } catch (error) {
+            console.error(`Error al cargar usuarios del rol ${rolId}:`, error)
+            return []
+        }
+    }
+
     const handleToggleState = async (rol: InstitutionalRole) => {
-        const newState = rol.state === 'Activo' ? 'Inactivo' : 'Activo'
         const action = rol.state === 'Activo' ? 'desactivar' : 'activar'
+        const endpoint = rol.state === 'Activo' ? 'deactivate' : 'activate'
         
         Swal.fire({
             title: `¿${action.charAt(0).toUpperCase() + action.slice(1)} este rol?`,
             text: `El rol "${rol.name}" será ${rol.state === 'Activo' ? 'desactivado' : 'activado'}`,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: 'var(--text-color-secondary)',
-            cancelButtonColor: 'var(--border-color-secondary)',
             confirmButtonText: `Sí, ${action}`,
             cancelButtonText: 'Cancelar',
             focusCancel: true
@@ -176,20 +275,21 @@ const ContentPage: React.FC = () => {
                     allowEnterKey: false
                 })
 
-                const { status } = await ConsumerAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/gestion_usuarios/toggleRolState/${rol.code}`,
-                    method: 'PATCH',
-                    body: { state: newState }
+                const { status, data, message } = await ConsumerAPI({
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/${rol.code}/${endpoint}/`,
+                    method: 'POST'
                 })
 
                 if (status === 'error') {
+                    // Verificar si es un error de rol del sistema
+                    const errorMessage = String((data && typeof data === 'object' && 'error' in data ? data.error : message) || `No se pudo ${action} el rol`)
+                    
                     Swal.fire({
-                        title: 'Error',
-                        text: `No se pudo ${action} el rol`,
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true
+                        title: 'No se puede realizar la acción',
+                        text: errorMessage,
+                        icon: 'warning',
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#3fad32'
                     })
                     return false
                 }
@@ -233,8 +333,6 @@ const ContentPage: React.FC = () => {
             text: 'No podrás revertir los cambios',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, borrar',
             cancelButtonText: 'Cancelar',
             focusCancel: true
@@ -402,13 +500,26 @@ const ContentPage: React.FC = () => {
             <div className={stylesPage.rolesMainContainer}>            
                 <div className={stylesPage.header}>
                     <div className={stylesPage.searchContainer}>
-                        <InputText
-                            type="search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Buscar roles..."
-                            className={stylesPage.searchInput}
-                        />
+                        <div className={stylesPage.searchWrapper}>
+                            <SearchIcon className={stylesPage.searchIcon} />
+                            <InputText
+                                type="search"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Buscar por nombre, descripción o nivel de acceso..."
+                                className={stylesPage.searchInput}
+                            />
+                            {searchTerm && (
+                                <button 
+                                    className={stylesPage.clearButton}
+                                    onClick={() => setSearchTerm('')}
+                                    type="button"
+                                    aria-label="Limpiar búsqueda"
+                                >
+                                    ×
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <div className={stylesPage.btnNewRolin}>
                         <Link href="/gestor_usuarios/roles/crear">

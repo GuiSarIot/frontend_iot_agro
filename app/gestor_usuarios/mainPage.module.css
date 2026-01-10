@@ -1,77 +1,368 @@
-
-.content{
+.content {
+    position: relative;
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
     flex-direction: column;
+    min-height: 70vh;
     width: 100%;
-    min-height: calc(100vh - 200px);
-    padding: 0;
-    margin: 0;
-    max-width: none;
-    overflow-y: auto;
+    padding: 20px;
 }
 
-/* Contenedor de la tabla */
-.content > div {
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    background: var(--bg-primary);
-    border-radius: 0;
-    padding: var(--spacing-lg);
-    box-shadow: none;
-    margin: 0;
+    max-width: 1400px;
+    margin-bottom: 30px;
+    gap: 20px;
 }
 
-/* Header de la tabla */
-.tableHeader {
+.searchContainer {
+    flex: 1;
+    max-width: 600px;
+}
+
+.searchWrapper {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: var(--border-width) solid var(--border-color);
+    width: 100%;
 }
 
-.tableHeader h2 {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-    margin: 0;
+.searchIcon {
+    position: absolute;
+    left: 15px;
+    color: var(--text-color-tertiary);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
-/* Botón de retorno */
-.btnBack {
+.searchInput {
+    width: 100%;
+    padding: 12px 45px 12px 45px !important;
+    border: 2px solid var(--border-color-primary) !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    background: var(--background-color-primary) !important;
+    color: var(--text-color-primary) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.searchInput:hover {
+    border-color: var(--primary-500) !important;
+    box-shadow: 0 4px 8px rgba(63, 173, 50, 0.1) !important;
+}
+
+.searchInput:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.15) !important;
+}
+
+.searchInput::placeholder {
+    color: var(--text-color-tertiary);
+}
+
+.clearButton {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-color-tertiary);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-secondary);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius-base);
-    color: var(--text-primary);
+}
+
+.clearButton:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-color-primary);
+}
+
+.clearButton:active {
+    transform: scale(0.95);
+}
+
+.btnNewUser {
+    text-align: right;
+}
+
+.btnNewUser a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #3fad32 0%, #2c7a4d 100%);
+    border-radius: 8px;
     cursor: pointer;
-    padding: var(--spacing-sm);
-    transition: all var(--transition-normal);
-    min-width: 40px;
-    height: 40px;
+    transition: all 0.3s ease-in-out;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(63, 173, 50, 0.3);
 }
 
-.btnBack:hover {
-    background: var(--bg-hover);
-    transform: translateX(-2px);
+.btnNewUser a:hover {
+    background: linear-gradient(135deg, #2c7a4d 0%, #3fad32 100%);
+    box-shadow: 0 6px 16px rgba(63, 173, 50, 0.4);
+    transform: translateY(-2px);
 }
 
-.btnBack:active {
-    transform: translateX(-4px);
+.btnNewUser a svg {
+    font-size: 20px;
 }
 
-/* Responsive: reducir espaciado en móviles */
+.usersMainContainer {
+    width: 100%;
+    max-width: 1400px;
+    background: var(--background-color-secondary);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color-primary);
+}
+
+[data-theme='dark'] .usersMainContainer {
+    background: var(--background-color-secondary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cardsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+}
+
+@media (max-width: 1400px) {
+    .cardsContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
-    .content > div {
-        padding: var(--spacing-md);
-        margin: 0;
-        border-radius: var(--border-radius-base);
-    }
-
-    .tableHeader h2 {
-        font-size: var(--font-size-xl);
+    .cardsContainer {
+        grid-template-columns: 1fr;
     }
 }
 
+.userCard {
+    background-color: var(--background-color-primary);
+    border: 1px solid var(--border-color-secondary);
+    border-radius: 12px;
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.userCard:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 20px 16px 20px;
+    border-bottom: 1px solid var(--border-color-secondary);
+    background-color: #fafafa;
+}
+
+[data-theme='dark'] .cardHeader {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.cardTitle {
+    flex: 1;
+}
+
+.cardTitle h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color-primary);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badgeActive {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badgeInactive {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.cardActions {
+    display: flex;
+    gap: 10px;
+}
+
+.actionBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-primary);
+    text-decoration: none;
+}
+
+.actionBtn:hover {
+    background-color: var(--background-color-fifth);
+}
+
+.actionBtnDelete:hover {
+    background-color: #fee;
+    color: #c00;
+}
+
+.actionBtnToggleActive {
+    color: #3fad32;
+}
+
+.actionBtnToggleActive:hover {
+    background-color: #e8f5e9;
+    color: #2c7a4d;
+}
+
+.actionBtnToggleInactive {
+    color: #d32f2f;
+}
+
+.actionBtnToggleInactive:hover {
+    background-color: #ffebee;
+    color: #b71c1c;
+}
+
+.cardBody {
+    padding: 20px;
+}
+
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--background-color-fifth);
+    border-radius: 8px;
+    border: 1px solid var(--border-color-secondary);
+}
+
+.infoIcon {
+    color: var(--text-color-secondary);
+    font-size: 20px;
+    min-width: 20px;
+}
+
+.infoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.infoLabel {
+    font-size: 12px;
+    color: var(--text-color-tertiary);
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.infoValue {
+    font-size: 14px;
+    color: var(--text-color-primary);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.tipoBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: rgba(63, 173, 50, 0.1);
+    color: var(--primary);
+    font-size: 13px;
+}
+
+.emptyState {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-color-tertiary);
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .searchContainer {
+        max-width: 100%;
+    }
+
+    .btnNewUser {
+        text-align: center;
+    }
+
+    .usersMainContainer {
+        padding: 20px;
+    }
+
+    .cardTitle h3 {
+        font-size: 18px;
+    }
+
+    .cardActions {
+        gap: 6px;
+    }
+
+    .actionBtn {
+        padding: 6px;
+    }
+}

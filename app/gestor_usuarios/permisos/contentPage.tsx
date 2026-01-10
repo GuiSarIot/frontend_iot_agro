@@ -5,11 +5,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 import AddIcon from '@mui/icons-material/Add'
+import CodeIcon from '@mui/icons-material/Code'
 import DeleteIcon from '@mui/icons-material/Delete'
+import DescriptionIcon from '@mui/icons-material/Description'
 import EditIcon from '@mui/icons-material/Edit'
 import LockIcon from '@mui/icons-material/Lock'
-import CodeIcon from '@mui/icons-material/Code'
-import DescriptionIcon from '@mui/icons-material/Description'
+import SearchIcon from '@mui/icons-material/Search'
 import ToggleOffIcon from '@mui/icons-material/ToggleOff'
 import ToggleOnIcon from '@mui/icons-material/ToggleOn'
 import { Dialog } from 'primereact/dialog'
@@ -27,6 +28,7 @@ interface PermisoFromBackend {
     nombre: string
     codigo: string
     descripcion: string
+    is_active: boolean
     created_at: string
     updated_at: string
 }
@@ -97,18 +99,33 @@ const ContentPage: React.FC = () => {
                 return false
             }
             
-            const apiResponse = data as PermisosApiResponse
-            const permisosFromBackend = apiResponse?.results || []
+            console.log('Respuesta completa del backend:', data)
             
-            console.log('Permisos cargados desde backend:', permisosFromBackend)
+            // Verificar si la respuesta tiene estructura de paginación o es un array directo
+            let permisosFromBackend: PermisoFromBackend[] = []
+            
+            if (Array.isArray(data)) {
+                // Si es un array directo
+                permisosFromBackend = data
+            } else if (data && typeof data === 'object' && 'results' in data) {
+                // Si tiene estructura de paginación
+                const apiResponse = data as PermisosApiResponse
+                permisosFromBackend = apiResponse.results || []
+            } else {
+                console.error('Estructura de datos no esperada:', data)
+                showLoader(false)
+                return false
+            }
+            
+            console.log('Permisos extraídos:', permisosFromBackend)
 
             const permisosTransformed: Permiso[] = permisosFromBackend.map(permiso => ({
                 code: String(permiso.id),
-                name: permiso.nombre,
-                codigo: permiso.codigo,
-                description: permiso.descripcion,
-                state: 'Activo',
-                created_at: permiso.created_at
+                name: permiso.nombre || '',
+                codigo: permiso.codigo || '',
+                description: permiso.descripcion || '',
+                state: permiso.is_active ? 'Activo' : 'Inactivo',
+                created_at: permiso.created_at || new Date().toISOString()
             }))
             
             console.log('Permisos transformados:', permisosTransformed)
@@ -131,14 +148,14 @@ const ContentPage: React.FC = () => {
     const handleToggleState = async (permiso: Permiso) => {
         const newState = permiso.state === 'Activo' ? 'Inactivo' : 'Activo'
         const action = permiso.state === 'Activo' ? 'desactivar' : 'activar'
+        const endpoint = permiso.state === 'Activo' ? 'deactivate' : 'activate'
         
         Swal.fire({
             title: `¿${action.charAt(0).toUpperCase() + action.slice(1)} este permiso?`,
             text: `El permiso "${permiso.name}" será ${permiso.state === 'Activo' ? 'desactivado' : 'activado'}`,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3fad32',
-            cancelButtonColor: '#6c757d',
+
             confirmButtonText: `Sí, ${action}`,
             cancelButtonText: 'Cancelar',
             focusCancel: true
@@ -158,9 +175,8 @@ const ContentPage: React.FC = () => {
                 })
 
                 const { status } = await ConsumerAPI({
-                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/permisos/${permiso.code}/toggle_state/`,
-                    method: 'PATCH',
-                    body: { state: newState }
+                    url: `${process.env.NEXT_PUBLIC_API_URL}/api/permisos/${permiso.code}/${endpoint}/`,
+                    method: 'POST'
                 })
 
                 if (status === 'error') {
@@ -195,8 +211,6 @@ const ContentPage: React.FC = () => {
             text: 'No podrás revertir los cambios',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, borrar',
             cancelButtonText: 'Cancelar',
             focusCancel: true
@@ -327,13 +341,26 @@ const ContentPage: React.FC = () => {
             <div className={stylesPage.permisosMainContainer}>            
                 <div className={stylesPage.header}>
                     <div className={stylesPage.searchContainer}>
-                        <InputText
-                            type="search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Buscar permisos..."
-                            className={stylesPage.searchInput}
-                        />
+                        <div className={stylesPage.searchWrapper}>
+                            <SearchIcon className={stylesPage.searchIcon} />
+                            <InputText
+                                type="search"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Buscar por nombre, código o descripción..."
+                                className={stylesPage.searchInput}
+                            />
+                            {searchTerm && (
+                                <button 
+                                    className={stylesPage.clearButton}
+                                    onClick={() => setSearchTerm('')}
+                                    type="button"
+                                    aria-label="Limpiar búsqueda"
+                                >
+                                    ×
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <div className={stylesPage.btnNewPermiso}>
                         <Link href="/gestor_usuarios/permisos/crear">

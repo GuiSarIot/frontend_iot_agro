@@ -34,6 +34,7 @@ interface RolFromBackend {
     id: number
     nombre: string
     descripcion: string
+    is_active: boolean
     permisos: Permiso[]
 }
 
@@ -141,15 +142,19 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             
             const rolData = data as RolFromBackend
             
+            console.log('Datos del rol recibidos:', rolData)
+            
             // Transformar los permisos a formato Rol[]
             const permisosFormateados: Rol[] = rolData.permisos?.map(p => ({
                 code: String(p.id),
                 name: p.nombre
             })) || []
             
+            console.log('Permisos formateados:', permisosFormateados)
+            
             setInputValues({
                 nameRol: rolData.nombre || '',
-                rolState: 'Activo', // Ajustar si el backend tiene este campo
+                rolState: rolData.is_active ? 'Activo' : 'Inactivo',
                 rolDescription: rolData.descripcion || '',
                 rolesAccess: permisosFormateados,
                 rolLevelAccess: 'OPERADOR' // Ajustar si el backend tiene este campo
@@ -261,8 +266,11 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
         const dataToSend = {
             nombre: inputValues.nameRol,
             descripcion: inputValues.rolDescription,
-            permisos: inputValues.rolesAccess.map(rol => Number(rol.code))
+            is_active: inputValues.rolState === 'Activo',
+            permisos_ids: inputValues.rolesAccess.map(rol => parseInt(String(rol.code)))
         }
+        
+        console.log('Datos a enviar:', dataToSend)
 
         Swal.fire({
             title: 'Actualizando...',
@@ -287,7 +295,7 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             }
 
             const request = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/roles/${rolId.idRolIn}/`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
@@ -296,11 +304,13 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             })
 
             const jsonResponse = await request.json()
+            
+            console.log('Respuesta del servidor:', jsonResponse)
 
             Swal.close()
 
             if (!request.ok) {
-                const errorMessage = jsonResponse.detail || jsonResponse.message || 'Error al actualizar el rol'
+                const errorMessage = jsonResponse.detail || jsonResponse.error || jsonResponse.message || 'Error al actualizar el rol'
                 onErrorResponse(errorMessage)
                 return
             }

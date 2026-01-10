@@ -282,9 +282,10 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
             dataToSend.telefono = inputsValues.telefono
         }
         
-        // Agregar roles seleccionados (array de IDs)
+        // Agregar rol seleccionado (el backend espera un solo rol, no un array)
         if (inputsValues.roles && Array.isArray(inputsValues.roles) && inputsValues.roles.length > 0) {
-            dataToSend.roles = (inputsValues.roles as Rol[]).map(rol => rol.code)
+            // Tomar solo el primer rol seleccionado
+            dataToSend.rol = inputsValues.roles[0].code
         }
         
         if (inputsValues.telegram_username && (inputsValues.telegram_username as string).trim() !== '') {
@@ -477,26 +478,43 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
 
                     <div className={styles.formGroup}>
                         <label htmlFor="roles" className={styles.formLabel}>
-                            Roles*
-                            <span className={styles.labelSubtext}>Selecciona uno o varios roles para el usuario</span>
+                            Rol*
+                            <span className={styles.labelSubtext}>Selecciona un rol para el usuario</span>
                         </label>
-                        <InputMultiSelectCustom
-                            name="roles"
-                            required={false}
-                            valueProp={inputsValues.roles}
-                            specialConf={{
-                                options: filteredRols,
-                                valueState: rolesState,
-                                setValueState: setRolesState,
-                                onChange: (value) => {
+                        <select
+                            id="roles"
+                            className={styles.formSelect}
+                            value={inputsValues.roles && inputsValues.roles.length > 0 ? inputsValues.roles[0].code : ''}
+                            onChange={(e) => {
+                                const selectedCode = e.target.value
+                                const selectedRol = filteredRols.find(r => String(r.code) === String(selectedCode))
+                                if (selectedRol) {
                                     setInputsValues(prev => ({
                                         ...prev,
-                                        roles: value || []
+                                        roles: [selectedRol]
                                     }))
+                                    setRolesState({
+                                        roles: [selectedRol]
+                                    })
+                                } else {
+                                    setInputsValues(prev => ({
+                                        ...prev,
+                                        roles: []
+                                    }))
+                                    setRolesState({
+                                        roles: []
+                                    })
                                 }
                             }}
-                            disabled={false}
-                        />
+                            required
+                        >
+                            <option value="">Seleccione un rol</option>
+                            {filteredRols.map((rol) => (
+                                <option key={rol.code} value={rol.code}>
+                                    {rol.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className={styles.formGroup}>

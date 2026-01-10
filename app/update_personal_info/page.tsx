@@ -440,7 +440,7 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                     formatDate={formatDate}
                     handleNotificationToggle={handleNotificationToggle}
                     handleTelegramIdChange={handleTelegramIdChange}
-                    handleSaveNotifications={handleSaveNotifications}
+                    onTelegramVerified={loadInfoUser}
                 />
             )}
 

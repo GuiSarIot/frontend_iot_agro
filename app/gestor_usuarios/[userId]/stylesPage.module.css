@@ -1,8 +1,9 @@
-
-.content{
+/* Contenedor principal */
+.content {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 70vh;
     width: 100%;
+    padding: 1rem;
 }

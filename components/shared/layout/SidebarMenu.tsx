@@ -32,7 +32,25 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, items }) => {
     }
     
     const isActive = (href: string) => {
-        return pathname === href || pathname?.startsWith(href + '/')
+        // Coincidencia exacta
+        if (pathname === href) {
+            return true
+        }
+        
+        // Para subrutas, verificar que la ruta actual comience con el href
+        // pero solo si no coincide exactamente con ninguna otra ruta del menú
+        if (pathname?.startsWith(href + '/')) {
+            // Verificar que ninguna otra ruta del menú sea una coincidencia más específica
+            const hasMoreSpecificMatch = items.some(item => 
+                item.href !== href && 
+                item.href.length > href.length && 
+                (pathname === item.href || pathname?.startsWith(item.href + '/'))
+            )
+            
+            return !hasMoreSpecificMatch
+        }
+        
+        return false
     }
 
     return (

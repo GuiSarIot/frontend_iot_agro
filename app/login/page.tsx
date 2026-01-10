@@ -21,6 +21,7 @@ const Login: React.FC = () => {
 
     // Forzar tema claro en la página de login
     useEffect(() => {
+        document.title = 'Iniciar Sesión - IOTCorp'
         document.documentElement.setAttribute('data-theme', 'light')
         return () => {
             // Restaurar el tema guardado al salir
