@@ -24,13 +24,12 @@ interface AccessLogDetailPageProps {
 
 const AccessLogDetailPage: React.FC<AccessLogDetailPageProps> = ({ params }) => {
     const router = useRouter()
-    const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
+    const { changeTitle, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
     const [log, setLog] = useState<AccessLog | null>(null)
 
     useEffect(() => {
         showLoader(true)
-        showNavbar(window.innerWidth > 1380)
         changeTitle('Detalle de Log de Acceso')
         SaveRoute({
             routeInfo: `/gestor_logs/access/${params.id}`,

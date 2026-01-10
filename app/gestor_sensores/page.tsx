@@ -12,6 +12,7 @@ import SensorsIcon from '@mui/icons-material/Sensors'
 import { InputText } from 'primereact/inputtext'
 import Swal from 'sweetalert2'
 
+import useAccessLogger from '@/app/hooks/useAccessLogger'
 import { sensoresService, type Sensor } from '@/app/services/api.service'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
@@ -41,35 +42,46 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
 
+    // Registrar acceso al módulo automáticamente
+    useAccessLogger({ 
+        customModule: 'sensors',
+        action: 'list'
+    })
+
     const [filteredSensores, setFilteredSensores] = useState<Sensor[]>([])
     const [searchTerm, setSearchTerm] = useState('')
     const [totalCount, setTotalCount] = useState(0)
+    const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect(() => {
-        showLoader(true)
-        showNavbar(window.innerWidth > 1380)
-        changeTitle(infoPage.title)
-        SaveRoute({
-            routeInfo: infoPage.route,
-            title: infoPage.title,
-            role: infoPage.role
-        })
-        changeUserInfo({
-            ...userInfo,
-            role: infoPage.role
-        })
-        loadSensores()
+        if (!isInitialized) {
+            showLoader(true)
+            showNavbar(window.innerWidth > 1380)
+            changeTitle(infoPage.title)
+            SaveRoute({
+                routeInfo: infoPage.route,
+                title: infoPage.title,
+                role: infoPage.role
+            })
+            changeUserInfo({
+                ...userInfo,
+                role: infoPage.role
+            })
+            setIsInitialized(true)
+        }
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
+        if (!isInitialized) return
+
         const delayDebounceFn = setTimeout(() => {
             loadSensores()
         }, 300)
 
         return () => clearTimeout(delayDebounceFn)
         // eslint-disable-next-line
-    }, [searchTerm])
+    }, [searchTerm, isInitialized])
 
     const loadSensores = async () => {
         try {
@@ -214,9 +226,6 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
                                     <div className={stylesPage.cardHeaderSensor}>
                                         <div className={stylesPage.cardTitleSection}>
                                             <h3 className={stylesPage.cardTitle}>{sensor.nombre}</h3>
-                                            <span className={`${stylesPage.badge} ${stylesPage[`badge${sensor.estado || 'Activo'}`]}`}>
-                                                {sensor.estado_display || sensor.estado || 'Activo'}
-                                            </span>
                                         </div>
                                         <div className={stylesPage.cardActions}>
                                             <Link 

@@ -99,8 +99,6 @@ const ContentPage: React.FC = () => {
                 return false
             }
             
-            console.log('Respuesta completa del backend:', data)
-            
             // Verificar si la respuesta tiene estructura de paginación o es un array directo
             let permisosFromBackend: PermisoFromBackend[] = []
             
@@ -116,8 +114,6 @@ const ContentPage: React.FC = () => {
                 showLoader(false)
                 return false
             }
-            
-            console.log('Permisos extraídos:', permisosFromBackend)
 
             const permisosTransformed: Permiso[] = permisosFromBackend.map(permiso => ({
                 code: String(permiso.id),
@@ -128,7 +124,6 @@ const ContentPage: React.FC = () => {
                 created_at: permiso.created_at || new Date().toISOString()
             }))
             
-            console.log('Permisos transformados:', permisosTransformed)
             setListPermisos(permisosTransformed)
             setFilteredPermisos(permisosTransformed)
             showLoader(false)

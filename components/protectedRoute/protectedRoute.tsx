@@ -82,11 +82,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             setIsValidating(true)
             showLoader(true)
             const { isLogged, route, user, title, role, token } = await GetRoute()
-            
-            console.log('ProtectedRoute - Datos de GetRoute:', { isLogged, route, user, title, role, hasToken: !!token })
-
             if (!isLogged || isLogged === 'false' || !user || user === 'false') {
-                console.log('ProtectedRoute - No hay sesión, redirigiendo a login')
                 SaveRoute({ isLogged: 'false', user: 'false', token: 'false' })
                 showLoader(false)
                 router.push('/login')
@@ -94,12 +90,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             }
 
             if (!token || token === 'false') {
-                console.log('ProtectedRoute - No hay token, cerrando sesión')
                 logoutAndRedirect()
                 return
             }
-
-            console.log('ProtectedRoute - Llamando a /api/users/me/ con token')
             const { data, status } = await consumerPublicAPI<UserData>({
                 url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/me/`,
                 headers: {
@@ -107,10 +100,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
                 }
             })
 
-            console.log('ProtectedRoute - Respuesta de /api/users/me/:', { status, hasData: !!data })
-
             if (status === 'error' || !data) {
-                console.log('ProtectedRoute - Error o sin datos, cerrando sesión')
                 logoutAndRedirect()
                 return
             }
@@ -167,9 +157,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
         if (data.is_superuser) {
             permissionCodes.push('is_superuser')
         }
-        
-        console.log('ProtectedRoute - Datos del usuario:', data)
-        console.log('ProtectedRoute - Permisos extraídos:', permissionCodes)
         
         changeUserInfo({
             name: data.full_name || `${data.first_name} ${data.last_name}`,

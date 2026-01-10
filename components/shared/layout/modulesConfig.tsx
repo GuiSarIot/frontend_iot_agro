@@ -71,7 +71,7 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         permissions: ['ver_lecturas', 'crear_lecturas'],
         icon: <AssessmentIcon />,
         label: 'Lecturas',
-        href: '/lecturas',
+        href: '/gestor_lecturas',
         description: 'Visualización de lecturas de sensores',
         priority: 6
     },

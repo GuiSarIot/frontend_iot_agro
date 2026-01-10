@@ -42,6 +42,20 @@ export {
     type SensorQueryParams
 } from './sensores.service'
 
+// Re-exportar el servicio completo de lecturas desde su archivo especializado
+export {
+    lecturasService,
+    type Lectura,
+    type LecturasResponse,
+    type LecturaQueryParams,
+    type CreateLecturaDto,
+    type UpdateLecturaDto,
+    type BulkLecturasDto,
+    type BulkLecturasResponse,
+    type EstadisticasLecturas,
+    type LecturaResumida
+} from './lecturas.service'
+
 /**
  * Ejemplo de servicio para gestionar usuarios
  */
@@ -63,11 +77,11 @@ export interface Usuario {
 
 export const usuariosService = {
     getAll: async (): Promise<Usuario[]> => {
-        return authenticatedGet<Usuario[]>(`${API_BASE_URL}/api/usuarios/`)
+        return authenticatedGet<Usuario[]>(`${API_BASE_URL}/api/users/`)
     },
 
     getById: async (id: number): Promise<Usuario> => {
-        return authenticatedGet<Usuario>(`${API_BASE_URL}/api/usuarios/${id}/`)
+        return authenticatedGet<Usuario>(`${API_BASE_URL}/api/users/${id}/`)
     },
 
     create: async (data: {
@@ -78,63 +92,19 @@ export const usuariosService = {
         last_name: string
         rol: number
     }): Promise<Usuario> => {
-        return authenticatedPost<Usuario>(`${API_BASE_URL}/api/usuarios/`, data)
+        return authenticatedPost<Usuario>(`${API_BASE_URL}/api/users/`, data)
     },
 
     update: async (id: number, data: Partial<Usuario>): Promise<Usuario> => {
-        return authenticatedPatch<Usuario>(`${API_BASE_URL}/api/usuarios/${id}/`, data)
+        return authenticatedPatch<Usuario>(`${API_BASE_URL}/api/users/${id}/`, data)
     },
 
     delete: async (id: number): Promise<void> => {
-        return authenticatedDelete<void>(`${API_BASE_URL}/api/usuarios/${id}/`)
+        return authenticatedDelete<void>(`${API_BASE_URL}/api/users/${id}/`)
     },
 }
 
-/**
- * Ejemplo de servicio para gestionar lecturas de sensores
- */
-
-export interface Lectura {
-    id: number
-    sensor: number
-    dispositivo: number
-    valor: number
-    timestamp: string
-    created_at: string
-}
-
-export const lecturasService = {
-    /**
-     * Obtiene lecturas con filtros opcionales
-     */
-    getAll: async (params?: {
-        sensor?: number
-        dispositivo?: number
-        fecha_inicio?: string
-        fecha_fin?: string
-    }): Promise<Lectura[]> => {
-        const queryParams = new URLSearchParams()
-        if (params?.sensor) queryParams.append('sensor', String(params.sensor))
-        if (params?.dispositivo) queryParams.append('dispositivo', String(params.dispositivo))
-        if (params?.fecha_inicio) queryParams.append('fecha_inicio', params.fecha_inicio)
-        if (params?.fecha_fin) queryParams.append('fecha_fin', params.fecha_fin)
-
-        const query = queryParams.toString()
-        const url = query
-            ? `${API_BASE_URL}/api/lecturas/?${query}`
-            : `${API_BASE_URL}/api/lecturas/`
-
-        return authenticatedGet<Lectura[]>(url)
-    },
-
-    create: async (data: {
-        sensor: number
-        dispositivo: number
-        valor: number
-    }): Promise<Lectura> => {
-        return authenticatedPost<Lectura>(`${API_BASE_URL}/api/lecturas/`, data)
-    },
-}
+// Servicio de lecturas movido a lecturas.service.ts
 
 /**
  * Servicio para gestionar roles

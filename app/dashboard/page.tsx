@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import DashboardIcon from '@mui/icons-material/Dashboard'
 
+import useAccessLogger from '@/app/hooks/useAccessLogger'
 import AppLayout from '@/components/shared/layout/AppLayout'
 import { useAppContext } from '@/context/appContext'
 
@@ -11,6 +12,12 @@ import styles from './dashboard.module.css'
 
 const DashboardPage: React.FC = () => {
     const { changeTitle, showNavbar, showLoader } = useAppContext()
+
+    // Registrar acceso al dashboard
+    useAccessLogger({ 
+        customModule: 'other',
+        action: 'view'
+    })
 
     useEffect(() => {
         showLoader(true)

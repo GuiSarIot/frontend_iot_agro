@@ -1,9 +1,9 @@
-import ContentApp from '../../../contentApp'
+import ProtectedRoute from '@/components/protectedRoute/protectedRoute'
 
 export default function AccessLogDetailLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-    return <ContentApp>{children}</ContentApp>
+    return <ProtectedRoute>{children}</ProtectedRoute>
 }

@@ -16,6 +16,7 @@ import ToggleOnIcon from '@mui/icons-material/ToggleOn'
 import { InputText } from 'primereact/inputtext'
 import Swal from 'sweetalert2'
 
+import useAccessLogger from '@/app/hooks/useAccessLogger'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import consumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
@@ -84,25 +85,35 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
 
+    // Registrar acceso al módulo automáticamente
+    useAccessLogger({ 
+        customModule: 'users',
+        action: 'list'
+    })
+
     const [listUsers, setListUsers] = useState<User[]>([])
     const [filteredUsers, setFilteredUsers] = useState<User[]>([])
     const [searchTerm, setSearchTerm] = useState('')
     const [roleUsers, setRoleUsers] = useState<{[roleId: number]: User[]}>({})
+    const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect(() => {
-        showLoader(true)
-        showNavbar(window.innerWidth > 1380)
-        changeTitle(infoPage.title)
-        SaveRoute({
-            routeInfo: infoPage.route,
-            title: infoPage.title,
-            role: infoPage.role
-        })
-        changeUserInfo({
-            ...userInfo,
-            role: infoPage.role
-        })
-        loadUsers()
+        if (!isInitialized) {
+            showLoader(true)
+            showNavbar(window.innerWidth > 1380)
+            changeTitle(infoPage.title)
+            SaveRoute({
+                routeInfo: infoPage.route,
+                title: infoPage.title,
+                role: infoPage.role
+            })
+            changeUserInfo({
+                ...userInfo,
+                role: infoPage.role
+            })
+            loadUsers()
+            setIsInitialized(true)
+        }
         // eslint-disable-next-line
     }, [])
 
@@ -157,12 +168,10 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                 })
                 return false
             }
-
-            console.log('Datos recibidos del backend:', data)
+            
             const backendResponse = data as BackendUsersResponse | BackendUser[]
             const usersData = Array.isArray(backendResponse) ? backendResponse : (backendResponse?.results || [])
-            console.log('Users data extraído:', usersData)
-            
+                        
             const adaptedUsers: User[] = Array.isArray(usersData) ? usersData.map((user: BackendUser) => {
                 const roleName = user.rol_detail?.nombre || 'Sin rol'
                 const roleNameLower = roleName.toLowerCase()
@@ -200,8 +209,6 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                 user.email.toLowerCase() !== currentUserEmail.toLowerCase()
             )
             
-            console.log('Usuarios adaptados:', adaptedUsers)
-            console.log('Usuario actual filtrado:', currentUserEmail)
             setListUsers(filteredFromCurrent)
             setFilteredUsers(filteredFromCurrent)
             showLoader(false)

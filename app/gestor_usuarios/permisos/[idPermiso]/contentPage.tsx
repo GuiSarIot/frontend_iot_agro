@@ -76,8 +76,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             
             const permisoData = data as PermisoFromBackend
             
-            console.log('Datos del permiso recibidos:', permisoData)
-            
             setInputValues({
                 nombrePermiso: permisoData.nombre || '',
                 codigoPermiso: permisoData.codigo || '',
@@ -181,8 +179,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             descripcion: inputValues.descripcionPermiso,
             is_active: inputValues.estadoPermiso === 'Activo'
         }
-        
-        console.log('Datos a enviar:', dataToSend)
 
         Swal.fire({
             title: 'Actualizando...',
@@ -216,8 +212,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ permisoId }) => {
             })
 
             const jsonResponse = await request.json()
-            
-            console.log('Respuesta del servidor:', jsonResponse)
 
             Swal.close()
 

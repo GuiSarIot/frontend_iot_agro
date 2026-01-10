@@ -100,12 +100,8 @@ const ContentPage: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        console.log('=== FILTRO DE ROLES ===')
-        console.log('Término de búsqueda:', searchTerm)
-        console.log('Total de roles:', listRolIn.length)
         
         if (searchTerm.trim() === '') {
-            console.log('Sin filtro - mostrando todos los roles')
             setFilteredRoles(listRolIn)
         } else {
             const searchLower = searchTerm.toLowerCase().trim()
@@ -114,12 +110,8 @@ const ContentPage: React.FC = () => {
                 const descMatch = (role.description || '').toLowerCase().includes(searchLower)
                 const accessMatch = (role.access_level || '').toLowerCase().includes(searchLower)
                 
-                console.log(`Rol: "${role.name}" - Nombre match: ${nameMatch}, Desc match: ${descMatch}, Access match: ${accessMatch}`)
-                
                 return nameMatch || descMatch || accessMatch
             })
-            console.log('Roles filtrados:', filtered.length)
-            console.log('Nombres de roles filtrados:', filtered.map(r => r.name))
             setFilteredRoles(filtered)
         }
     }, [searchTerm, listRolIn])
@@ -143,8 +135,6 @@ const ContentPage: React.FC = () => {
                 return false
             }
             
-            console.log('Respuesta completa del backend:', data)
-            
             // Verificar si la respuesta tiene estructura de paginación o es un array directo
             let rolesFromBackend: RolFromBackend[] = []
             
@@ -160,15 +150,11 @@ const ContentPage: React.FC = () => {
                 showLoader(false)
                 return false
             }
-            
-            console.log('Roles extraídos:', rolesFromBackend)
 
             // Transformar los roles del backend al formato esperado por el frontend
             const rolesTransformed: InstitutionalRole[] = await Promise.all(
                 rolesFromBackend.map(async (rol) => {
-                    console.log(`Rol: ${rol.nombre}, Permisos:`, rol.permisos)
                     const permisosIds = rol.permisos?.map(p => p.codigo) || []
-                    console.log(`Códigos de permisos para ${rol.nombre}:`, permisosIds)
                     
                     // Obtener usuarios asignados a este rol
                     const usuarios = await loadUsuariosByRol(rol.id)
@@ -186,7 +172,6 @@ const ContentPage: React.FC = () => {
                 })
             )
             
-            console.log('Roles transformados:', rolesTransformed)
             setListRolIn(rolesTransformed)
             setFilteredRoles(rolesTransformed)
             showLoader(false)
@@ -205,7 +190,6 @@ const ContentPage: React.FC = () => {
 
     const loadUsuariosByRol = async (rolId: number): Promise<Array<{ username: string; full_name: string }>> => {
         try {
-            console.log(`Cargando usuarios para el rol con ID: ${rolId}`)
             const { data, status, message } = await ConsumerAPI({
                 url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/${rolId}/usuarios/`
             })
@@ -213,9 +197,7 @@ const ContentPage: React.FC = () => {
             if (status === 'error') {
                 console.error(`Error al cargar usuarios del rol ${rolId}:`, message)
                 return []
-            }
-            
-            console.log(`Respuesta completa de usuarios del rol ${rolId}:`, data)
+            }            
             
             // La respuesta tiene la estructura: { rol, total_usuarios, usuarios_activos, usuarios_inactivos, usuarios: [...] }
             let usuarios: UsuarioFromBackend[] = []
@@ -223,7 +205,6 @@ const ContentPage: React.FC = () => {
             if (data && typeof data === 'object' && 'usuarios' in data) {
                 const responseData = data as UsuariosRolResponse
                 usuarios = Array.isArray(responseData.usuarios) ? responseData.usuarios : []
-                console.log(`Total de usuarios encontrados para el rol ${rolId}: ${usuarios.length}`)
             } else if (Array.isArray(data)) {
                 usuarios = data
             } else if (data && typeof data === 'object' && 'results' in data) {
@@ -239,7 +220,6 @@ const ContentPage: React.FC = () => {
                 full_name: user.full_name || user.nombre || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Sin nombre'
             }))
             
-            console.log(`Usuarios transformados del rol ${rolId}:`, usuariosTransformados)
             return usuariosTransformados
             
         } catch (error) {

@@ -27,7 +27,6 @@ function GenerateZip(files: FileToZip[]): Promise<void> {
 
     return zip.generateAsync({ type: 'blob' })
         .then((zipBlob) => {
-            console.log('ZIP generado:', zipBlob)
             saveAs(zipBlob, 'MonitoreoFichas.zip')
         })
         .catch((error) => {

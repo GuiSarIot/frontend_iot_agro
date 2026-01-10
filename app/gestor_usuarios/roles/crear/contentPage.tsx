@@ -110,8 +110,6 @@ const ContentPage: React.FC = () => {
                     name: permiso.nombre || permiso.name || ''
                 }))
                 : []
-            
-            console.log('Permisos cargados:', rolesFormatted)
             setRolsList(rolesFormatted)
             showLoader(false)
         } catch (error) {
@@ -219,8 +217,6 @@ const ContentPage: React.FC = () => {
             is_active: inputValues.rolState === 'Activo',
             permisos_ids: inputValues.rolesAccess.map(rol => parseInt(String(rol.code)))
         }
-        
-        console.log('Datos a enviar:', dataToSend)
 
         // Mostrar loader
         Swal.fire({

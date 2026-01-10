@@ -182,7 +182,6 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
                 }))
                 : []
             
-            console.log('Roles cargados:', rolesFormatted)
             setListRols(rolesFormatted)
             showLoader(false)
         } catch (error) {

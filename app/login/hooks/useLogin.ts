@@ -67,9 +67,6 @@ export function useLogin() {
 
         // Ahora cifrar el ID con el token
         const idEncrypted = await encryptUserId(String(data.user.id), data.access)
-        
-        console.log('useLogin - ID cifrado:', idEncrypted)
-        console.log('useLogin - Datos del usuario:', data.user)
 
         changeAuthContext({
             ...appState.authContext,
@@ -86,8 +83,6 @@ export function useLogin() {
         if (data.user.is_superuser) {
             permissionCodes.push('is_superuser')
         }
-        
-        console.log('useLogin - Permisos extraídos:', permissionCodes)
 
         // Obtener el nombre del rol de forma segura
         const roleName = data.user.rol_detail?.nombre || 'Usuario'
@@ -108,7 +103,6 @@ export function useLogin() {
         changeTitle('Dashboard')
         
         try {
-            console.log('useLogin - Guardando ruta...')
             await saveRoute({
                 routeInfo: '/dashboard', 
                 title: 'Dashboard',
@@ -117,7 +111,6 @@ export function useLogin() {
                 token: data.access,
                 role: roleName,
             })
-            console.log('useLogin - Ruta guardada correctamente')
         } catch (error) {
             console.error('useLogin - Error guardando ruta:', error)
         }

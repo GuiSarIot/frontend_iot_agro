@@ -1,42 +1,67 @@
 /* removing default styles from primereact classes */
 .p-datatable-header {
     border: none;
-    background-color: var(--bg-secondary);
-    border-radius: 5px 5px 0 0;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--neutral-100) 100%);
+    border-radius: 12px 12px 0 0;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    border-color: var(--border-color);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+    color: var(--primary-900);
+    border-color: var(--primary-200);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--primary-300);
 }
 
 .p-datatable .p-datatable-tbody > tr {
     background-color: var(--bg-primary);
     color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
     border-color: var(--border-color);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .p-datatable .p-datatable-tbody > tr:hover {
-    background-color: var(--bg-hover);
+    background: linear-gradient(135deg, rgba(63, 173, 50, 0.05) 0%, rgba(63, 173, 50, 0.02) 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 .p-paginator {
-    background-color: var(--bg-secondary);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--neutral-100) 100%);
     color: var(--text-primary);
     border-color: var(--border-color);
+    padding: 1rem;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page {
     color: var(--text-primary);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:hover {
+    background-color: var(--primary-100);
+    color: var(--primary-900);
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-700) 100%);
     color: white;
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.3);
 }
 
 /* datatable custom */
@@ -46,21 +71,31 @@
 
 /* table header */
 .dataTableCustom .table-header{
-    padding: 10px;
+    padding: 1.25rem;
     display: flex;
     justify-content: flex-end;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--neutral-100) 100%);
+    border-radius: 12px 12px 0 0;
 }
 
 .dataTableCustom .table-header input{
-    padding: 8px 12px;
+    padding: 0.75rem 1rem;
     min-width: 300px;
     width: 40%;
     max-width: 500px;
     color: var(--text-primary);
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-base);
+    background-color: white;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
     font-size: var(--font-size-sm);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dataTableCustom .table-header input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .dataTableCustom .table-header input::placeholder {
@@ -70,16 +105,21 @@
 /* table content */
 .dataTableCustom table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     margin-bottom: 10px;
+    overflow: hidden;
 }
 
 .dataTableCustom table th {
-    font-weight: 600;
-    color: var(--text-primary);
-    background-color: var(--bg-secondary);
+    font-weight: 700;
+    color: var(--primary-900);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
     border: none;
+    border-bottom: 2px solid var(--primary-300);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
 }
 
 .dataTableCustom table th span{
@@ -94,16 +134,26 @@
     color: var(--text-primary);
     background-color: var(--bg-primary);
     border: none;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dataTableCustom table tbody tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dataTableCustom table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(63, 173, 50, 0.05) 0%, rgba(63, 173, 50, 0.02) 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 .dataTableCustom table tbody tr:hover td {
-    background-color: var(--bg-hover);
+    background-color: transparent;
 }
 
 .dataTableCustom table td,
 .dataTableCustom table th {
-    padding: 10px 20px;
+    padding: 1rem 1.25rem;
     font-size: 14px;
 }
 

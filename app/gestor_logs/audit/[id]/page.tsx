@@ -23,13 +23,12 @@ interface AuditLogDetailPageProps {
 
 const AuditLogDetailPage: React.FC<AuditLogDetailPageProps> = ({ params }) => {
     const router = useRouter()
-    const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
+    const { changeTitle, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
     const [log, setLog] = useState<AuditLog | null>(null)
 
     useEffect(() => {
         showLoader(true)
-        showNavbar(window.innerWidth > 1380)
         changeTitle('Detalle de Log de Auditoría')
         SaveRoute({
             routeInfo: `/gestor_logs/audit/${params.id}`,

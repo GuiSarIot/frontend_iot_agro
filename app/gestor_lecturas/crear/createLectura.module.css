@@ -1,0 +1,492 @@
+/* Layout principal */
+.contentLayout {
+    max-width: 95%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (min-width: 1400px) {
+    .contentLayout {
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 1800px) {
+    .contentLayout {
+        max-width: 85%;
+    }
+}
+
+/* Panel - Formulario */
+.formPanel {
+    background: var(--background-color-secondary);
+    border-radius: 8px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color-primary);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.sectionDescription {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+/* Formulario */
+.createForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: grid;
+    grid-template-columns: minmax(200px, 25%) 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+    .formGroup {
+        grid-template-columns: minmax(180px, 30%) 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.formLabel {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-top: 0.5rem;
+}
+
+.labelSubtext {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-color-secondary);
+    font-style: italic;
+}
+
+.formInput {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    background: var(--background-color-secondary);
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: min(600px, 100%);
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formInput::placeholder {
+    color: var(--text-color-secondary);
+    opacity: 0.5;
+}
+
+/* Estilos para PrimeReact Dropdown */
+.formGroup :global(.p-dropdown) {
+    width: 100%;
+    max-width: min(600px, 100%);
+    min-height: 42px;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    background: var(--background-color-secondary);
+}
+
+.formGroup :global(.p-dropdown:not(.p-disabled):hover) {
+    border-color: var(--primary-color);
+}
+
+.formGroup :global(.p-dropdown:not(.p-disabled).p-focus) {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formGroup :global(.p-dropdown.p-invalid) {
+    border-color: #ef4444;
+}
+
+.formGroup :global(.p-dropdown .p-dropdown-label) {
+    padding: 0.625rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+}
+
+.formGroup :global(.p-dropdown .p-dropdown-label.p-placeholder) {
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+}
+
+/* Estilos para PrimeReact InputNumber */
+.formGroup :global(.p-inputnumber) {
+    width: 100%;
+    max-width: min(600px, 100%);
+}
+
+.formGroup :global(.p-inputnumber .p-inputtext) {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    background: var(--background-color-secondary);
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.formGroup :global(.p-inputnumber .p-inputtext:focus) {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formGroup :global(.p-inputnumber.p-invalid .p-inputtext) {
+    border-color: #ef4444;
+}
+
+/* Estilos para PrimeReact InputTextarea */
+.formGroup :global(.p-inputtextarea) {
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    background: var(--background-color-secondary);
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: min(600px, 100%);
+    font-family: 'Courier New', monospace;
+}
+
+.formGroup :global(.p-inputtextarea:focus) {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 168, 107, 0.1);
+}
+
+.formGroup :global(.p-inputtextarea.p-invalid) {
+    border-color: #ef4444;
+}
+
+.errorMessage {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.warningMessage {
+    color: #f59e0b;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.helperText {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Separador de secciones */
+.sectionDivider {
+    border-top: 1px solid var(--border-color-primary);
+    margin: 2rem 0 1.5rem 0;
+    padding-top: 1.5rem;
+}
+
+.sectionSubtitle {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0 0 1.25rem 0;
+}
+
+/* Botones */
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color-primary);
+}
+
+.cancelButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--text-color-primary);
+    border: 1px solid var(--border-color-primary);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 42px;
+}
+
+.cancelButton:hover {
+    background: var(--background-color-primary);
+    border-color: var(--text-color-secondary);
+    transform: translateY(-1px);
+}
+
+.cancelButton:active {
+    transform: translateY(0);
+}
+
+.submitButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 42px;
+}
+
+.submitButton:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.25);
+}
+
+.submitButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.submitButton svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Card de Preview - Lado derecho */
+.previewCard {
+    background: var(--background-color-secondary);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color-primary);
+    position: sticky;
+    top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.previewHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color-primary);
+    margin-bottom: 1.5rem;
+}
+
+.iconContainer {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #00a86b 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 168, 107, 0.25);
+}
+
+.iconContainer svg {
+    width: 50px;
+    height: 50px;
+    color: white;
+}
+
+.statusBadge {
+    padding: 0.375rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(0, 168, 107, 0.15);
+    color: var(--primary-color);
+}
+
+.previewInfo {
+    width: 100%;
+}
+
+.previewTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+}
+
+.previewSubtitle {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.previewDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detailRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.detailRow:last-child {
+    border-bottom: none;
+}
+
+.detailLabel {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+}
+
+.detailValue {
+    font-size: 0.9rem;
+    color: var(--text-color-primary);
+    word-break: break-word;
+}
+
+.detailValueHighlight {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.emptyState {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-color-secondary);
+    font-style: italic;
+}
+
+.emptyState svg {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .contentLayout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .previewCard {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .contentLayout {
+        padding: 1.5rem 1rem;
+        max-width: 95%;
+    }
+    
+    .formPanel {
+        padding: 1.5rem;
+    }
+    
+    .formGroup {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .formLabel {
+        padding-top: 0;
+    }
+    
+    .formInput,
+    .formGroup :global(.p-dropdown),
+    .formGroup :global(.p-inputnumber),
+    .formGroup :global(.p-inputtextarea) {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .contentLayout {
+        padding: 1rem 0.75rem;
+        max-width: 100%;
+    }
+    
+    .formPanel {
+        padding: 1rem;
+        border-radius: 4px;
+    }
+    
+    .sectionTitle {
+        font-size: 1.25rem;
+    }
+    
+    .sectionSubtitle {
+        font-size: 1rem;
+    }
+    
+    .previewCard {
+        padding: 1.5rem;
+    }
+    
+    .iconContainer {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .iconContainer svg {
+        width: 40px;
+        height: 40px;
+    }
+}

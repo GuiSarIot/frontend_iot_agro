@@ -15,6 +15,7 @@ import ToggleOnIcon from '@mui/icons-material/ToggleOn'
 import { InputText } from 'primereact/inputtext'
 import Swal from 'sweetalert2'
 
+import useAccessLogger from '@/app/hooks/useAccessLogger'
 import { dispositivosService, type Dispositivo } from '@/app/services/api.service'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
@@ -44,24 +45,34 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
 
+    // Registrar acceso al módulo automáticamente
+    useAccessLogger({ 
+        customModule: 'devices',
+        action: 'list'
+    })
+
     const [listDispositivos, setListDispositivos] = useState<Dispositivo[]>([])
     const [filteredDispositivos, setFilteredDispositivos] = useState<Dispositivo[]>([])
     const [searchTerm, setSearchTerm] = useState('')
+    const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect(() => {
-        showLoader(true)
-        showNavbar(window.innerWidth > 1380)
-        changeTitle(infoPage.title)
-        SaveRoute({
-            routeInfo: infoPage.route,
-            title: infoPage.title,
-            role: infoPage.role
-        })
-        changeUserInfo({
-            ...userInfo,
-            role: infoPage.role
-        })
-        loadDispositivos()
+        if (!isInitialized) {
+            showLoader(true)
+            showNavbar(window.innerWidth > 1380)
+            changeTitle(infoPage.title)
+            SaveRoute({
+                routeInfo: infoPage.route,
+                title: infoPage.title,
+                role: infoPage.role
+            })
+            changeUserInfo({
+                ...userInfo,
+                role: infoPage.role
+            })
+            loadDispositivos()
+            setIsInitialized(true)
+        }
         // eslint-disable-next-line
     }, [])
 

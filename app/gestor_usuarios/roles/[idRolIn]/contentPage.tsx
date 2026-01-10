@@ -110,8 +110,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
                 code: String(permiso.id),
                 name: permiso.nombre
             }))
-            
-            console.log('Permisos disponibles cargados:', rolesFormatted)
             setRolsList(rolesFormatted)
         } catch (error) {
             console.error('Error al cargar los permisos:', error)
@@ -142,15 +140,11 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             
             const rolData = data as RolFromBackend
             
-            console.log('Datos del rol recibidos:', rolData)
-            
             // Transformar los permisos a formato Rol[]
             const permisosFormateados: Rol[] = rolData.permisos?.map(p => ({
                 code: String(p.id),
                 name: p.nombre
             })) || []
-            
-            console.log('Permisos formateados:', permisosFormateados)
             
             setInputValues({
                 nameRol: rolData.nombre || '',
@@ -269,8 +263,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             is_active: inputValues.rolState === 'Activo',
             permisos_ids: inputValues.rolesAccess.map(rol => parseInt(String(rol.code)))
         }
-        
-        console.log('Datos a enviar:', dataToSend)
 
         Swal.fire({
             title: 'Actualizando...',
@@ -304,8 +296,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ rolId }) => {
             })
 
             const jsonResponse = await request.json()
-            
-            console.log('Respuesta del servidor:', jsonResponse)
 
             Swal.close()
 

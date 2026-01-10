@@ -24,7 +24,6 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ title, items }) => {
     const pathname = usePathname()
     
     const handleClick = (e: MouseEvent<HTMLAnchorElement>, item: SidebarMenuItem) => {
-        console.log('SidebarMenu - Click detectado:', item.label, item.href)
         // Si hay un onClick personalizado, llamarlo pero no prevenir la navegación
         if (item.onClick) {
             item.onClick(e)

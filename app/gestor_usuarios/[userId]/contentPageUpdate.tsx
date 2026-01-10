@@ -236,8 +236,6 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                 window.__tempRolId = rolId
             }
 
-            console.log('Roles del usuario cargados:', rolesFromUser)
-
             setInputsValues({
                 username: userData?.username || '',
                 email: userData?.email || '',
@@ -298,7 +296,6 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                 }))
                 : []
             
-            console.log('Roles cargados:', rolesFormatted)
             setListRols(rolesFormatted)
             
             // Si hay un ID de rol temporal guardado, buscarlo y asignarlo
@@ -306,7 +303,6 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
             if (tempRolId && rolesFormatted.length > 0) {
                 const rolEncontrado = rolesFormatted.find(r => String(r.code) === String(tempRolId))
                 if (rolEncontrado) {
-                    console.log('Rol encontrado por ID temporal:', rolEncontrado)
                     setInputsValues(prev => ({
                         ...prev,
                         roles: [rolEncontrado]

@@ -50,7 +50,6 @@ const MainForm: React.FC<MainFormProps> = ({
         event.preventDefault()
 
         if (debug) {
-            console.log(inputsValues)
             return
         }
 

@@ -343,10 +343,6 @@ export default function EditarDispositivoPage() {
                 }
             }
 
-            console.log('Campos a actualizar:', updatedFields)
-            console.log('Datos originales:', originalData)
-            console.log('Datos actuales:', formData)
-
             await dispositivosService.partialUpdate(Number(dispositivoId), updatedFields)
 
             setLoading(false)

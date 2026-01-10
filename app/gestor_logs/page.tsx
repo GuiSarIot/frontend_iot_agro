@@ -12,15 +12,16 @@ import HistoryIcon from '@mui/icons-material/History'
 import SearchIcon from '@mui/icons-material/Search'
 import SpeedIcon from '@mui/icons-material/Speed'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from 'chart.js'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { TabView, TabPanel } from 'primereact/tabview'
-import { Bar, Pie } from 'react-chartjs-2'
+import { Line, Doughnut } from 'react-chartjs-2'
 import Swal from 'sweetalert2'
 
+import useAccessLogger from '@/app/hooks/useAccessLogger'
 import { 
     auditLogsService, 
     accessLogsService,
@@ -36,7 +37,7 @@ import { useAppContext } from '@/context/appContext'
 import stylesPage from './mainPage.module.css'
 
 // Registrar componentes de Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler)
 
 // ---- Interfaces ----
 interface InfoPage {
@@ -104,6 +105,12 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
 }) => {
     const { changeTitle, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
+
+    // Registrar acceso al módulo
+    useAccessLogger({ 
+        customModule: 'admin',
+        action: 'view'
+    })
 
     // Estado para Audit Logs
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
@@ -323,16 +330,22 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
             label: 'Acciones de Auditoría',
             data: auditStats ? Object.values(auditStats.by_action) : [],
             backgroundColor: [
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(255, 99, 132, 0.6)'
+                'rgba(63, 173, 50, 0.75)',    // Verde IOTCorp
+                'rgba(255, 159, 64, 0.75)',   // Naranja
+                'rgba(244, 67, 54, 0.75)',    // Rojo
+                'rgba(33, 150, 243, 0.75)',   // Azul
+                'rgba(156, 39, 176, 0.75)'    // Morado
             ],
             borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(255, 99, 132, 1)'
+                'rgba(63, 173, 50, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(244, 67, 54, 1)',
+                'rgba(33, 150, 243, 1)',
+                'rgba(156, 39, 176, 1)'
             ],
-            borderWidth: 1
+            borderWidth: 2,
+            hoverOffset: 15,
+            hoverBorderWidth: 3
         }]
     }
 
@@ -341,31 +354,157 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
         datasets: [{
             label: 'Métodos HTTP',
             data: accessStats ? Object.values(accessStats.by_method) : [],
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(255, 159, 64, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(255, 99, 132, 0.6)'
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 99, 132, 1)'
-            ],
-            borderWidth: 1
+            backgroundColor: 'rgba(63, 173, 50, 0.1)',
+            borderColor: 'rgba(63, 173, 50, 1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(63, 173, 50, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: 'rgba(63, 173, 50, 1)',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 3
         }]
     }
 
-    const chartOptions = {
+    // Opciones para gráfica Doughnut (sin escalas X/Y)
+    const doughnutChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 1000,
+            easing: 'easeInOutQuart'
+        },
         plugins: {
             legend: {
                 position: 'bottom' as const,
+                labels: {
+                    padding: 20,
+                    font: {
+                        size: 13,
+                        weight: '500'
+                    },
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    color: '#444'
+                }
             },
+            tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: 'rgba(63, 173, 50, 0.8)',
+                borderWidth: 2,
+                padding: 12,
+                displayColors: true,
+                cornerRadius: 8,
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 13
+                },
+                callbacks: {
+                    label: function(context: any) {
+                        const label = context.label || '';
+                        const value = context.parsed;
+                        const dataset = context.dataset;
+                        const total = dataset.data.reduce((acc: number, val: number) => acc + val, 0);
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+                        return `${label}: ${value} (${percentage}%)`;
+                    }
+                }
+            }
+        }
+    }
+
+    // Opciones para gráfica Line (con escalas X/Y)
+    const lineChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+        },
+        plugins: {
+            legend: {
+                position: 'bottom' as const,
+                labels: {
+                    padding: 20,
+                    font: {
+                        size: 13,
+                        weight: '500'
+                    },
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    color: '#444'
+                }
+            },
+            tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: 'rgba(63, 173, 50, 0.8)',
+                borderWidth: 2,
+                padding: 12,
+                displayColors: true,
+                cornerRadius: 8,
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 13
+                },
+                callbacks: {
+                    label: function(context: any) {
+                        const label = context.dataset.label || '';
+                        const value = context.parsed.y;
+                        return `${label}: ${value} solicitudes`;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false
+                },
+                ticks: {
+                    color: '#666',
+                    font: {
+                        size: 12
+                    },
+                    padding: 10
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    color: '#666',
+                    font: {
+                        size: 12,
+                        weight: '500'
+                    },
+                    padding: 10
+                }
+            }
+        },
+        interaction: {
+            mode: 'index' as const,
+            intersect: false
         }
     }
 
@@ -538,13 +677,13 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
                             <div className={stylesPage.chartCard}>
                                 <h3 className={stylesPage.chartTitle}>Distribución de Acciones de Auditoría</h3>
                                 <div className={stylesPage.chartWrapper}>
-                                    <Pie data={auditActionsChartData} options={chartOptions} />
+                                    <Doughnut data={auditActionsChartData} options={doughnutChartOptions} />
                                 </div>
                             </div>
                             <div className={stylesPage.chartCard}>
-                                <h3 className={stylesPage.chartTitle}>Métodos HTTP</h3>
+                                <h3 className={stylesPage.chartTitle}>Actividad de Acceso por Método</h3>
                                 <div className={stylesPage.chartWrapper}>
-                                    <Bar data={accessMethodsChartData} options={chartOptions} />
+                                    <Line data={accessMethodsChartData} options={lineChartOptions} />
                                 </div>
                             </div>
                         </div>
@@ -570,21 +709,23 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
                                     </div>
                                 </div>
                                 
-                                <div className={stylesPage.filterGroup}>
-                                    <FilterListIcon className={stylesPage.filterIcon} />
-                                    <Dropdown
-                                        value={auditFilters.action}
-                                        options={actionOptions}
-                                        onChange={(e) => setAuditFilters({ ...auditFilters, action: e.value })}
-                                        placeholder="Filtrar por acción"
-                                        className={stylesPage.filterDropdown}
-                                    />
-                                    <InputText
-                                        value={auditFilters.model_name}
-                                        onChange={(e) => setAuditFilters({ ...auditFilters, model_name: e.target.value })}
-                                        placeholder="Modelo (ej: Dispositivo)"
-                                        className={stylesPage.filterInput}
-                                    />
+                                <div className={stylesPage.filterRow}>
+                                    <div className={stylesPage.filterGroup}>
+                                        <FilterListIcon className={stylesPage.filterIcon} />
+                                        <Dropdown
+                                            value={auditFilters.action}
+                                            options={actionOptions}
+                                            onChange={(e) => setAuditFilters({ ...auditFilters, action: e.value })}
+                                            placeholder="Filtrar por acción"
+                                            className={stylesPage.filterDropdown}
+                                        />
+                                        <InputText
+                                            value={auditFilters.model_name}
+                                            onChange={(e) => setAuditFilters({ ...auditFilters, model_name: e.target.value })}
+                                            placeholder="Modelo (ej: Dispositivo)"
+                                            className={stylesPage.filterInput}
+                                        />
+                                    </div>
                                     <button onClick={handleExportAuditLogs} className={stylesPage.btnExport}>
                                         <DownloadIcon />
                                         <span>Exportar CSV</span>
@@ -647,29 +788,31 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
                                     </div>
                                 </div>
                                 
-                                <div className={stylesPage.filterGroup}>
-                                    <FilterListIcon className={stylesPage.filterIcon} />
-                                    <Dropdown
-                                        value={accessFilters.method}
-                                        options={methodOptions}
-                                        onChange={(e) => setAccessFilters({ ...accessFilters, method: e.value })}
-                                        placeholder="Método HTTP"
-                                        className={stylesPage.filterDropdown}
-                                    />
-                                    <Dropdown
-                                        value={accessFilters.module}
-                                        options={moduleOptions}
-                                        onChange={(e) => setAccessFilters({ ...accessFilters, module: e.value })}
-                                        placeholder="Módulo"
-                                        className={stylesPage.filterDropdown}
-                                    />
-                                    <InputText
-                                        value={accessFilters.status_code}
-                                        onChange={(e) => setAccessFilters({ ...accessFilters, status_code: e.target.value })}
-                                        placeholder="Status code"
-                                        className={stylesPage.filterInput}
-                                        keyfilter="int"
-                                    />
+                                <div className={stylesPage.filterRow}>
+                                    <div className={stylesPage.filterGroup}>
+                                        <FilterListIcon className={stylesPage.filterIcon} />
+                                        <Dropdown
+                                            value={accessFilters.method}
+                                            options={methodOptions}
+                                            onChange={(e) => setAccessFilters({ ...accessFilters, method: e.value })}
+                                            placeholder="Método HTTP"
+                                            className={stylesPage.filterDropdown}
+                                        />
+                                        <Dropdown
+                                            value={accessFilters.module}
+                                            options={moduleOptions}
+                                            onChange={(e) => setAccessFilters({ ...accessFilters, module: e.value })}
+                                            placeholder="Módulo"
+                                            className={stylesPage.filterDropdown}
+                                        />
+                                        <InputText
+                                            value={accessFilters.status_code}
+                                            onChange={(e) => setAccessFilters({ ...accessFilters, status_code: e.target.value })}
+                                            placeholder="Status code"
+                                            className={stylesPage.filterInput}
+                                            keyfilter="int"
+                                        />
+                                    </div>
                                     <button onClick={handleExportAccessLogs} className={stylesPage.btnExport}>
                                         <DownloadIcon />
                                         <span>Exportar CSV</span>
