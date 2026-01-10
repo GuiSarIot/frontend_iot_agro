@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
+
 import {
     telegramService,
     TelegramStatus,
-    GenerateVerificationResponse,
 } from '@/app/services/telegram.service'
 
 export interface UseTelegramReturn {
@@ -44,8 +44,8 @@ export const useTelegram = (): UseTelegramReturn => {
             clearMessages()
             const data = await telegramService.getStatus()
             setStatus(data)
-        } catch (err: any) {
-            setError(err.message || 'Error al cargar el estado de Telegram')
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Error al cargar el estado de Telegram')
         } finally {
             setLoading(false)
         }
@@ -58,8 +58,8 @@ export const useTelegram = (): UseTelegramReturn => {
             setVerificationCode(response.verification_code)
             setExpiresIn(response.expires_in_minutes)
             setSuccess(response.message)
-        } catch (err: any) {
-            setError(err.message || 'Error al generar código de verificación')
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Error al generar código de verificación')
             throw err
         }
     }, [clearMessages])
@@ -71,8 +71,8 @@ export const useTelegram = (): UseTelegramReturn => {
                 const response = await telegramService.verifyCode(code)
                 setSuccess(response.message)
                 await loadStatus()
-            } catch (err: any) {
-                setError(err.message || 'Error al verificar el código')
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Error al verificar el código')
                 throw err
             }
         },
@@ -85,8 +85,8 @@ export const useTelegram = (): UseTelegramReturn => {
             const response = await telegramService.unlinkAccount()
             setSuccess(response.message)
             await loadStatus()
-        } catch (err: any) {
-            setError(err.message || 'Error al desvincular la cuenta')
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Error al desvincular la cuenta')
             throw err
         }
     }, [clearMessages, loadStatus])
@@ -105,8 +105,8 @@ export const useTelegram = (): UseTelegramReturn => {
                 }
 
                 await loadStatus()
-            } catch (err: any) {
-                setError(err.message || 'Error al actualizar las notificaciones')
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Error al actualizar las notificaciones')
                 await loadStatus()
                 throw err
             }

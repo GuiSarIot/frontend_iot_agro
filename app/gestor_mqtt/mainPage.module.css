@@ -1,0 +1,283 @@
+/* ============================================
+   GESTOR DE MQTT - ESTILOS PRINCIPALES
+   ============================================ */
+
+.containerPage {
+    padding: var(--spacing-xl);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   MAIN CARD (Contenedor principal)
+   ============================================ */
+
+.mainCard {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-base);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.mainCard:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   PAGE HEADER (Dentro del box)
+   ============================================ */
+
+.pageHeader {
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.titleSection {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+}
+
+.titleIcon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary);
+    margin-top: 4px;
+}
+
+.pageTitle {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.pageSubtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+
+.contentArea {
+    padding: var(--spacing-xl);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.sectionTitle {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.moduleCount {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ============================================
+   GRID DE MÓDULOS
+   ============================================ */
+
+.modulesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* ============================================
+   TARJETAS DE MÓDULOS
+   ============================================ */
+
+.moduleCard {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.moduleCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.moduleCard:hover .moduleIconWrapper {
+    background: var(--primary);
+    color: white;
+}
+
+.cardContent {
+    padding: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+}
+
+.moduleIconWrapper {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: var(--border-radius-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .moduleIconWrapper {
+    background: rgba(79, 193, 112, 0.15);
+}
+
+[data-theme='dark'] .moduleCard:hover .moduleIconWrapper {
+    background: var(--primary);
+}
+
+.moduleIconWrapper svg {
+    font-size: 28px !important;
+}
+
+.moduleInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.moduleTitle {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--text-primary);
+}
+
+.moduleDescription {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-base);
+}
+
+.emptyIcon {
+    width: 64px !important;
+    height: 64px !important;
+    color: var(--text-tertiary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.emptyText {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .modulesGrid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .containerPage {
+        padding: var(--spacing-lg);
+    }
+
+    .pageHeader {
+        padding: var(--spacing-lg);
+    }
+
+    .contentArea {
+        padding: var(--spacing-lg);
+    }
+
+    .titleSection {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .titleIcon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .pageTitle {
+        font-size: var(--font-size-2xl);
+    }
+
+    .modulesGrid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .cardContent {
+        padding: var(--spacing-lg);
+    }
+
+    .moduleIconWrapper {
+        width: 48px;
+        height: 48px;
+    }
+
+    .moduleIconWrapper svg {
+        font-size: 24px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .containerPage {
+        padding: var(--spacing-md);
+    }
+
+    .pageHeader,
+    .contentArea {
+        padding: var(--spacing-md);
+    }
+
+    .sectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+
+    .cardContent {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .moduleInfo {
+        width: 100%;
+    }
+}

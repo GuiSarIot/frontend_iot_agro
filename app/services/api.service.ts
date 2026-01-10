@@ -56,6 +56,56 @@ export {
     type LecturaResumida
 } from './lecturas.service'
 
+// Re-exportar los servicios completos de MQTT desde su archivo especializado
+export {
+    // Brokers
+    mqttBrokersService,
+    type MqttBroker,
+    type MqttBrokersResponse,
+    type CreateMqttBrokerDto,
+    type UpdateMqttBrokerDto,
+    
+    // Credentials
+    mqttCredentialsService,
+    type MqttCredential,
+    type MqttCredentialDetail,
+    type MqttCredentialsResponse,
+    type CreateMqttCredentialDto,
+    type UpdateMqttCredentialDto,
+    
+    // Topics
+    mqttTopicsService,
+    type MqttTopic,
+    type MqttTopicsResponse,
+    type CreateMqttTopicDto,
+    type UpdateMqttTopicDto,
+    
+    // Device Config
+    mqttDeviceConfigService,
+    type MqttDeviceConfig,
+    type MqttDeviceConfigsResponse,
+    type CreateMqttDeviceConfigDto,
+    type UpdateMqttDeviceConfigDto,
+    
+    // EMQX Users
+    emqxUsersService,
+    type EmqxUser,
+    type EmqxUsersResponse,
+    type CreateEmqxUserDto,
+    type CreateEmqxUserWithAclDto,
+    type UpdateEmqxUserDto,
+    
+    // EMQX ACL
+    emqxAclService,
+    type EmqxAcl,
+    type EmqxAclResponse,
+    type CreateEmqxAclDto,
+    type UpdateEmqxAclDto,
+    
+    // Utilities
+    mqttUtilitiesService
+} from './mqtt.service'
+
 /**
  * Ejemplo de servicio para gestionar usuarios
  */

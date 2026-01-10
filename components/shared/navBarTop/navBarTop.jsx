@@ -1,31 +1,22 @@
 'use client'
 
 import { useContext, useState } from 'react'
+
+import Image from 'next/image'
 import { useRouter, usePathname } from 'next/navigation'
 
-import MenuIcon from '@mui/icons-material/Menu'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
+import MenuIcon from '@mui/icons-material/Menu'
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import PersonIcon from '@mui/icons-material/Person'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import PeopleIcon from '@mui/icons-material/People'
-import DevicesIcon from '@mui/icons-material/Devices'
-import SensorsIcon from '@mui/icons-material/Sensors'
-import AssessmentIcon from '@mui/icons-material/Assessment'
-import SettingsIcon from '@mui/icons-material/Settings'
-import SecurityIcon from '@mui/icons-material/Security'
-import RouterIcon from '@mui/icons-material/Router'
-import VpnKeyIcon from '@mui/icons-material/VpnKey'
-import CodeIcon from '@mui/icons-material/Code'
-import Image from 'next/image'
 
-import AppContext from '@/context/appContext'
 import { MODULES_CONFIG } from '@/components/shared/layout/modulesConfig'
+import AppContext from '@/context/appContext'
 
 import stylesNavBarTop from './navBarTop.module.css'
-import ProfilePopup from './profilePopup/profilePopup'
 import GetProfileImage from './profilePopup/getProfileImage'
+import ProfilePopup from './profilePopup/profilePopup'
 
 const NavBarTop = () => {
 
@@ -64,7 +55,6 @@ const NavBarTop = () => {
                 return config.permissions.some(permission => permissions.includes(permission))
             })
             .sort((a, b) => a[1].priority - b[1].priority)
-            .slice(0, 6) // Mostrar máximo 6 módulos en el navbar
     }
     
     const availableModules = getAvailableModules()

@@ -36,18 +36,28 @@
     align-items: center;
     gap: var(--spacing-xs);
     flex: 1;
-    max-width: 700px;
+    max-width: 100%;
     overflow-x: auto;
     padding: var(--spacing-xs) 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
 }
 
 .modulesNav::-webkit-scrollbar {
     height: 4px;
 }
 
+.modulesNav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .modulesNav::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: var(--border-radius-full);
+}
+
+.modulesNav::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
 }
 
 .moduleButton {

@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+
 import { usePathname } from 'next/navigation'
+
 import { accessLogsService } from '@/app/services/api.service'
 
 /**
@@ -17,8 +19,7 @@ const ROUTE_TO_MODULE_MAP: Record<string, string> = {
     '/gestor_dispositivos': 'devices',
     '/gestor_sensores': 'sensors',
     '/gestor_logs': 'admin',
-    '/dashboard': 'other',
-    '/ejemplos': 'other'
+    '/dashboard': 'other'
 }
 
 /**

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import CloseIcon from '@mui/icons-material/Close'
+import SensorsIcon from '@mui/icons-material/Sensors'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
@@ -42,9 +43,10 @@ export default function AsignarSensorModal({
         setLoadingSensores(true)
         try {
             const data = await sensoresService.getAll()
-            setSensores(data)
+            setSensores(data.results || [])
         } catch (error) {
             console.error('Error al cargar sensores:', error)
+            setSensores([])
         } finally {
             setLoadingSensores(false)
         }
@@ -91,11 +93,18 @@ export default function AsignarSensorModal({
         </div>
     )
 
+    const headerTemplate = (
+        <div className={styles.modalHeader}>
+            <SensorsIcon className={styles.modalHeaderIcon} />
+            <span>Asignar sensor al dispositivo</span>
+        </div>
+    )
+
     return (
         <Dialog
             visible={visible}
             onHide={handleClose}
-            header="Asignar sensor al dispositivo"
+            header={headerTemplate}
             footer={footer}
             className={styles.modal}
             style={{ width: '550px', maxWidth: '95vw' }}

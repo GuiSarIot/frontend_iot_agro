@@ -3,15 +3,13 @@
 import React, { ReactElement } from 'react'
 
 import AssessmentIcon from '@mui/icons-material/Assessment'
-import CodeIcon from '@mui/icons-material/Code'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DevicesIcon from '@mui/icons-material/Devices'
 import HistoryIcon from '@mui/icons-material/History'
 import PeopleIcon from '@mui/icons-material/People'
 import RouterIcon from '@mui/icons-material/Router'
-import SecurityIcon from '@mui/icons-material/Security'
 import SensorsIcon from '@mui/icons-material/Sensors'
-import VpnKeyIcon from '@mui/icons-material/VpnKey'
+
 
 import { SidebarMenuItem } from './SidebarMenu'
 
@@ -76,36 +74,12 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         priority: 6
     },
     mqtt: {
-        permissions: ['gestionar_mqtt', 'ver_credenciales_mqtt'],
+        permissions: ['gestionar_mqtt', 'ver_mqtt'],
         icon: <RouterIcon />,
         label: 'MQTT',
-        href: '/mqtt',
-        description: 'Configuración MQTT/EMQX',
+        href: '/gestor_mqtt',
+        description: 'Gestión de componentes MQTT',
         priority: 7
-    },
-    roles: {
-        permissions: ['gestionar_roles'],
-        icon: <SecurityIcon />,
-        label: 'Roles',
-        href: '/gestor_usuarios/roles',
-        description: 'Gestión de roles',
-        priority: 8
-    },
-    permisos: {
-        permissions: ['gestionar_permisos'],
-        icon: <VpnKeyIcon />,
-        label: 'Permisos',
-        href: '/permisos',
-        description: 'Gestión de permisos',
-        priority: 9
-    },
-    ejemplos: {
-        permissions: [], // Todos tienen acceso a ejemplos
-        icon: <CodeIcon />,
-        label: 'Ejemplos',
-        href: '/ejemplos',
-        description: 'Ejemplos de código y funcionalidades',
-        priority: 10
     }
 }
 
@@ -139,7 +113,7 @@ export const getAvailableModules = (userPermissions: string[]): SidebarMenuItem[
 
     const availableModules: SidebarMenuItem[] = []
 
-    Object.entries(MODULES_CONFIG).forEach(([key, config]) => {
+    Object.entries(MODULES_CONFIG).forEach(([_key, config]) => {
         // Si el módulo no requiere permisos (array vacío), está disponible para todos
         const hasAccess = config.permissions.length === 0 || 
             config.permissions.some(permission => userPermissions.includes(permission))

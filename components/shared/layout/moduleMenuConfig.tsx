@@ -2,7 +2,6 @@
 
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import AssessmentIcon from '@mui/icons-material/Assessment'
-import CodeIcon from '@mui/icons-material/Code'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DevicesIcon from '@mui/icons-material/Devices'
 import ListIcon from '@mui/icons-material/List'
@@ -96,18 +95,126 @@ export const MODULE_MENUS: Record<string, SidebarMenuItem[]> = {
             title: 'Registrar nuevo sensor'
         }
     ],
-    '/ejemplos': [
+    '/gestor_mqtt': [
         {
-            icon: <CodeIcon />,
-            label: 'Ejemplos de Código',
-            href: '/ejemplos',
-            title: 'Ver ejemplos de implementación'
+            icon: <ListIcon />,
+            label: 'Brokers MQTT',
+            href: '/gestor_mqtt_brokers',
+            title: 'Gestión de brokers MQTT'
+        },
+        {
+            icon: <SecurityIcon />,
+            label: 'Credenciales MQTT',
+            href: '/gestor_mqtt_credentials',
+            title: 'Gestión de credenciales de autenticación'
+        },
+        {
+            icon: <SettingsIcon />,
+            label: 'Topics MQTT',
+            href: '/gestor_mqtt_topics',
+            title: 'Gestión de topics MQTT'
         },
         {
             icon: <DevicesIcon />,
-            label: 'Ejemplo Dispositivos',
-            href: '/ejemplos/gestor_dispositivos-example',
-            title: 'Ejemplo de gestión de dispositivos'
+            label: 'Config. Dispositivos',
+            href: '/gestor_mqtt_device_config',
+            title: 'Configuración MQTT por dispositivo'
+        },
+        {
+            icon: <PeopleIcon />,
+            label: 'Usuarios EMQX',
+            href: '/gestor_emqx_users',
+            title: 'Gestión de usuarios EMQX'
+        },
+        {
+            icon: <SecurityIcon />,
+            label: 'ACL EMQX',
+            href: '/gestor_emqx_acl',
+            title: 'Control de acceso a topics'
+        }
+    ],
+    '/gestor_mqtt_brokers': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Brokers',
+            href: '/gestor_mqtt_brokers',
+            title: 'Ver todos los brokers MQTT'
+        },
+        {
+            icon: <AddCircleIcon />,
+            label: 'Crear Broker',
+            href: '/gestor_mqtt_brokers/crear',
+            title: 'Registrar nuevo broker'
+        }
+    ],
+    '/gestor_mqtt_credentials': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Credenciales',
+            href: '/gestor_mqtt_credentials',
+            title: 'Ver todas las credenciales'
+        },
+        {
+            icon: <AddCircleIcon />,
+            label: 'Crear Credencial',
+            href: '/gestor_mqtt_credentials/crear',
+            title: 'Registrar nueva credencial'
+        }
+    ],
+    '/gestor_mqtt_topics': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Topics',
+            href: '/gestor_mqtt_topics',
+            title: 'Ver todos los topics'
+        },
+        {
+            icon: <AddCircleIcon />,
+            label: 'Crear Topic',
+            href: '/gestor_mqtt_topics/crear',
+            title: 'Registrar nuevo topic'
+        }
+    ],
+    '/gestor_mqtt_device_config': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Configuraciones',
+            href: '/gestor_mqtt_device_config',
+            title: 'Ver configuraciones de dispositivos'
+        },
+        {
+            icon: <AddCircleIcon />,
+            label: 'Crear Configuración',
+            href: '/gestor_mqtt_device_config/crear',
+            title: 'Configurar dispositivo MQTT'
+        }
+    ],
+    '/gestor_emqx_users': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Usuarios',
+            href: '/gestor_emqx_users',
+            title: 'Ver usuarios EMQX'
+        },
+        {
+            icon: <PersonAddIcon />,
+            label: 'Crear Usuario',
+            href: '/gestor_emqx_users/crear',
+            title: 'Registrar usuario EMQX'
+        }
+    ],
+    '/gestor_emqx_acl': [
+        {
+            icon: <ListIcon />,
+            label: 'Lista de Reglas ACL',
+            href: '/gestor_emqx_acl',
+            title: 'Ver reglas de control de acceso'
+        },
+        {
+            icon: <AddCircleIcon />,
+            label: 'Crear Regla ACL',
+            href: '/gestor_emqx_acl/crear',
+            title: 'Crear regla de acceso'
         }
     ]
 }
