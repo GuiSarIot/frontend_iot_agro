@@ -24,7 +24,7 @@ const menuItems = [
     {
         icon: <DevicesIcon />,
         label: 'Ejemplo Dispositivos',
-        href: '/ejemplos/dispositivos-example',
+        href: '/ejemplos/gestor_dispositivos-example',
         title: 'Ejemplo de gestión de dispositivos'
     }
 ]

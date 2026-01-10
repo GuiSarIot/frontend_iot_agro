@@ -163,6 +163,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
         // Extraer los códigos de permisos del usuario
         const permissionCodes = data.rol_detail?.permisos?.map(p => p.codigo) || []
         
+        // Si es superusuario, agregar el permiso especial
+        if (data.is_superuser) {
+            permissionCodes.push('is_superuser')
+        }
+        
         console.log('ProtectedRoute - Datos del usuario:', data)
         console.log('ProtectedRoute - Permisos extraídos:', permissionCodes)
         

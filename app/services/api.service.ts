@@ -10,118 +10,37 @@ import {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
-/**
- * Ejemplo de servicio para gestionar dispositivos
- * Reemplaza con tus propios tipos según tu backend
- */
+// ============================================
+// IMPORTAR SERVICIOS ESPECIALIZADOS
+// ============================================
 
-export interface Dispositivo {
-    id: number
-    nombre: string
-    tipo: string
-    estado: string
-    ubicacion?: string
-    created_at: string
-    updated_at: string
-}
+// Re-exportar el servicio completo de dispositivos desde su archivo especializado
+export { 
+    dispositivosService,
+    type Dispositivo,
+    type DispositivosResponse,
+    type CreateDispositivoDto,
+    type SensorAsignado,
+    type TipoDispositivo,
+    type DispositivoQueryParams,
+    type AsignarSensorDto,
+    type AsignarOperadorResponse,
+    type AsignarOperadorDto,
+    type AsignarSensorResponse,
+    type MqttCredentials,
+    type DispositivoMqtt
+} from './dispositivos.service'
 
-export interface CreateDispositivoDto {
-    nombre: string
-    tipo: string
-    estado: string
-    ubicacion?: string
-}
-
-export const dispositivosService = {
-    /**
-     * Obtiene todos los dispositivos
-     */
-    getAll: async (): Promise<Dispositivo[]> => {
-        return authenticatedGet<Dispositivo[]>(`${API_BASE_URL}/api/dispositivos/`)
-    },
-
-    /**
-     * Obtiene un dispositivo por ID
-     */
-    getById: async (id: number): Promise<Dispositivo> => {
-        return authenticatedGet<Dispositivo>(`${API_BASE_URL}/api/dispositivos/${id}/`)
-    },
-
-    /**
-     * Crea un nuevo dispositivo
-     */
-    create: async (data: CreateDispositivoDto): Promise<Dispositivo> => {
-        return authenticatedPost<Dispositivo>(`${API_BASE_URL}/api/dispositivos/`, data)
-    },
-
-    /**
-     * Actualiza un dispositivo completo (PUT)
-     */
-    update: async (id: number, data: CreateDispositivoDto): Promise<Dispositivo> => {
-        return authenticatedPut<Dispositivo>(
-            `${API_BASE_URL}/api/dispositivos/${id}/`,
-            data
-        )
-    },
-
-    /**
-     * Actualiza parcialmente un dispositivo (PATCH)
-     */
-    partialUpdate: async (
-        id: number,
-        data: Partial<CreateDispositivoDto>
-    ): Promise<Dispositivo> => {
-        return authenticatedPatch<Dispositivo>(
-            `${API_BASE_URL}/api/dispositivos/${id}/`,
-            data
-        )
-    },
-
-    /**
-     * Elimina un dispositivo
-     */
-    delete: async (id: number): Promise<void> => {
-        return authenticatedDelete<void>(`${API_BASE_URL}/api/dispositivos/${id}/`)
-    },
-}
-
-/**
- * Ejemplo de servicio para gestionar sensores
- */
-
-export interface Sensor {
-    id: number
-    nombre: string
-    tipo: string
-    unidad_medida: string
-    created_at: string
-    updated_at: string
-}
-
-export const sensoresService = {
-    getAll: async (): Promise<Sensor[]> => {
-        return authenticatedGet<Sensor[]>(`${API_BASE_URL}/api/sensores/`)
-    },
-
-    getById: async (id: number): Promise<Sensor> => {
-        return authenticatedGet<Sensor>(`${API_BASE_URL}/api/sensores/${id}/`)
-    },
-
-    create: async (data: Omit<Sensor, 'id' | 'created_at' | 'updated_at'>): Promise<Sensor> => {
-        return authenticatedPost<Sensor>(`${API_BASE_URL}/api/sensores/`, data)
-    },
-
-    update: async (
-        id: number,
-        data: Omit<Sensor, 'id' | 'created_at' | 'updated_at'>
-    ): Promise<Sensor> => {
-        return authenticatedPut<Sensor>(`${API_BASE_URL}/api/sensores/${id}/`, data)
-    },
-
-    delete: async (id: number): Promise<void> => {
-        return authenticatedDelete<void>(`${API_BASE_URL}/api/sensores/${id}/`)
-    },
-}
+// Re-exportar el servicio completo de sensores desde su archivo especializado
+export {
+    sensoresService,
+    type Sensor,
+    type SensoresResponse,
+    type CreateSensorDto,
+    type UpdateSensorDto,
+    type TipoSensor,
+    type SensorQueryParams
+} from './sensores.service'
 
 /**
  * Ejemplo de servicio para gestionar usuarios
@@ -262,5 +181,164 @@ export const rolesService = {
      */
     delete: async (id: number): Promise<void> => {
         return authenticatedDelete<void>(`${API_BASE_URL}/api/roles/${id}/`)
+    },
+}
+
+/**
+ * Servicio para gestionar logs de auditoría
+ */
+
+export interface AuditLog {
+    id: number
+    timestamp: string
+    user: number
+    username: string
+    model_name: string
+    object_id: string
+    object_repr: string
+    action: 'CREATE' | 'UPDATE' | 'DELETE'
+    changes: Record<string, { old: any; new: any }>
+    ip_address: string
+    user_agent: string
+}
+
+export interface AuditLogsResponse {
+    count: number
+    next: string | null
+    previous: string | null
+    results: AuditLog[]
+}
+
+export interface AuditStatsResponse {
+    total_logs: number
+    by_action: Record<string, number>
+    by_model: Record<string, number>
+    recent_changes: AuditLog[]
+}
+
+export interface AuditLogQueryParams {
+    action?: 'CREATE' | 'UPDATE' | 'DELETE'
+    model_name?: string
+    username?: string
+    page?: number
+}
+
+export const auditLogsService = {
+    /**
+     * Obtiene todos los logs de auditoría con filtros opcionales
+     */
+    getAll: async (params?: AuditLogQueryParams): Promise<AuditLogsResponse> => {
+        const queryParams = new URLSearchParams()
+        if (params?.action) queryParams.append('action', params.action)
+        if (params?.model_name) queryParams.append('model_name', params.model_name)
+        if (params?.username) queryParams.append('username', params.username)
+        if (params?.page) queryParams.append('page', String(params.page))
+
+        const query = queryParams.toString()
+        const url = query
+            ? `${API_BASE_URL}/api/audit_logs/?${query}`
+            : `${API_BASE_URL}/api/audit_logs/`
+
+        return authenticatedGet<AuditLogsResponse>(url)
+    },
+
+    /**
+     * Obtiene estadísticas de auditoría
+     */
+    getStats: async (): Promise<AuditStatsResponse> => {
+        return authenticatedGet<AuditStatsResponse>(`${API_BASE_URL}/api/audit_logs/stats/`)
+    },
+
+    /**
+     * Obtiene un log de auditoría por ID
+     */
+    getById: async (id: number): Promise<AuditLog> => {
+        return authenticatedGet<AuditLog>(`${API_BASE_URL}/api/audit_logs/${id}/`)
+    },
+}
+
+/**
+ * Servicio para gestionar logs de acceso
+ */
+
+export interface AccessLog {
+    id: number
+    timestamp: string
+    user: number
+    username: string
+    module: string
+    endpoint: string
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+    status_code: number
+    response_time_ms: number
+    ip_address: string
+    user_agent: string
+}
+
+export interface AccessLogsResponse {
+    count: number
+    next: string | null
+    previous: string | null
+    results: AccessLog[]
+}
+
+export interface AccessStatsResponse {
+    total_requests: number
+    by_method: Record<string, number>
+    by_status: Record<string, number>
+    avg_response_time_ms: number
+}
+
+export interface AccessLogQueryParams {
+    method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+    status_code?: number
+    module?: string
+    page?: number
+}
+
+export const accessLogsService = {
+    /**
+     * Obtiene todos los logs de acceso con filtros opcionales
+     */
+    getAll: async (params?: AccessLogQueryParams): Promise<AccessLogsResponse> => {
+        const queryParams = new URLSearchParams()
+        if (params?.method) queryParams.append('method', params.method)
+        if (params?.status_code) queryParams.append('status_code', String(params.status_code))
+        if (params?.module) queryParams.append('module', params.module)
+        if (params?.page) queryParams.append('page', String(params.page))
+
+        const query = queryParams.toString()
+        const url = query
+            ? `${API_BASE_URL}/api/access_logs/?${query}`
+            : `${API_BASE_URL}/api/access_logs/`
+
+        return authenticatedGet<AccessLogsResponse>(url)
+    },
+
+    /**
+     * Obtiene estadísticas de acceso
+     */
+    getStats: async (): Promise<AccessStatsResponse> => {
+        return authenticatedGet<AccessStatsResponse>(`${API_BASE_URL}/api/access_logs/stats/`)
+    },
+
+    /**
+     * Obtiene un log de acceso por ID
+     */
+    getById: async (id: number): Promise<AccessLog> => {
+        return authenticatedGet<AccessLog>(`${API_BASE_URL}/api/access_logs/${id}/`)
+    },
+
+    /**
+     * Crea un log de acceso manual
+     */
+    create: async (data: {
+        module: string
+        endpoint: string
+        method: string
+        status_code: number
+        response_time_ms: number
+    }): Promise<AccessLog> => {
+        return authenticatedPost<AccessLog>(`${API_BASE_URL}/api/access_logs/create_log/`, data)
     },
 }

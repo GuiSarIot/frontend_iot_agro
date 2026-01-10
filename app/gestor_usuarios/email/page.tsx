@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 
+import EmailIcon from '@mui/icons-material/Email'
+
 import { emailService, SendEmailNotificationRequest } from '@/app/services/email.service'
 
 import styles from '../notifications.module.css'
@@ -80,8 +82,11 @@ const EmailNotificationsPage = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.pageContainer}>
-                <div className={styles.pageHeader}>
-                    <h1 className={styles.pageTitle}>Enviar Notificaciones por Email</h1>
+                <div className={styles.titleSection}>
+                    <div className={styles.titleWrapper}>
+                        <EmailIcon className={styles.titleIcon} />
+                        <h1 className={styles.pageTitle}>Envío de notificaciones por email</h1>
+                    </div>
                     <p className={styles.pageSubtitle}>
                         Envía notificaciones a usuarios con cuentas de email verificadas
                     </p>

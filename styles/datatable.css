@@ -56,7 +56,7 @@
     min-width: 300px;
     width: 40%;
     max-width: 500px;
-    color: var(--text-color-primary);
+    color: var(--text-primary);
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-base);
@@ -77,7 +77,7 @@
 
 .dataTableCustom table th {
     font-weight: 600;
-    color: var(--text-color-primary);
+    color: var(--text-primary);
     background-color: var(--bg-secondary);
     border: none;
 }
@@ -91,10 +91,10 @@
 
 .dataTableCustom table td {
     text-align: left;
-    color: var(--text-color-primary);
+    color: var(--text-primary);
     background-color: var(--bg-primary);
     border: none;
-    border-bottom: 1px solid var(--border-color-primary);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .dataTableCustom table tbody tr:hover td {
@@ -113,7 +113,7 @@
     background: none;
     cursor: pointer;
     outline: none;
-    color: var(--text-color-primary);
+    color: var(--text-primary);
 }
 
 .dataTableCustom td button,
@@ -129,7 +129,7 @@
 
 .dataTableCustom td button:hover,
 .dataTableCustom td a:hover{
-    color: var(--text-color-secondary);
+    color: var(--text-secondary);
 }
 
 .p-datatable .p-column-header-content{
@@ -154,7 +154,7 @@
         width: 50%;
         padding: 6px 10px;
         margin: 0 auto;
-        color: var(--text-color-primary);
+        color: var(--text-primary);
         font-size: 13px;
     }
 }
@@ -167,7 +167,7 @@
         width: 90%;
         padding: 5px;
         margin: 0 auto;
-        color: var(--text-color-primary);
+        color: var(--text-primary);
         font-size: 13px;
     }
 }

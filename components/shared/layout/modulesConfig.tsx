@@ -1,11 +1,13 @@
 'use client'
 
+import React, { ReactElement } from 'react'
+
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import CodeIcon from '@mui/icons-material/Code'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DevicesIcon from '@mui/icons-material/Devices'
+import HistoryIcon from '@mui/icons-material/History'
 import PeopleIcon from '@mui/icons-material/People'
-import PersonIcon from '@mui/icons-material/Person'
 import RouterIcon from '@mui/icons-material/Router'
 import SecurityIcon from '@mui/icons-material/Security'
 import SensorsIcon from '@mui/icons-material/Sensors'
@@ -16,7 +18,7 @@ import { SidebarMenuItem } from './SidebarMenu'
 // Mapeo de permisos a módulos principales
 interface ModuleConfig {
     permissions: string[]  // Permisos que dan acceso al módulo
-    icon: JSX.Element
+    icon: ReactElement
     label: string
     href: string
     description: string
@@ -41,19 +43,19 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         description: 'Gestión de usuarios del sistema',
         priority: 2
     },
-    perfil: {
-        permissions: [], // Todos tienen acceso a editar su perfil
-        icon: <PersonIcon />,
-        label: 'Mi Perfil',
-        href: '/update_personal_info',
-        description: 'Actualizar información personal',
+    logs: {
+        permissions: ['is_superuser'], // Solo superusuarios
+        icon: <HistoryIcon />,
+        label: 'Auditoría y Logs',
+        href: '/gestor_logs',
+        description: 'Auditoría y logs del sistema',
         priority: 3
     },
     dispositivos: {
         permissions: ['gestionar_dispositivos', 'ver_dispositivos'],
         icon: <DevicesIcon />,
         label: 'Dispositivos',
-        href: '/dispositivos',
+        href: '/gestor_dispositivos',
         description: 'Gestión de dispositivos IoT',
         priority: 4
     },
@@ -61,7 +63,7 @@ export const MODULES_CONFIG: Record<string, ModuleConfig> = {
         permissions: ['gestionar_sensores', 'ver_sensores'],
         icon: <SensorsIcon />,
         label: 'Sensores',
-        href: '/sensores',
+        href: '/gestor_sensores',
         description: 'Gestión de sensores',
         priority: 5
     },

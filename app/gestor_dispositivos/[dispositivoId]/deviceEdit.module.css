@@ -1,0 +1,225 @@
+/* ============================================
+   SECCIONES DE GESTIÓN DE SENSORES Y OPERADORES
+   ============================================ */
+
+/* Secciones */
+.section {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--bg-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.sectionTitle h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+.sectionTitle svg {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+/* Botones */
+.btnAddSensor {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    min-height: 42px;
+}
+
+.btnAddSensor:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
+}
+
+.btnAddSensor svg {
+    font-size: 1.25rem;
+}
+
+.btnDelete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: var(--border-width) solid var(--error);
+    color: var(--error);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btnDelete:hover {
+    background: var(--error);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btnDelete svg {
+    font-size: 1.125rem;
+}
+
+/* Tabla */
+.table {
+    width: 100%;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+
+.table :global(.p-datatable-header) {
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table :global(.p-datatable-thead > tr > th) {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-md);
+    border: none;
+    font-size: var(--font-size-sm);
+}
+
+.table :global(.p-datatable-tbody > tr) {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.table :global(.p-datatable-tbody > tr > td) {
+    padding: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+}
+
+.table :global(.p-datatable-tbody > tr:hover) {
+    background: var(--bg-hover);
+}
+
+.table :global(.p-datatable-tbody > tr:last-child > td) {
+    border-bottom: none;
+}
+
+/* Estados */
+.statusActive {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: var(--success-50);
+    color: var(--success-700);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+[data-theme='dark'] .statusActive {
+    background: rgba(32, 201, 151, 0.15);
+    color: #4ade80;
+}
+
+.statusInactive {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    background: var(--neutral-100);
+    color: var(--neutral-600);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+[data-theme='dark'] .statusInactive {
+    background: rgba(156, 163, 175, 0.15);
+    color: #9ca3af;
+}
+
+/* Configuración */
+.configCell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.configCell strong {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Estado vacío */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3xl) var(--spacing-md);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.emptyState svg {
+    font-size: 3rem;
+    color: var(--neutral-400);
+    margin-bottom: var(--spacing-md);
+}
+
+[data-theme='dark'] .emptyState svg {
+    color: var(--neutral-600);
+}
+
+.emptyState p {
+    margin-top: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    color: var(--text-secondary);
+}
+
+/* Operador actual */
+.currentOperator {
+    display: block;
+    margin-top: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    font-style: italic;
+}
+
+.operatorDropdown {
+    width: 100%;
+    max-width: 400px;
+}
+
+.operatorDropdown :global(.p-dropdown) {
+    width: 100%;
+}

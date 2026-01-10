@@ -59,10 +59,50 @@ export async function authenticatedFetch<T = unknown>(
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}))
-            throw new Error(errorData.message || `Error HTTP: ${response.status}`)
+            
+            // Extraer mensaje de error más específico
+            let errorMessage = `Error HTTP: ${response.status}`
+            
+            if (errorData.detail) {
+                errorMessage = errorData.detail
+            } else if (errorData.message) {
+                errorMessage = errorData.message
+            } else if (errorData.error) {
+                errorMessage = errorData.error
+            } else if (typeof errorData === 'object' && Object.keys(errorData).length > 0) {
+                // Si hay errores de campo específicos
+                const fieldErrors = Object.entries(errorData)
+                    .map(([field, messages]) => {
+                        if (Array.isArray(messages)) {
+                            return `${field}: ${messages.join(', ')}`
+                        }
+                        return `${field}: ${messages}`
+                    })
+                    .join('. ')
+                if (fieldErrors) {
+                    errorMessage = fieldErrors
+                }
+            }
+            
+            throw new Error(errorMessage)
         }
 
-        return (await response.json()) as T
+        // Manejar respuestas vacías (204 No Content, DELETE, etc.)
+        const contentType = response.headers.get('content-type')
+        const contentLength = response.headers.get('content-length')
+        
+        // Si no hay contenido o es 204, retornar objeto vacío
+        if (response.status === 204 || contentLength === '0' || !contentType?.includes('application/json')) {
+            return {} as T
+        }
+
+        // Intentar parsear JSON solo si hay contenido
+        const text = await response.text()
+        if (!text || text.trim().length === 0) {
+            return {} as T
+        }
+
+        return JSON.parse(text) as T
     } catch (error) {
         console.error('Error en petición autenticada:', error)
         throw error

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 
+import TelegramIcon from '@mui/icons-material/Telegram'
+
 import { telegramService, SendNotificationRequest } from '@/app/services/telegram.service'
 
 import styles from '../notifications.module.css'
@@ -73,8 +75,11 @@ const TelegramNotificationsPage = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.pageContainer}>
-                <div className={styles.pageHeader}>
-                    <h1 className={styles.pageTitle}>Enviar Notificaciones de Telegram</h1>
+                <div className={styles.titleSection}>
+                    <div className={styles.titleWrapper}>
+                        <TelegramIcon className={styles.titleIcon} />
+                        <h1 className={styles.pageTitle}>Envío de notificaciones de Telegram</h1>
+                    </div>
                     <p className={styles.pageSubtitle}>
                         Envía notificaciones a usuarios con cuentas de Telegram vinculadas y verificadas
                     </p>

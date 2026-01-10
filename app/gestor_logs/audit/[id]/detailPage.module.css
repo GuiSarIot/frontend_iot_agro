@@ -1,0 +1,411 @@
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.containerPage {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--background);
+}
+
+.mainCard {
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.pageHeader {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+    border-bottom: 1px solid var(--border);
+}
+
+.btnBack {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+}
+
+.btnBack:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateX(-4px);
+}
+
+.titleSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.titleIcon {
+    font-size: 2rem !important;
+    color: var(--primary);
+}
+
+.pageTitle {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.pageSubtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+    padding-left: 3rem;
+}
+
+/* ============================================
+   CONTENIDO
+   ============================================ */
+.contentSection {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.infoCard {
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--primary-100);
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.infoLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infoValue {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.infoValueCode {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    background: var(--surface);
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.infoValueFull {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    word-break: break-all;
+    grid-column: 1 / -1;
+}
+
+/* ============================================
+   CAMBIOS (AUDIT LOGS)
+   ============================================ */
+.changesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.changeCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.changeField {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.changeComparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.changeColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.changeLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.oldValue,
+.newValue {
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+}
+
+.oldValue {
+    background: var(--error-50);
+    border-color: var(--error-200);
+}
+
+.oldValue pre {
+    color: var(--error);
+    margin: 0;
+}
+
+.newValue {
+    background: var(--success-50);
+    border-color: var(--success-200);
+}
+
+.newValue pre {
+    color: var(--success);
+    margin: 0;
+}
+
+.changeArrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+/* ============================================
+   RENDIMIENTO (ACCESS LOGS)
+   ============================================ */
+.performanceCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.performanceMetric {
+    text-align: center;
+    padding: 2rem;
+    background: var(--primary-50);
+    border: 2px solid var(--primary-200);
+    border-radius: 12px;
+    min-width: 250px;
+}
+
+.metricLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+}
+
+.metricValue {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Badges de Acción */
+.badgeCreate {
+    background: var(--success-50);
+    color: var(--success);
+    border: 1px solid var(--success-200);
+}
+
+.badgeUpdate {
+    background: var(--warning-50);
+    color: var(--warning);
+    border: 1px solid var(--warning-200);
+}
+
+.badgeDelete {
+    background: var(--error-50);
+    color: var(--error);
+    border: 1px solid var(--error-200);
+}
+
+/* Badges de Método HTTP */
+.badgeGet {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #90caf9;
+}
+
+.badgePost {
+    background: #e8f5e9;
+    color: #388e3c;
+    border: 1px solid #81c784;
+}
+
+.badgePut {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffb74d;
+}
+
+.badgePatch {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #ba68c8;
+}
+
+/* Badges de Status */
+.badgeSuccess {
+    background: var(--success-50);
+    color: var(--success);
+    border: 1px solid var(--success-200);
+}
+
+.badgeWarning {
+    background: var(--warning-50);
+    color: var(--warning);
+    border: 1px solid var(--warning-200);
+}
+
+.badgeError {
+    background: var(--error-50);
+    color: var(--error);
+    border: 1px solid var(--error-200);
+}
+
+/* ============================================
+   ESTADOS
+   ============================================ */
+.loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    gap: 1rem;
+    min-height: 400px;
+}
+
+.loadingState h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .containerPage {
+        padding: 1rem;
+    }
+
+    .pageHeader {
+        padding: 1.5rem;
+    }
+
+    .pageTitle {
+        font-size: 1.5rem;
+    }
+
+    .contentSection {
+        padding: 1.5rem;
+    }
+
+    .infoGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .changeComparison {
+        grid-template-columns: 1fr;
+    }
+
+    .changeArrow {
+        transform: rotate(90deg);
+        margin: 0.5rem 0;
+    }
+
+    .performanceCard {
+        padding: 1rem;
+    }
+
+    .performanceMetric {
+        min-width: auto;
+        width: 100%;
+    }
+}

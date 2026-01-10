@@ -76,7 +76,7 @@ interface ManageUsersPageProps {
 // ---- Componente principal ----
 const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
     infoPage = {
-        title: 'Listado de usuarios',
+        title: 'Usuarios',
         route: '/gestor_usuarios',
         role: 'Gestión de usuarios'
     }
@@ -194,9 +194,16 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                 }
             }) : []
             
+            // Filtrar el usuario loggeado
+            const currentUserEmail = userInfo?.email || ''
+            const filteredFromCurrent = adaptedUsers.filter(user => 
+                user.email.toLowerCase() !== currentUserEmail.toLowerCase()
+            )
+            
             console.log('Usuarios adaptados:', adaptedUsers)
-            setListUsers(adaptedUsers)
-            setFilteredUsers(adaptedUsers)
+            console.log('Usuario actual filtrado:', currentUserEmail)
+            setListUsers(filteredFromCurrent)
+            setFilteredUsers(filteredFromCurrent)
             showLoader(false)
             return true
         } catch (error) {
@@ -518,7 +525,17 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
 
     return (
         <div className={stylesPage.content}>
-            <div className={stylesPage.usersMainContainer}>            
+            <div className={stylesPage.usersMainContainer}>
+                <div className={stylesPage.titleSection}>
+                    <div className={stylesPage.titleWrapper}>
+                        <PersonIcon className={stylesPage.titleIcon} />
+                        <h1 className={stylesPage.pageTitle}>Gestión de usuarios</h1>
+                    </div>
+                    <p className={stylesPage.pageSubtitle}>
+                        Administra los usuarios del sistema, sus roles y permisos
+                    </p>
+                </div>
+                
                 <div className={stylesPage.header}>
                     <div className={stylesPage.searchContainer}>
                         <div className={stylesPage.searchWrapper}>

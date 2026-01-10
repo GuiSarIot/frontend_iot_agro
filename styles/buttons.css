@@ -1,0 +1,260 @@
+/* ================================
+    SISTEMA UNIFICADO DE BOTONES
+    Estilos consistentes para todos los botones de la aplicación
+================================ */
+
+/* ============================================
+   BOTONES PRIMARIOS - Verde Principal
+   ============================================ */
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    text-decoration: none;
+    min-height: 42px;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   BOTONES SECUNDARIOS - Outline
+   ============================================ */
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: transparent;
+    color: var(--text-primary);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    text-decoration: none;
+    min-height: 42px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btn-secondary:active:not(:disabled) {
+    background: var(--bg-active);
+    transform: translateY(0);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   BOTONES CON GRADIENTE - Crear/Nuevo
+   ============================================ */
+
+.btn-create,
+.btn-new {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: linear-gradient(135deg, var(--primary) 0%, #0d7a10 100%);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
+    min-height: 42px;
+}
+
+.btn-create:hover:not(:disabled),
+.btn-new:hover:not(:disabled) {
+    background: linear-gradient(135deg, #0d7a10 0%, var(--primary) 100%);
+    box-shadow: 0 6px 16px rgba(20, 121, 16, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-create:active:not(:disabled),
+.btn-new:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* ============================================
+   BOTONES DE EDITAR - Verde Outline
+   ============================================ */
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    color: var(--primary);
+    border: var(--border-width) solid var(--primary);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+
+.btn-edit:hover:not(:disabled) {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-edit:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* ============================================
+   BOTONES DE ELIMINAR - Rojo
+   ============================================ */
+
+.btn-delete,
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    color: var(--error);
+    border: var(--border-width) solid var(--error);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+
+.btn-delete:hover:not(:disabled),
+.btn-danger:hover:not(:disabled) {
+    background: var(--error);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-delete:active:not(:disabled),
+.btn-danger:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* ============================================
+   BOTONES PEQUEÑOS / ICONOS
+   ============================================ */
+
+.btn-sm {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    min-height: 36px;
+}
+
+.btn-icon {
+    padding: var(--spacing-sm);
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.btn-icon svg {
+    font-size: 1.25rem;
+}
+
+/* ============================================
+   BOTONES DE VOLVER/ATRÁS
+   ============================================ */
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-back:hover {
+    background: var(--bg-hover);
+    color: var(--primary);
+}
+
+.btn-back svg {
+    font-size: 1.125rem;
+}
+
+/* ============================================
+   ESTADOS COMUNES
+   ============================================ */
+
+button:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-create:disabled,
+.btn-new:disabled,
+.btn-edit:disabled,
+.btn-delete:disabled,
+.btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ============================================
+   ICONOS DENTRO DE BOTONES
+   ============================================ */
+
+.btn-primary svg,
+.btn-secondary svg,
+.btn-create svg,
+.btn-new svg,
+.btn-edit svg,
+.btn-delete svg,
+.btn-danger svg {
+    font-size: 1.125rem;
+}

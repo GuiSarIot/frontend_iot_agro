@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useContext, useCallback } from 'react'
+
 import { useRouter } from 'next/navigation'
 
 import Swal from 'sweetalert2'
@@ -29,7 +30,7 @@ interface ContentPageUpdateProps {
 }
 
 const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
-    infoPage: _infoPage = { title: 'Listado de usuarios', route: '/gestor_usuarios' }
+    infoPage: _infoPage = { title: 'Usuarios', route: '/gestor_usuarios' }
 }) => {
     //* context
     const { changeTitle, appState, showLoader } = useContext(AppContext.Context)
@@ -155,7 +156,7 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
         }))
     }
 
-    const handleSaveNotifications = async () => {
+    const _handleSaveNotifications = async () => {
         if (!userInfoForm.id) {
             Swal.fire({
                 icon: 'error',

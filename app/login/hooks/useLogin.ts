@@ -82,6 +82,11 @@ export function useLogin() {
             ? data.user.rol_detail.permisos.map(p => p.codigo)
             : []
         
+        // Si es superusuario, agregar el permiso especial
+        if (data.user.is_superuser) {
+            permissionCodes.push('is_superuser')
+        }
+        
         console.log('useLogin - Permisos extraídos:', permissionCodes)
 
         // Obtener el nombre del rol de forma segura

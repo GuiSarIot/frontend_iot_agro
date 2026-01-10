@@ -62,23 +62,23 @@ export const MODULE_MENUS: Record<string, SidebarMenuItem[]> = {
             title: 'Actualizar datos personales'
         }
     ],
-    '/dispositivos': [
+    '/gestor_dispositivos': [
         {
             icon: <ListIcon />,
             label: 'Lista de Dispositivos',
-            href: '/dispositivos',
+            href: '/gestor_dispositivos',
             title: 'Ver todos los dispositivos'
         },
         {
             icon: <AddCircleIcon />,
             label: 'Agregar Dispositivo',
-            href: '/dispositivos/crear',
+            href: '/gestor_dispositivos/crear',
             title: 'Registrar nuevo dispositivo'
         },
         {
             icon: <SettingsIcon />,
             label: 'Configuración',
-            href: '/dispositivos/configuracion',
+            href: '/gestor_dispositivos/configuracion',
             title: 'Configuración de dispositivos'
         }
     ],
@@ -106,7 +106,7 @@ export const MODULE_MENUS: Record<string, SidebarMenuItem[]> = {
         {
             icon: <DevicesIcon />,
             label: 'Ejemplo Dispositivos',
-            href: '/ejemplos/dispositivos-example',
+            href: '/ejemplos/gestor_dispositivos-example',
             title: 'Ejemplo de gestión de dispositivos'
         }
     ]

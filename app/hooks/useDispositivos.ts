@@ -4,11 +4,19 @@ import { useState, useEffect } from 'react'
 
 import Swal from 'sweetalert2'
 
-import { dispositivosService, Dispositivo } from '@/app/services/api.service'
+import { 
+    dispositivosService, 
+    type Dispositivo,
+    type DispositivoQueryParams,
+    type CreateDispositivoDto,
+    type AsignarSensorDto,
+    type AsignarOperadorDto,
+    type TipoDispositivo
+} from '@/app/services/api.service'
 
 /**
- * Hook de ejemplo para gestionar dispositivos
- * Muestra el patrón de uso de los servicios API
+ * Hook completo para gestionar dispositivos IoT
+ * Incluye todas las operaciones CRUD y asignaciones
  */
 export function useDispositivos() {
     const [dispositivos, setDispositivos] = useState<Dispositivo[]>([])
@@ -16,13 +24,15 @@ export function useDispositivos() {
     const [error, setError] = useState<string | null>(null)
 
     /**
-     * Carga todos los dispositivos
+     * Carga todos los dispositivos con parámetros de búsqueda opcionales
      */
-    const fetchDispositivos = async () => {
+    const fetchDispositivos = async (params?: DispositivoQueryParams) => {
         setLoading(true)
         setError(null)
         try {
-            const data = await dispositivosService.getAll()
+            const response = await dispositivosService.getAll(params)
+            // Si la respuesta es paginada, extraer results
+            const data = Array.isArray(response) ? response : response.results || []
             setDispositivos(data)
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Error al cargar dispositivos'
@@ -63,12 +73,7 @@ export function useDispositivos() {
     /**
      * Crea un nuevo dispositivo
      */
-    const createDispositivo = async (data: {
-        nombre: string
-        tipo: string
-        estado: string
-        ubicacion?: string
-    }): Promise<boolean> => {
+    const createDispositivo = async (data: CreateDispositivoDto): Promise<boolean> => {
         setLoading(true)
         setError(null)
         try {
@@ -95,16 +100,11 @@ export function useDispositivos() {
     }
 
     /**
-     * Actualiza un dispositivo existente
+     * Actualiza un dispositivo existente (PUT completo)
      */
     const updateDispositivo = async (
         id: number,
-        data: {
-            nombre: string
-            tipo: string
-            estado: string
-            ubicacion?: string
-        }
+        data: CreateDispositivoDto
     ): Promise<boolean> => {
         setLoading(true)
         setError(null)
@@ -135,16 +135,11 @@ export function useDispositivos() {
     }
 
     /**
-     * Actualiza parcialmente un dispositivo
+     * Actualiza parcialmente un dispositivo (PATCH)
      */
     const partialUpdateDispositivo = async (
         id: number,
-        data: Partial<{
-            nombre: string
-            tipo: string
-            estado: string
-            ubicacion?: string
-        }>
+        data: Partial<CreateDispositivoDto>
     ): Promise<boolean> => {
         setLoading(true)
         setError(null)
@@ -221,6 +216,165 @@ export function useDispositivos() {
     }
 
     /**
+     * Asigna un sensor a un dispositivo
+     */
+    const assignSensor = async (
+        dispositivoId: number,
+        data: AsignarSensorDto
+    ): Promise<boolean> => {
+        setLoading(true)
+        setError(null)
+        try {
+            await dispositivosService.assignSensor(dispositivoId, data)
+            // Recargar el dispositivo para actualizar la lista de sensores
+            await fetchDispositivoById(dispositivoId)
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Sensor asignado correctamente',
+            })
+            return true
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error al asignar sensor'
+            setError(errorMessage)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            })
+            return false
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    /**
+     * Remueve un sensor de un dispositivo
+     */
+    const removeSensor = async (dispositivoId: number, sensorId: number): Promise<boolean> => {
+        setLoading(true)
+        setError(null)
+        try {
+            await dispositivosService.removeSensor(dispositivoId, sensorId)
+            // Recargar el dispositivo para actualizar la lista de sensores
+            await fetchDispositivoById(dispositivoId)
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Sensor removido correctamente',
+            })
+            return true
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error al remover sensor'
+            setError(errorMessage)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            })
+            return false
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    /**
+     * Asigna un operador a un dispositivo
+     */
+    const assignOperator = async (
+        dispositivoId: number,
+        data: AsignarOperadorDto
+    ): Promise<boolean> => {
+        setLoading(true)
+        setError(null)
+        try {
+            const response = await dispositivosService.assignOperator(dispositivoId, data)
+            // Actualizar el dispositivo en la lista
+            setDispositivos(
+                dispositivos.map((d) =>
+                    d.id === dispositivoId ? response.dispositivo : d
+                )
+            )
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Operador asignado correctamente',
+            })
+            return true
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error al asignar operador'
+            setError(errorMessage)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            })
+            return false
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    /**
+     * Obtiene los tipos de dispositivos disponibles
+     */
+    const getTipos = async (): Promise<TipoDispositivo[]> => {
+        try {
+            return await dispositivosService.getTipos()
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error al cargar tipos'
+            setError(errorMessage)
+            return []
+        }
+    }
+
+    /**
+     * Obtiene dispositivos con MQTT habilitado
+     */
+    const getMqttDevices = async () => {
+        setLoading(true)
+        setError(null)
+        try {
+            return await dispositivosService.getMqttDevices()
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : 'Error al cargar dispositivos MQTT'
+            setError(errorMessage)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            })
+            return []
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    /**
+     * Obtiene las credenciales MQTT de un dispositivo
+     */
+    const getMqttCredentials = async (dispositivoId: number) => {
+        setLoading(true)
+        setError(null)
+        try {
+            return await dispositivosService.getMqttCredentials(dispositivoId)
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : 'Error al cargar credenciales MQTT'
+            setError(errorMessage)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+            })
+            return null
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    /**
      * Carga los dispositivos al montar el componente
      */
     useEffect(() => {
@@ -238,5 +392,11 @@ export function useDispositivos() {
         updateDispositivo,
         partialUpdateDispositivo,
         deleteDispositivo,
+        assignSensor,
+        removeSensor,
+        assignOperator,
+        getTipos,
+        getMqttDevices,
+        getMqttCredentials,
     }
 }

@@ -497,7 +497,17 @@ const ContentPage: React.FC = () => {
 
     return (
         <div className={stylesPage.content}>
-            <div className={stylesPage.rolesMainContainer}>            
+            <div className={stylesPage.rolesMainContainer}>
+                <div className={stylesPage.titleSection}>
+                    <div className={stylesPage.titleWrapper}>
+                        <SecurityIcon className={stylesPage.titleIcon} />
+                        <h1 className={stylesPage.pageTitle}>Gestión de roles</h1>
+                    </div>
+                    <p className={stylesPage.pageSubtitle}>
+                        Administra los roles del sistema y sus permisos asociados
+                    </p>
+                </div>
+                
                 <div className={stylesPage.header}>
                     <div className={stylesPage.searchContainer}>
                         <div className={stylesPage.searchWrapper}>

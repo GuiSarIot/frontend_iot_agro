@@ -1,0 +1,879 @@
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.containerPage {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--background);
+}
+
+.mainCard {
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.pageHeader {
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.pageHeader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    pointer-events: none;
+}
+
+.titleSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.titleIcon {
+    font-size: 2.5rem !important;
+    color: #ffffff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.pageTitle {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pageSubtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    padding-left: 3.5rem;
+}
+
+/* ============================================
+   ESTADÍSTICAS
+   ============================================ */
+.statsContainer {
+    padding: 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.statCard {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--background);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.statCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.statIcon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.statIconAudit {
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    color: #4f46e5;
+}
+
+.statIconAccess {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #2563eb;
+}
+
+.statIconSpeed {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #059669;
+}
+
+.statContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.statLabel {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Gráficos */
+.chartsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.chartCard {
+    background: var(--background);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.chartTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    text-align: center;
+}
+
+.chartWrapper {
+    height: 300px;
+    position: relative;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+.tabContent {
+    padding: 0;
+    min-height: 500px;
+}
+
+/* Estilos mejorados para TabView */
+.mainCard :global(.p-tabview) {
+    background: var(--surface);
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav) {
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+    border: none;
+    border-bottom: 2px solid var(--border);
+    padding: 0.5rem 1.5rem 0;
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav li) {
+    margin-right: 0.25rem;
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav li .p-tabview-nav-link) {
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 1rem 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-bottom: -2px;
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus) {
+    box-shadow: none;
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav li:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link) {
+    background: rgba(var(--primary-rgb), 0.05);
+    color: var(--primary);
+    border-color: var(--border);
+    transform: translateY(-2px);
+}
+
+.mainCard :global(.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link) {
+    background: var(--surface);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--surface);
+    font-weight: 700;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mainCard :global(.p-tabview .p-tabview-panels) {
+    background: var(--surface);
+    padding: 0;
+    border: none;
+}
+
+/* DataTable personalizada para logs */
+.tabContent :global(.p-datatable) {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.tabContent :global(.p-datatable .p-datatable-wrapper) {
+    border-radius: 0;
+}
+
+.tabContent :global(.p-datatable .p-datatable-thead > tr > th) {
+    background: linear-gradient(to bottom, #667eea 0%, #5a67d8 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabContent :global(.p-datatable .p-datatable-thead > tr > th:last-child) {
+    border-right: none;
+}
+
+.tabContent :global(.p-datatable .p-datatable-tbody > tr) {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border);
+}
+
+.tabContent :global(.p-datatable .p-datatable-tbody > tr > td) {
+    padding: 1rem;
+    border: none;
+}
+
+.tabContent :global(.p-datatable .p-datatable-tbody > tr:hover) {
+    background: linear-gradient(to right, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tabContent :global(.p-datatable .p-datatable-tbody > tr:nth-child(even)) {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.tabContent :global(.p-datatable .p-datatable-tbody > tr:nth-child(even):hover) {
+    background: linear-gradient(to right, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.tabContent :global(.p-column-title) {
+    font-weight: 700;
+    color: white;
+}
+
+/* Paginador de la tabla */
+.tabContent :global(.p-paginator) {
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+    border: none;
+    border-top: 2px solid var(--border);
+    padding: 1rem 1.5rem;
+}
+
+.tabContent :global(.p-paginator .p-paginator-pages .p-paginator-page) {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.tabContent :global(.p-paginator .p-paginator-pages .p-paginator-page:hover) {
+    background: var(--primary-100);
+    color: var(--primary);
+}
+
+.tabContent :global(.p-paginator .p-paginator-pages .p-paginator-page.p-highlight) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.tabContent :global(.p-paginator .p-paginator-first),
+.tabContent :global(.p-paginator .p-paginator-prev),
+.tabContent :global(.p-paginator .p-paginator-next),
+.tabContent :global(.p-paginator .p-paginator-last) {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.tabContent :global(.p-paginator .p-paginator-first:not(.p-disabled):hover),
+.tabContent :global(.p-paginator .p-paginator-prev:not(.p-disabled):hover),
+.tabContent :global(.p-paginator .p-paginator-next:not(.p-disabled):hover),
+.tabContent :global(.p-paginator .p-paginator-last:not(.p-disabled):hover) {
+    background: var(--primary-100);
+    color: var(--primary);
+}
+
+/* ============================================
+   FILTROS Y BÚSQUEDA
+   ============================================ */
+.filtersSection {
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.searchContainer {
+    width: 100%;
+}
+
+.searchBox {
+    position: relative;
+    width: 100%;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    font-size: 1.25rem !important;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.searchInput {
+    width: 100% !important;
+    padding: 1rem 1rem 1rem 3.25rem !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+    background: white !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.searchInput:hover {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.searchInput:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    outline: none !important;
+}
+
+.filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filterIcon {
+    color: var(--primary);
+    font-size: 1.25rem !important;
+}
+
+.filterDropdown {
+    min-width: 180px !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+.filterDropdown:hover {
+    border-color: var(--primary-300) !important;
+}
+
+.filterInput {
+    min-width: 180px !important;
+    padding: 0.875rem 1rem !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+    background: white !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.filterInput:hover {
+    border-color: var(--primary-300) !important;
+}
+
+.filterInput:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+    outline: none !important;
+}
+
+.btnExport {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btnExport:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.btnExport:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.searchStats {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to right, #667eea15 0%, #764ba215 100%);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.searchStats::before {
+    content: '📊';
+    font-size: 1.2rem;
+}
+
+/* ============================================
+   LOGS CONTAINER
+   ============================================ */
+.logsContainer {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
+    border-radius: 12px;
+    margin: 2rem;
+}
+
+.emptyState h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.emptyState p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+/* ============================================
+   LOG CARDS
+   ============================================ */
+.logCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.logCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary-200);
+}
+
+.logHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.logActions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btnActionIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    color: var(--primary);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btnActionIcon:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btnActionIcon:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.logTitleSection {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.logModel {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.logObject {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.logEndpoint {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+}
+
+.logDivider {
+    color: var(--text-tertiary);
+}
+
+.logTimestamp {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.logBody {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.logInfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.logInfoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.logInfoLabel {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.logInfoValue {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   CHANGES SECTION
+   ============================================ */
+.changesSection {
+    background: var(--background);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.changesTitle {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.changesGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.changeItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.changeField {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.changeValues {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+.oldValue {
+    padding: 0.25rem 0.5rem;
+    background: var(--error-50);
+    color: var(--error);
+    border-radius: 4px;
+}
+
+.newValue {
+    padding: 0.25rem 0.5rem;
+    background: var(--success-50);
+    color: var(--success);
+    border-radius: 4px;
+}
+
+.changeArrow {
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+.viewMore {
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+.viewMore:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   PAGINACIÓN
+   ============================================ */
+.paginatorContainer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    padding: 0.5rem 0.875rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Badges de Acción */
+.badgeCreate {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+}
+
+.badgeUpdate {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+}
+
+.badgeDelete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+}
+
+/* Badges de Método HTTP */
+.badgeGet {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+}
+
+.badgePost {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+}
+
+.badgePut {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+}
+
+.badgePatch {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+}
+
+/* Badges de Status */
+.badgeSuccess {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+}
+
+.badgeWarning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border: none;
+}
+
+.badgeError {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .containerPage {
+        padding: 1rem;
+    }
+
+    .pageHeader {
+        padding: 1.5rem;
+    }
+
+    .pageTitle {
+        font-size: 1.5rem;
+    }
+
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .filtersSection {
+        padding: 1rem;
+    }
+
+    .filterGroup {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filterDropdown,
+    .filterInput {
+        width: 100% !important;
+    }
+
+    .logHeader {
+        flex-direction: column;
+    }
+
+    .logInfo {
+        grid-template-columns: 1fr;
+    }
+
+    .logsContainer {
+        max-height: none;
+    }
+}
