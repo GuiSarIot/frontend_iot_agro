@@ -81,42 +81,42 @@ const ManageMqttPage: React.FC<ManageMqttPageProps> = ({
             title: 'Brokers MQTT',
             description: 'Gestión de brokers MQTT para la comunicación de dispositivos',
             icon: <RouterIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_mqtt_brokers',
+            href: '/gestor_mqtt/brokers',
             permissions: ['gestionar_mqtt', 'ver_mqtt']
         },
         {
             title: 'Credenciales MQTT',
             description: 'Administración de credenciales de autenticación para MQTT',
             icon: <VpnKeyIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_mqtt_credentials',
+            href: '/gestor_mqtt/credentials',
             permissions: ['gestionar_mqtt', 'ver_credenciales_mqtt']
         },
         {
             title: 'Topics MQTT',
             description: 'Configuración de topics para la publicación y suscripción de mensajes',
             icon: <SettingsSuggestIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_mqtt_topics',
+            href: '/gestor_mqtt/topics',
             permissions: ['gestionar_mqtt', 'ver_mqtt']
         },
         {
             title: 'Config. Dispositivos',
             description: 'Configuración MQTT específica por dispositivo',
             icon: <DevicesIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_mqtt_device_config',
+            href: '/gestor_mqtt/device_config',
             permissions: ['gestionar_mqtt', 'ver_dispositivos']
         },
         {
             title: 'Usuarios EMQX',
             description: 'Gestión de usuarios del broker EMQX',
             icon: <PeopleIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_emqx_users',
+            href: '/gestor_mqtt/users',
             permissions: ['gestionar_mqtt', 'is_superuser']
         },
         {
             title: 'ACL EMQX',
             description: 'Control de acceso a topics y recursos MQTT',
             icon: <ShieldIcon sx={{ fontSize: 48 }} />,
-            href: '/gestor_emqx_acl',
+            href: '/gestor_mqtt/acl',
             permissions: ['gestionar_mqtt', 'is_superuser']
         }
     ]

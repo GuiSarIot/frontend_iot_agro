@@ -100,12 +100,17 @@ export function useLogin() {
             levelAccessRolSistema: data.user.is_superuser ? 'ROOT' : 'NORMAL'
         })
 
-        changeTitle('Dashboard')
+        // Determinar ruta de redirección según el tipo de usuario
+        const isAdmin = data.user.is_superuser || data.user.is_staff
+        const redirectRoute = isAdmin ? '/dashboard/portal_admin' : '/dashboard/portal_usuario'
+        const redirectTitle = isAdmin ? 'Portal Admin' : 'Mi Portal'
+
+        changeTitle(redirectTitle)
         
         try {
             await saveRoute({
-                routeInfo: '/dashboard', 
-                title: 'Dashboard',
+                routeInfo: redirectRoute, 
+                title: redirectTitle,
                 isLogged: 'true',
                 user: idEncrypted,
                 token: data.access,
@@ -116,7 +121,7 @@ export function useLogin() {
         }
 
         showLoader(false)
-        router.push('/dashboard') 
+        router.push(redirectRoute) 
     }
 
     return {

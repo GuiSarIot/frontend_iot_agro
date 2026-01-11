@@ -26,6 +26,8 @@ export interface Lectura {
     sensor_unidad: string
     valor: number
     timestamp: string
+    fecha_lectura: string
+    unidad: string
     metadata_json: Record<string, unknown>
     mqtt_message_id?: string
     mqtt_qos?: number
@@ -215,6 +217,29 @@ export const lecturasService = {
     getUltimas: async (limit: number = 10): Promise<LecturaResumida[]> => {
         const url = `${API_BASE_URL}/api/readings/ultimas/?limit=${Math.min(limit, 100)}`
         return authenticatedGet<LecturaResumida[]>(url)
+    },
+
+    /**
+     * Obtener mis lecturas (solo dispositivos asignados)
+     * GET /api/readings/my-readings/
+     * Para usuarios operadores/normales que solo ven dispositivos asignados
+     */
+    getMyReadings: async (params?: LecturaQueryParams): Promise<LecturasResponse> => {
+        const queryParams = new URLSearchParams()
+        
+        if (params?.dispositivo) queryParams.append('dispositivo', String(params.dispositivo))
+        if (params?.sensor) queryParams.append('sensor', String(params.sensor))
+        if (params?.fecha_inicio) queryParams.append('fecha_inicio', params.fecha_inicio)
+        if (params?.fecha_fin) queryParams.append('fecha_fin', params.fecha_fin)
+        if (params?.ordering) queryParams.append('ordering', params.ordering)
+        if (params?.page_size) queryParams.append('limit', String(params.page_size))
+
+        const query = queryParams.toString()
+        const url = query
+            ? `${API_BASE_URL}/api/readings/my-readings/?${query}`
+            : `${API_BASE_URL}/api/readings/my-readings/`
+
+        return authenticatedGet<LecturasResponse>(url)
     },
 }
 

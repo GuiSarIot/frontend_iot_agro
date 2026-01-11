@@ -36,7 +36,7 @@
 
 ### 3. Asignar Operador a Dispositivo
 - **Ubicación**: Vista de edición de dispositivo
-- **Endpoint**: `POST /api/devices/{id}/assign-operator/`
+- **Endpoint**: `POST /api/devices/{id}/assign_operator/`
 
 **Características**:
 - Dropdown con lista de usuarios activos del sistema

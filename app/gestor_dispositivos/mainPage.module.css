@@ -616,7 +616,7 @@
 
 /* Card Body */
 .cardBody {
-    padding: var(--spacing-lg);
+    padding: 16px 20px;
     flex: 1;
 }
 
@@ -630,13 +630,17 @@
 .cardInfo {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 12px;
 }
 
 .infoItemRow {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+}
+
+.infoItemRow.fullWidth {
+    grid-template-columns: 1fr;
 }
 
 .infoSection {
@@ -681,6 +685,14 @@
     color: var(--text-primary);
     font-weight: 500;
     word-break: break-word;
+}
+
+.cardInfoSubtext {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    font-weight: 400;
+    margin-top: 2px;
+    display: block;
 }
 
 /* Card Footer */

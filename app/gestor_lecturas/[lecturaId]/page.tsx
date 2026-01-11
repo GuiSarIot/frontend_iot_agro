@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -20,6 +20,7 @@ import {
     type Lectura,
     type UpdateLecturaDto
 } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import { useAppContext } from '@/context/appContext'
 
 import stylesPage from '../mainPage.module.css'
@@ -38,10 +39,9 @@ const LecturaDetailPage = ({ params }: LecturaDetailPageProps) => {
     const lecturaId = parseInt(params.lecturaId)
 
     // Registrar acceso
-    const { logAction } = useAccessLogger({
+    useAccessLogger({
         customModule: 'readings',
-        action: 'view',
-        resourceId: lecturaId
+        action: 'view'
     })
 
     // ---- Estados ----
@@ -51,38 +51,40 @@ const LecturaDetailPage = ({ params }: LecturaDetailPageProps) => {
     const [metadata, setMetadata] = useState('')
     const [errors, setErrors] = useState<Record<string, string>>({})
 
+    // Determinar si el usuario es superusuario
+    const isSuperUser = userInfo ? checkIsSuperUser(userInfo) : false
+
     // ---- Efectos ----
     useEffect(() => {
         changeTitle('Detalle de lectura')
         showNavbar(true)
-        logAction()
+        
+        const loadLectura = async () => {
+            try {
+                setLoading(true)
+                showLoader(true)
 
-        loadLectura()
-    }, [lecturaId, changeTitle, showNavbar, logAction, loadLectura])
-
-    // ---- Funciones de carga ----
-    const loadLectura = useCallback(async () => {
-        try {
-            setLoading(true)
-            showLoader(true)
-
-            const data = await lecturasService.getById(lecturaId)
-            setLectura(data)
-            setMetadata(JSON.stringify(data.metadata_json, null, 2))
-        } catch (error) {
-            console.error('Error cargando lectura:', error)
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo cargar la lectura'
-            }).then(() => {
-                router.push('/gestor_lecturas')
-            })
-        } finally {
-            setLoading(false)
-            showLoader(false)
+                const data = await lecturasService.getById(lecturaId)
+                setLectura(data)
+                setMetadata(JSON.stringify(data.metadata_json, null, 2))
+            } catch (error) {
+                console.error('Error cargando lectura:', error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo cargar la lectura'
+                }).then(() => {
+                    router.push('/gestor_lecturas')
+                })
+            } finally {
+                setLoading(false)
+                showLoader(false)
+            }
         }
-    }, [lecturaId, router, showLoader])
+        
+        loadLectura()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lecturaId])
 
     // ---- Validación ----
     const validateMetadata = (): boolean => {
@@ -184,10 +186,6 @@ const LecturaDetailPage = ({ params }: LecturaDetailPageProps) => {
         setErrors({})
     }
 
-    // ---- Permisos ----
-    const canEdit = userInfo?.is_superuser
-    const canDelete = userInfo?.is_superuser
-
     // ---- Render ----
     if (loading || !lectura) {
         return (
@@ -234,7 +232,7 @@ const LecturaDetailPage = ({ params }: LecturaDetailPageProps) => {
                                 onClick={() => router.push('/gestor_lecturas')}
                             />
 
-                            {canEdit && !editMode && (
+                            {isSuperUser && !editMode && (
                                 <Button
                                     icon={<EditIcon />}
                                     label="Editar metadata"
@@ -243,7 +241,7 @@ const LecturaDetailPage = ({ params }: LecturaDetailPageProps) => {
                                 />
                             )}
 
-                            {canDelete && (
+                            {isSuperUser && (
                                 <Button
                                     icon={<DeleteIcon />}
                                     label="Eliminar"

@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import PersonIcon from '@mui/icons-material/Person'
 
-import { MODULES_CONFIG } from '@/components/shared/layout/modulesConfig'
+import { getAvailableModules } from '@/components/shared/layout/modulesConfig'
 import AppContext from '@/context/appContext'
 
 import stylesNavBarTop from './navBarTop.module.css'
@@ -45,19 +45,9 @@ const NavBarTop = () => {
         router.push(href)
     }
     
-    // Obtener módulos disponibles basados en permisos del usuario
-    const getAvailableModules = () => {
-        const permissions = Array.isArray(userPermissions) ? userPermissions : []
-        
-        return Object.entries(MODULES_CONFIG)
-            .filter(([_, config]) => {
-                if (config.permissions.length === 0) return true
-                return config.permissions.some(permission => permissions.includes(permission))
-            })
-            .sort((a, b) => a[1].priority - b[1].priority)
-    }
-    
-    const availableModules = getAvailableModules()
+    // Obtener módulos disponibles basados en permisos y rol del usuario
+    const permissions = Array.isArray(userPermissions) ? userPermissions : []
+    const availableModules = getAvailableModules(permissions, userInfo)
     
     // Verificar si la ruta actual corresponde a un módulo
     const isActiveModule = (href) => {
@@ -86,17 +76,17 @@ const NavBarTop = () => {
             </div>
             
             <div className={stylesNavBarTop.modulesNav}>
-                {availableModules.map(([key, config]) => (
+                {availableModules.map((module) => (
                     <button
-                        key={key}
+                        key={module.href}
                         className={`${stylesNavBarTop.moduleButton} ${
-                            isActiveModule(config.href) ? stylesNavBarTop.activeModule : ''
+                            isActiveModule(module.href) ? stylesNavBarTop.activeModule : ''
                         }`}
-                        onClick={() => handleModuleClick(config.href)}
-                        title={config.label}
-                        aria-label={config.label}
+                        onClick={() => handleModuleClick(module.href)}
+                        title={module.label}
+                        aria-label={module.label}
                     >
-                        {config.icon}
+                        {module.icon}
                     </button>
                 ))}
             </div>

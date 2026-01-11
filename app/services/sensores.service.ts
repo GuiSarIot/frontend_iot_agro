@@ -14,6 +14,18 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 // INTERFACES Y TIPOS
 // ============================================
 
+export interface DispositivoAsignado {
+    id: number
+    nombre: string
+    tipo: string
+    tipo_display: string
+    identificador_unico: string
+    estado: string
+    estado_display: string
+    fecha_asignacion: string
+    activo: boolean
+}
+
 export interface Sensor {
     id: number
     nombre: string
@@ -29,6 +41,9 @@ export interface Sensor {
     created_by_username: string
     created_at: string
     updated_at: string
+    // Nuevos campos de dispositivos asignados
+    dispositivos_asignados: DispositivoAsignado[]
+    cantidad_dispositivos: number
     // Campos opcionales para MQTT
     mqtt_topic_suffix?: string
     publish_interval?: number

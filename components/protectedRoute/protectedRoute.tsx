@@ -187,8 +187,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, autoRedirecti
             if (route && route !== '/login' && route !== '/') {
                 router.push(route)
             } else {
-                // Si no hay ruta guardada, ir al dashboard
-                router.push('/dashboard')
+                // Si no hay ruta guardada, determinar según el tipo de usuario
+                const isAdmin = data.is_superuser || data.is_staff
+                const defaultRoute = isAdmin ? '/dashboard/portal_admin' : '/dashboard/portal_usuario'
+                router.push(defaultRoute)
             }
         }
         // De lo contrario, permanecer en la ruta actual (no redirigir)

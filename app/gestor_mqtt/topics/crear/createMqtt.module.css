@@ -1,0 +1,485 @@
+/* Layout principal - Dos columnas */
+.contentLayout {
+    max-width: 95%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (min-width: 1400px) {
+    .contentLayout {
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 1800px) {
+    .contentLayout {
+        max-width: 85%;
+    }
+}
+
+/* Panel - Formulario */
+.formPanel {
+    background: var(--background-color-secondary);
+    border-radius: 8px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color-primary);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.sectionDescription {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+.sectionDescription strong {
+    font-weight: 600;
+    color: var(--text-color-primary);
+}
+
+/* Formulario */
+.createForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: grid;
+    grid-template-columns: minmax(200px, 25%) 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+    .formGroup {
+        grid-template-columns: minmax(180px, 30%) 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.formLabel {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-top: 0.5rem;
+}
+
+.labelText {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.labelSubtext {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-color-secondary);
+    font-style: italic;
+}
+
+.required {
+    color: #dc3545;
+    margin-left: 0.25rem;
+    font-size: 1rem;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+    width: 100%;
+    max-width: 600px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color-secondary);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background: var(--background-color-primary);
+    color: var(--text-color-primary);
+}
+
+/* Estilos para componentes PrimeReact */
+.formGroup :global(.p-inputtext),
+.formGroup :global(.p-password),
+.formGroup :global(.p-password input) {
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0.75rem 1rem !important;
+    border: 1px solid var(--border-color-secondary) !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+    background: var(--background-color-primary) !important;
+    color: var(--text-color-primary) !important;
+}
+
+.formGroup :global(.p-dropdown) {
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    border: 1px solid var(--border-color-secondary) !important;
+    border-radius: 8px !important;
+    background: var(--background-color-primary) !important;
+}
+
+.formGroup :global(.p-dropdown .p-dropdown-label) {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.95rem !important;
+    color: var(--text-color-primary) !important;
+}
+
+.formGroup :global(.p-dropdown .p-dropdown-trigger) {
+    width: 2.5rem !important;
+    color: var(--text-color-secondary) !important;
+}
+
+.formGroup :global(.p-inputnumber) {
+    width: 100% !important;
+    max-width: 600px !important;
+}
+
+.formGroup :global(.p-inputnumber-input) {
+    width: 100% !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0.75rem 1rem !important;
+    border: 1px solid var(--border-color-secondary) !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem !important;
+    background: var(--background-color-primary) !important;
+    color: var(--text-color-primary) !important;
+}
+
+.formGroup :global(.p-password) {
+    width: 100% !important;
+    max-width: 600px !important;
+}
+
+.formGroup :global(.p-inputtext:enabled:focus),
+.formGroup :global(.p-password input:enabled:focus),
+.formGroup :global(.p-inputnumber-input:enabled:focus) {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1) !important;
+}
+
+.formGroup :global(.p-dropdown:not(.p-disabled).p-focus) {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1) !important;
+}
+
+.formGroup :global(.p-inputtext:enabled:hover),
+.formGroup :global(.p-password input:enabled:hover),
+.formGroup :global(.p-inputnumber-input:enabled:hover) {
+    border-color: #9ca3af !important;
+}
+
+.formGroup :global(.p-dropdown:not(.p-disabled):hover) {
+    border-color: #9ca3af !important;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1);
+}
+
+.formTextarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.errorText {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.checkboxLabel {
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Acciones del formulario */
+.formActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color-primary);
+}
+
+.submitButton {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.submitButton:hover {
+    background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #22c55e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+}
+
+.submitButton:active {
+    transform: translateY(0);
+}
+
+.cancelButton {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    background: var(--background-color-primary);
+    border: 2px solid var(--border-color-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cancelButton:hover {
+    background: var(--background-color-secondary);
+    border-color: var(--text-color-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cancelButton:active {
+    transform: translateY(0);
+}
+
+/* Card de Preview - Lado derecho */
+.previewCard {
+    background: var(--background-color-secondary);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color-primary);
+    position: sticky;
+    top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.previewHeader {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.avatarContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: white;
+}
+
+.previewTitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-color-secondary);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.5px;
+}
+
+.previewName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0;
+}
+
+.previewDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.detailRow,
+.previewRow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color-primary);
+    gap: 0.25rem;
+}
+
+.detailRow:last-child,
+.previewRow:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.detailRow:first-child,
+.previewRow:first-child {
+    padding-top: 0;
+}
+
+.detailLabel,
+.previewLabel {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detailValue,
+.previewValue {
+    font-size: 0.95rem;
+    color: var(--text-color-primary);
+    word-break: break-word;
+    font-weight: 400;
+    width: 100%;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.statusActive {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.statusInactive {
+    background: #fed7aa;
+    color: #92400e;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .contentLayout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .previewCard {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .contentLayout {
+        padding: 1.5rem 1rem;
+        max-width: 95%;
+    }
+    
+    .formPanel {
+        padding: 1.5rem;
+    }
+    
+    .formGroup {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .formLabel {
+        padding-top: 0;
+    }
+    
+    .formInput,
+    .formSelect,
+    .formTextarea {
+        max-width: 100%;
+    }
+    
+    .submitButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .contentLayout {
+        padding: 1rem 0.75rem;
+        max-width: 100%;
+    }
+    
+    .formPanel {
+        padding: 1rem;
+        border-radius: 4px;
+    }
+    
+    .sectionTitle {
+        font-size: 1.25rem;
+    }
+    
+    .previewCard {
+        padding: 1.5rem;
+    }
+    
+    .avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 1.75rem;
+    }
+}

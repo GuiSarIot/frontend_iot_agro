@@ -20,13 +20,32 @@ import {
     type Dispositivo,
     type Sensor
 } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import { useAppContext } from '@/context/appContext'
 
 import styles from './createLectura.module.css'
 
 const CreateLecturaPage = () => {
     const router = useRouter()
-    const { changeTitle, showNavbar, showLoader } = useAppContext()
+    const { changeTitle, showNavbar, showLoader, appState } = useAppContext()
+    const { userInfo } = appState
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = checkIsSuperUser(userInfo)
+
+    // Verificar permisos al montar el componente
+    useEffect(() => {
+        if (!isSuperUser) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Acceso denegado',
+                text: 'Solo los superusuarios pueden crear lecturas manualmente',
+                confirmButtonText: 'Entendido'
+            }).then(() => {
+                router.push('/gestor_lecturas')
+            })
+        }
+    }, [isSuperUser, router])
 
     // Registrar acceso automáticamente
     useAccessLogger({

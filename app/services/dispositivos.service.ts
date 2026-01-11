@@ -54,7 +54,7 @@ export interface TipoDispositivo {
 export interface Dispositivo {
     id: number
     nombre: string
-    tipo: string
+    tipo: string | { nombre: string; id: number }
     tipo_display: string
     identificador_unico: string
     ubicacion: string
@@ -63,6 +63,7 @@ export interface Dispositivo {
     descripcion: string
     operador_asignado: number | null
     operador_username?: string
+    propietario?: { id: number; username: string; email: string }
     mqtt_enabled?: boolean
     mqtt_client_id?: string
     connection_status?: string
@@ -104,6 +105,7 @@ export interface DispositivoQueryParams {
     tipo?: string
     estado?: string
     operador?: number
+    propietario?: number
     page?: number
     page_size?: number
 }
@@ -208,6 +210,25 @@ export const dispositivosService = {
     },
 
     /**
+     * Obtener Mis Dispositivos (dispositivos asignados al usuario actual)
+     * GET /api/devices/my-devices/
+     */
+    getMyDevices: async (params?: DispositivoQueryParams): Promise<DispositivosResponse> => {
+        const queryParams = new URLSearchParams()
+        
+        if (params?.search) queryParams.append('search', params.search)
+        if (params?.tipo) queryParams.append('tipo', params.tipo)
+        if (params?.estado) queryParams.append('estado', params.estado)
+        if (params?.page) queryParams.append('page', String(params.page))
+        if (params?.page_size) queryParams.append('page_size', String(params.page_size))
+
+        const query = queryParams.toString()
+        const url = query ? `${API_BASE_URL}/api/devices/my-devices/?${query}` : `${API_BASE_URL}/api/devices/my-devices/`
+
+        return authenticatedGet<DispositivosResponse>(url)
+    },
+
+    /**
      * 2. Crear Dispositivo
      * POST /api/devices/
      */
@@ -276,14 +297,14 @@ export const dispositivosService = {
 
     /**
      * 4. Asignar Operador a Dispositivo
-     * POST /api/devices/{id}/assign-operator/
+     * POST /api/devices/{id}/assign_operator/
      */
     assignOperator: async (
         dispositivoId: number,
         data: AsignarOperadorDto
     ): Promise<AsignarOperadorResponse> => {
         return authenticatedPost<AsignarOperadorResponse>(
-            `${API_BASE_URL}/api/devices/${dispositivoId}/assign-operator/`,
+            `${API_BASE_URL}/api/devices/${dispositivoId}/assign_operator/`,
             data
         )
     },

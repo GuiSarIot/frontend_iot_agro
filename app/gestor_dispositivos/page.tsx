@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DevicesIcon from '@mui/icons-material/Devices'
 import EditIcon from '@mui/icons-material/Edit'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import PersonIcon from '@mui/icons-material/Person'
 import SearchIcon from '@mui/icons-material/Search'
 import ToggleOffIcon from '@mui/icons-material/ToggleOff'
 import ToggleOnIcon from '@mui/icons-material/ToggleOn'
@@ -17,6 +18,7 @@ import Swal from 'sweetalert2'
 
 import useAccessLogger from '@/app/hooks/useAccessLogger'
 import { dispositivosService, type Dispositivo } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import { useAppContext } from '@/context/appContext'
@@ -55,6 +57,9 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
     const [filteredDispositivos, setFilteredDispositivos] = useState<Dispositivo[]>([])
     const [searchTerm, setSearchTerm] = useState('')
     const [isInitialized, setIsInitialized] = useState(false)
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = checkIsSuperUser(userInfo)
 
     useEffect(() => {
         if (!isInitialized) {
@@ -107,8 +112,22 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                 return false
             }
 
+            // Determinar si el usuario es superusuario o ROOT
+            const isSuperUser = userInfo.levelAccessRolSistema === 'ROOT' || 
+                               userInfo.levelAccessRolSistema === 'SUPERUSER' ||
+                               userInfo.nameRolSistema?.toLowerCase().includes('superusuario')
+
+            // Preparar parámetros de consulta
+            const queryParams: any = {}
+            
+            // Si NO es superusuario, filtrar por operador asignado (el usuario actual)
+            if (!isSuperUser && userInfo.id) {
+                queryParams.operador = Number(userInfo.id)
+            }
+            // Si es superusuario, traer todos los dispositivos (no pasar operador)
+
             // Usar el servicio de dispositivos actualizado
-            const response = await dispositivosService.getAll()
+            const response = await dispositivosService.getAll(queryParams)
             
             // La respuesta puede ser paginada { count, results } o un array directo
             const dispositivosArray = Array.isArray(response) 
@@ -267,10 +286,46 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                         <DevicesIcon className={stylesPage.titleIcon} />
                         <div>
                             <h1 className={stylesPage.pageTitle}>Gestión de Dispositivos</h1>
-                            <p className={stylesPage.pageSubtitle}>Administra y monitorea todos tus dispositivos</p>
+                            <p className={stylesPage.pageSubtitle}>
+                                {isSuperUser 
+                                    ? 'Administra y monitorea todos los dispositivos del sistema' 
+                                    : 'Visualiza y administra tus dispositivos asignados'}
+                            </p>
                         </div>
                     </div>
                 </div>
+
+                {/* Banner informativo de permisos */}
+                {!isSuperUser && (
+                    <div style={{
+                        padding: '12px 20px',
+                        backgroundColor: 'var(--info-bg, #e3f2fd)',
+                        border: '1px solid var(--info-border, #90caf9)',
+                        borderRadius: '8px',
+                        marginBottom: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px'
+                    }}>
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="20" 
+                            height="20" 
+                            viewBox="0 0 24 24" 
+                            fill="var(--info, #2196f3)"
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <span style={{ 
+                            color: 'var(--info-text, #1976d2)', 
+                            fontSize: '14px',
+                            fontWeight: 500
+                        }}>
+                            Estás viendo únicamente los dispositivos que tienes asignados. 
+                            Solo los superusuarios pueden ver todos los dispositivos del sistema.
+                        </span>
+                    </div>
+                )}
 
                 {/* Sección de búsqueda y acciones */}
                 <div className={stylesPage.cardHeader}>
@@ -293,10 +348,12 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                         </span>
                     </div>
                     
-                    <Link href="/gestor_dispositivos/crear" className={stylesPage.btnPrimary}>
-                        <AddIcon className={stylesPage.btnIcon} />
-                        <span>Nuevo dispositivo</span>
-                    </Link>
+                    {isSuperUser && (
+                        <Link href="/gestor_dispositivos/crear" className={stylesPage.btnPrimary}>
+                            <AddIcon className={stylesPage.btnIcon} />
+                            <span>Nuevo dispositivo</span>
+                        </Link>
+                    )}
                 </div>
 
                 {/* Estadísticas dentro del card */}
@@ -351,13 +408,26 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                         <div className={stylesPage.emptyState}>
                             <DevicesIcon style={{ fontSize: '64px', color: 'var(--neutral-300)' }} />
                             <p className={stylesPage.emptyStateText}>
-                                {searchTerm ? 'No se encontraron dispositivos' : 'No hay dispositivos registrados'}
+                                {searchTerm 
+                                    ? 'No se encontraron dispositivos' 
+                                    : isSuperUser
+                                        ? 'No hay dispositivos registrados'
+                                        : 'No tienes dispositivos asignados'}
                             </p>
-                            {!searchTerm && (
+                            {!searchTerm && isSuperUser && (
                                 <Link href="/gestor_dispositivos/crear" className={stylesPage.btnPrimary}>
                                     <AddIcon className={stylesPage.btnIcon} />
                                     Crear primer dispositivo
                                 </Link>
+                            )}
+                            {!searchTerm && !isSuperUser && (
+                                <p style={{ 
+                                    fontSize: '14px', 
+                                    color: 'var(--neutral-500)',
+                                    marginTop: '10px'
+                                }}>
+                                    Contacta a un administrador para que te asigne dispositivos
+                                </p>
                             )}
                         </div>
                     ) : (
@@ -380,31 +450,35 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                                             </span>
                                         </div>
                                         <div className={stylesPage.actionsButtons}>
-                                            <button
-                                                onClick={() => handleToggleEstado(dispositivo)}
-                                                className={`${stylesPage.btnAction} ${stylesPage.btnActionToggle}`}
-                                                title={dispositivo.estado === 'activo' ? 'Desactivar' : 'Activar'}
-                                            >
-                                                {dispositivo.estado === 'activo' ? (
-                                                    <ToggleOnIcon />
-                                                ) : (
-                                                    <ToggleOffIcon />
-                                                )}
-                                            </button>
+                                            {isSuperUser && (
+                                                <button
+                                                    onClick={() => handleToggleEstado(dispositivo)}
+                                                    className={`${stylesPage.btnAction} ${stylesPage.btnActionToggle}`}
+                                                    title={dispositivo.estado === 'activo' ? 'Desactivar' : 'Activar'}
+                                                >
+                                                    {dispositivo.estado === 'activo' ? (
+                                                        <ToggleOnIcon />
+                                                    ) : (
+                                                        <ToggleOffIcon />
+                                                    )}
+                                                </button>
+                                            )}
                                             <Link
                                                 href={`/gestor_dispositivos/${dispositivo.id}`}
                                                 className={`${stylesPage.btnAction} ${stylesPage.btnActionEdit}`}
-                                                title="Editar"
+                                                title={isSuperUser ? "Editar" : "Ver detalles"}
                                             >
                                                 <EditIcon />
                                             </Link>
-                                            <button
-                                                onClick={() => handleDeleteDispositivo(dispositivo)}
-                                                className={`${stylesPage.btnAction} ${stylesPage.btnActionDelete}`}
-                                                title="Eliminar"
-                                            >
-                                                <DeleteIcon />
-                                            </button>
+                                            {isSuperUser && (
+                                                <button
+                                                    onClick={() => handleDeleteDispositivo(dispositivo)}
+                                                    className={`${stylesPage.btnAction} ${stylesPage.btnActionDelete}`}
+                                                    title="Eliminar"
+                                                >
+                                                    <DeleteIcon />
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 
@@ -421,7 +495,7 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                                                 <div className={stylesPage.infoSection}>
                                                     <DevicesIcon className={stylesPage.infoIcon} />
                                                     <div className={stylesPage.infoContent}>
-                                                        <span className={stylesPage.cardInfoLabel}>Tipo</span>
+                                                        <span className={stylesPage.cardInfoLabel}>TIPO</span>
                                                         <span className={stylesPage.deviceType}>
                                                             {dispositivo.tipo_display || dispositivo.tipo}
                                                         </span>
@@ -431,10 +505,39 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                                                 <div className={stylesPage.infoSection}>
                                                     <LocationOnIcon className={stylesPage.infoIcon} />
                                                     <div className={stylesPage.infoContent}>
-                                                        <span className={stylesPage.cardInfoLabel}>Ubicación</span>
+                                                        <span className={stylesPage.cardInfoLabel}>UBICACIÓN</span>
                                                         <span className={stylesPage.cardInfoValue}>
                                                             {dispositivo.ubicacion || 'No especificada'}
                                                         </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Usuario asignado - siempre mostrar */}
+                                            <div className={`${stylesPage.infoItemRow} ${stylesPage.fullWidth}`}>
+                                                <div className={stylesPage.infoSection}>
+                                                    <PersonIcon className={stylesPage.infoIcon} />
+                                                    <div className={stylesPage.infoContent}>
+                                                        <span className={stylesPage.cardInfoLabel}>USUARIO ASIGNADO</span>
+                                                        {dispositivo.operador_asignado && dispositivo.operador_username ? (
+                                                            <>
+                                                                <span className={stylesPage.cardInfoValue}>
+                                                                    {dispositivo.operador_username}
+                                                                </span>
+                                                                {dispositivo.propietario?.email && (
+                                                                    <span className={stylesPage.cardInfoSubtext}>
+                                                                        {dispositivo.propietario.email}
+                                                                    </span>
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <span className={stylesPage.cardInfoValue} style={{ 
+                                                                color: 'var(--text-tertiary)',
+                                                                fontStyle: 'italic' 
+                                                            }}>
+                                                                Sin propietario
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

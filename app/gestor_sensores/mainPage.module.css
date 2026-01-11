@@ -367,6 +367,10 @@
     gap: 12px;
 }
 
+.infoItemRow.fullWidth {
+    grid-template-columns: 1fr;
+}
+
 .infoSection {
     display: flex;
     align-items: flex-start;

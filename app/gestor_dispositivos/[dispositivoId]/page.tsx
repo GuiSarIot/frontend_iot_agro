@@ -26,6 +26,7 @@ import {
     usuariosService,
     type Usuario 
 } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import { useAppContext } from '@/context/appContext'
 
 import AsignarSensorModal from './components/AsignarSensorModal'
@@ -69,8 +70,12 @@ const ESTADOS = [
 export default function EditarDispositivoPage() {
     const router = useRouter()
     const params = useParams()
-    const { showLoader } = useAppContext()
+    const { showLoader, appState } = useAppContext()
+    const { userInfo } = appState
     const dispositivoId = params.dispositivoId as string
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = userInfo ? checkIsSuperUser(userInfo) : false
 
     const [loading, setLoading] = useState(false)
     const [loadingData, setLoadingData] = useState(true)
@@ -117,9 +122,14 @@ export default function EditarDispositivoPage() {
         try {
             const dispositivo = await dispositivosService.getById(Number(dispositivoId))
             
+            // Manejar el tipo que puede ser string u objeto
+            const tipoValue = typeof dispositivo.tipo === 'string' 
+                ? dispositivo.tipo 
+                : dispositivo.tipo?.nombre || ''
+            
             const initialData: FormData = {
                 nombre: dispositivo.nombre,
-                tipo: dispositivo.tipo,
+                tipo: tipoValue,
                 identificador_unico: dispositivo.identificador_unico,
                 estado: dispositivo.estado,
                 ubicacion: dispositivo.ubicacion,
@@ -150,13 +160,40 @@ export default function EditarDispositivoPage() {
 
     const loadOperadores = async () => {
         try {
-            const usuarios = await usuariosService.getAll()
+            console.log('🔍 Cargando lista de operadores...')
+            const response = await usuariosService.getAll()
+            console.log('✅ Respuesta obtenida:', response)
+            console.log('📊 Total de usuarios:', response.count)
+            
+            const todosLosUsuarios = response.results || []
+            console.log('📊 Usuarios en results:', todosLosUsuarios.length)
+            
             // Filtrar usuarios activos (puedes ajustar según tu lógica de roles)
             // Por ahora mostramos todos los usuarios activos
-            const operadoresList = usuarios.filter(u => u.is_active)
+            const operadoresList = todosLosUsuarios.filter(u => u.is_active)
+            console.log('✅ Operadores activos filtrados:', operadoresList)
+            console.log('📊 Total de operadores activos:', operadoresList.length)
+            
             setOperadores(operadoresList)
+            
+            if (operadoresList.length === 0) {
+                console.warn('⚠️ No se encontraron operadores activos en el sistema')
+                console.log('💡 Usuarios disponibles:', todosLosUsuarios.map(u => ({
+                    id: u.id,
+                    username: u.username,
+                    is_active: u.is_active,
+                    nombre: `${u.first_name} ${u.last_name}`
+                })))
+            }
         } catch (error) {
-            console.error('Error al cargar operadores:', error)
+            console.error('❌ Error al cargar operadores:', error)
+            // Mostrar alerta al usuario
+            Swal.fire({
+                title: 'Advertencia',
+                text: 'No se pudieron cargar los operadores. Por favor, verifica tu conexión o contacta al administrador.',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+            })
         }
     }
 
@@ -428,12 +465,46 @@ export default function EditarDispositivoPage() {
                             </button>
                             
                             <div className={styles.titleSection}>
-                                <h1 className={styles.pageTitle}>Editar dispositivo</h1>
+                                <h1 className={styles.pageTitle}>
+                                    {isSuperUser ? 'Editar dispositivo' : 'Ver dispositivo'}
+                                </h1>
                                 <p className={styles.noteText}>
-                                    <strong>Nota:</strong> Actualiza la información del dispositivo IoT registrado en el sistema.
+                                    <strong>Nota:</strong> {isSuperUser 
+                                        ? 'Actualiza la información del dispositivo IoT registrado en el sistema.' 
+                                        : 'Consulta la información del dispositivo. Solo los superusuarios pueden editar.'}
                                 </p>
                             </div>
                         </div>
+
+                        {!isSuperUser && (
+                            <div style={{
+                                padding: '12px 20px',
+                                backgroundColor: 'var(--info-bg, #e3f2fd)',
+                                border: '1px solid var(--info-border, #90caf9)',
+                                borderRadius: '8px',
+                                marginBottom: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px'
+                            }}>
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    width="20" 
+                                    height="20" 
+                                    viewBox="0 0 24 24" 
+                                    fill="var(--info, #2196f3)"
+                                >
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                <span style={{ 
+                                    color: 'var(--info-text, #1976d2)', 
+                                    fontSize: '14px',
+                                    fontWeight: 500
+                                }}>
+                                    Modo de solo lectura. Solo puedes visualizar la información del dispositivo.
+                                </span>
+                            </div>
+                        )}
 
                         <div className={styles.formSection}>
                             {/* Nombre del dispositivo */}
@@ -449,7 +520,7 @@ export default function EditarDispositivoPage() {
                                         onChange={(e) => handleInputChange('nombre', e.target.value)}
                                         placeholder="Ej: Sensor Principal Invernadero 1"
                                         className={`${styles.formInput} ${errors.nombre ? styles.inputError : ''}`}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                     {errors.nombre && (
                                         <span className={styles.errorMessage}>{errors.nombre}</span>
@@ -471,7 +542,7 @@ export default function EditarDispositivoPage() {
                                         options={tiposDispositivo.length > 0 ? tiposDispositivo : TIPOS_DISPOSITIVO_DEFAULT}
                                         placeholder="Selecciona un tipo"
                                         className={`${styles.formSelect} ${errors.tipo ? styles.inputError : ''}`}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                     {errors.tipo && (
                                         <span className={styles.errorMessage}>{errors.tipo}</span>
@@ -492,7 +563,7 @@ export default function EditarDispositivoPage() {
                                         onChange={(e) => handleInputChange('identificador_unico', e.target.value)}
                                         placeholder="Ej: ESP32-SALA-001"
                                         className={`${styles.formInput} ${errors.identificador_unico ? styles.inputError : ''}`}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                     {errors.identificador_unico && (
                                         <span className={styles.errorMessage}>{errors.identificador_unico}</span>
@@ -513,7 +584,7 @@ export default function EditarDispositivoPage() {
                                         onChange={(e) => handleInputChange('estado', e.value)}
                                         options={ESTADOS}
                                         className={styles.formSelect}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                 </div>
                             </div>
@@ -531,7 +602,7 @@ export default function EditarDispositivoPage() {
                                         onChange={(e) => handleInputChange('ubicacion', e.target.value)}
                                         placeholder="Ej: Invernadero 1, Sector A"
                                         className={`${styles.formInput} ${errors.ubicacion ? styles.inputError : ''}`}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                     {errors.ubicacion && (
                                         <span className={styles.errorMessage}>{errors.ubicacion}</span>
@@ -553,7 +624,7 @@ export default function EditarDispositivoPage() {
                                         placeholder="Información adicional sobre el dispositivo..."
                                         rows={4}
                                         className={styles.formTextarea}
-                                        disabled={loading}
+                                        disabled={loading || !isSuperUser}
                                     />
                                 </div>
                             </div>
@@ -566,14 +637,16 @@ export default function EditarDispositivoPage() {
                                     <SensorsIcon style={{ fontSize: '24px' }} />
                                     <h3>Sensores asignados</h3>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAsignarSensorModal(true)}
-                                    className={tableStyles.btnAddSensor}
-                                >
-                                    <AddCircleIcon />
-                                    <span>Asignar sensor</span>
-                                </button>
+                                {isSuperUser && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAsignarSensorModal(true)}
+                                        className={tableStyles.btnAddSensor}
+                                    >
+                                        <AddCircleIcon />
+                                        <span>Asignar sensor</span>
+                                    </button>
+                                )}
                             </div>
 
                             {sensoresAsignados.length > 0 ? (
@@ -602,19 +675,21 @@ export default function EditarDispositivoPage() {
                                             </span>
                                         )}
                                     />
-                                    <Column 
-                                        header="Acciones"
-                                        body={(rowData: SensorAsignado) => (
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoverSensor(rowData.sensor, rowData.sensor_nombre)}
-                                                className={tableStyles.btnDelete}
-                                                title="Remover sensor"
-                                            >
-                                                <DeleteIcon />
-                                            </button>
-                                        )}
-                                    />
+                                    {isSuperUser && (
+                                        <Column 
+                                            header="Acciones"
+                                            body={(rowData: SensorAsignado) => (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoverSensor(rowData.sensor, rowData.sensor_nombre)}
+                                                    className={tableStyles.btnDelete}
+                                                    title="Remover sensor"
+                                                >
+                                                    <DeleteIcon />
+                                                </button>
+                                            )}
+                                        />
+                                    )}
                                 </DataTable>
                             ) : (
                                 <div className={tableStyles.emptyState}>
@@ -625,59 +700,76 @@ export default function EditarDispositivoPage() {
                         </div>
 
                         {/* Sección de Operador */}
-                        <div className={tableStyles.section}>
-                            <div className={tableStyles.sectionHeader}>
-                                <div className={tableStyles.sectionTitle}>
-                                    <PersonIcon style={{ fontSize: '24px' }} />
-                                    <h3>Operador asignado</h3>
+                        {isSuperUser && (
+                            <div className={tableStyles.section}>
+                                <div className={tableStyles.sectionHeader}>
+                                    <div className={tableStyles.sectionTitle}>
+                                        <PersonIcon style={{ fontSize: '24px' }} />
+                                        <h3>Operador asignado</h3>
+                                    </div>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label htmlFor="operador" className={styles.formLabel}>
+                                        Asignar operador
+                                        <span className={styles.labelSubtext}>Operador responsable del dispositivo</span>
+                                    </label>
+                                    <div className={styles.formInputWrapper}>
+                                        <Dropdown
+                                            id="operador"
+                                            value={dispositivo?.operador_asignado || null}
+                                            onChange={(e) => handleAsignarOperador(e.value)}
+                                            options={operadores.map(op => ({
+                                                label: `${op.first_name} ${op.last_name} (${op.username})`,
+                                                value: op.id
+                                            }))}
+                                            placeholder={operadores.length > 0 ? "Selecciona un operador" : "No hay operadores disponibles"}
+                                            className={styles.formSelect}
+                                            showClear
+                                            disabled={operadores.length === 0}
+                                            emptyMessage="No hay operadores activos en el sistema"
+                                            emptyFilterMessage="No se encontraron operadores"
+                                        />
+                                        {dispositivo?.operador_username && (
+                                            <small className={tableStyles.currentOperator}>
+                                                Operador actual: {dispositivo.operador_username}
+                                            </small>
+                                        )}
+                                        {operadores.length === 0 && (
+                                            <small style={{ 
+                                                color: 'var(--warning, #ff9800)', 
+                                                fontSize: '0.875rem',
+                                                marginTop: '0.5rem',
+                                                display: 'block'
+                                            }}>
+                                                ⚠️ No hay usuarios activos registrados en el sistema. Por favor, crea usuarios primero.
+                                            </small>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+                        )}
 
-                            <div className={styles.formGroup}>
-                                <label htmlFor="operador" className={styles.formLabel}>
-                                    Asignar operador
-                                    <span className={styles.labelSubtext}>Operador responsable del dispositivo</span>
-                                </label>
-                                <div className={styles.formInputWrapper}>
-                                    <Dropdown
-                                        id="operador"
-                                        value={dispositivo?.operador_asignado || null}
-                                        onChange={(e) => handleAsignarOperador(e.value)}
-                                        options={operadores.map(op => ({
-                                            label: `${op.first_name} ${op.last_name} (${op.username})`,
-                                            value: op.id
-                                        }))}
-                                        placeholder="Selecciona un operador"
-                                        className={styles.formSelect}
-                                        showClear
-                                    />
-                                    {dispositivo?.operador_username && (
-                                        <small className={tableStyles.currentOperator}>
-                                            Operador actual: {dispositivo.operador_username}
-                                        </small>
-                                    )}
-                                </div>
+                        {isSuperUser && (
+                            <div className={styles.formActions}>
+                                <button
+                                    type="button"
+                                    onClick={handleCancel}
+                                    className={styles.btnSecondary}
+                                    disabled={loading}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={styles.btnPrimary}
+                                    disabled={loading || !hasChanges()}
+                                >
+                                    <SaveIcon className={styles.btnIcon} />
+                                    <span>{loading ? 'Guardando...' : 'Guardar cambios'}</span>
+                                </button>
                             </div>
-                        </div>
-
-                        <div className={styles.formActions}>
-                            <button
-                                type="button"
-                                onClick={handleCancel}
-                                className={styles.btnSecondary}
-                                disabled={loading}
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                type="submit"
-                                className={styles.btnPrimary}
-                                disabled={loading || !hasChanges()}
-                            >
-                                <SaveIcon className={styles.btnIcon} />
-                                <span>{loading ? 'Guardando...' : 'Guardar cambios'}</span>
-                            </button>
-                        </div>
+                        )}
                     </div>
 
                     {/* Panel de vista previa */}

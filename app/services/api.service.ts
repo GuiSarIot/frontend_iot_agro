@@ -125,9 +125,16 @@ export interface Usuario {
     }
 }
 
+export interface UsuariosResponse {
+    count: number
+    next: string | null
+    previous: string | null
+    results: Usuario[]
+}
+
 export const usuariosService = {
-    getAll: async (): Promise<Usuario[]> => {
-        return authenticatedGet<Usuario[]>(`${API_BASE_URL}/api/users/`)
+    getAll: async (): Promise<UsuariosResponse> => {
+        return authenticatedGet<UsuariosResponse>(`${API_BASE_URL}/api/users/`)
     },
 
     getById: async (id: number): Promise<Usuario> => {

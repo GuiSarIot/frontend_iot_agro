@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 
+import { useRouter } from 'next/navigation'
+
 import DashboardIcon from '@mui/icons-material/Dashboard'
 
 import useAccessLogger from '@/app/hooks/useAccessLogger'
@@ -11,7 +13,9 @@ import { useAppContext } from '@/context/appContext'
 import styles from './dashboard.module.css'
 
 const DashboardPage: React.FC = () => {
-    const { changeTitle, showNavbar, showLoader } = useAppContext()
+    const { changeTitle, showNavbar, showLoader, appState } = useAppContext()
+    const { userInfo } = appState
+    const router = useRouter()
 
     // Registrar acceso al dashboard
     useAccessLogger({ 
@@ -23,9 +27,19 @@ const DashboardPage: React.FC = () => {
         showLoader(true)
         showNavbar(window.innerWidth > 1380)
         changeTitle('Panel de Control')
+        
+        // Redirigir automáticamente según el tipo de usuario
+        if (userInfo.hasRolSistema) {
+            // Es administrador, redirigir a portal admin
+            router.push('/dashboard/portal_admin')
+        } else if (userInfo.id) {
+            // Es usuario externo, redirigir a portal usuario
+            router.push('/dashboard/portal_usuario')
+        }
+        
         showLoader(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [userInfo.hasRolSistema, userInfo.id])
 
     return (
         <AppLayout showMainMenu={true}>

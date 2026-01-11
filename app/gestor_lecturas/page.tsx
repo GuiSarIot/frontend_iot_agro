@@ -12,7 +12,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Button } from 'primereact/button'
 import { Calendar } from 'primereact/calendar'
 import { Column } from 'primereact/column'
-import { DataTable } from 'primereact/datatable'
+import { DataTable, DataTableStateEvent } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import Swal from 'sweetalert2'
 
@@ -24,6 +24,7 @@ import {
     type Lectura,
     type LecturaQueryParams 
 } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import { useAppContext } from '@/context/appContext'
@@ -51,6 +52,9 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
 }) => {
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = userInfo ? checkIsSuperUser(userInfo) : false
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
@@ -110,7 +114,11 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
             setLoading(true)
             showLoader(true)
             
-            const response = await lecturasService.getAll(filters)
+            // Usar endpoint diferente según el rol del usuario
+            const response = isSuperUser 
+                ? await lecturasService.getAll(filters)
+                : await lecturasService.getMyReadings(filters)
+            
             setLecturas(response.results)
             setTotalRecords(response.count)
         } catch (error) {
@@ -124,7 +132,7 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
             setLoading(false)
             showLoader(false)
         }
-    }, [filters, showLoader])
+    }, [filters, showLoader, isSuperUser])
 
     // ---- Efectos ----
     useEffect(() => {
@@ -189,12 +197,12 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
     }
 
     // ---- Handlers de tabla ----
-    const onPage = (event: { first: number; rows: number; page: number }) => {
+    const onPage = (event: DataTableStateEvent) => {
         setFirst(event.first)
         setRows(event.rows)
         setFilters(prev => ({
             ...prev,
-            page: event.page + 1,
+            page: event.page !== undefined ? event.page + 1 : 1,
             page_size: event.rows
         }))
     }
@@ -256,8 +264,6 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
     }
 
     const actionsTemplate = (rowData: Lectura) => {
-        const canDelete = userInfo?.is_superuser
-
         return (
             <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <Link href={`/gestor_lecturas/${rowData.id}`}>
@@ -271,7 +277,7 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
                     />
                 </Link>
                 
-                {canDelete && (
+                {isSuperUser && (
                     <Button
                         icon={<DeleteIcon style={{ fontSize: '1rem' }} />}
                         rounded
@@ -314,13 +320,15 @@ const ManageLecturasPage: React.FC<ManageLecturasPageProps> = ({
                                 outlined
                             />
                             
-                            <Link href="/gestor_lecturas/crear">
-                                <Button
-                                    icon={<AddIcon />}
-                                    label="Nueva lectura"
-                                    severity="success"
-                                />
-                            </Link>
+                            {isSuperUser && (
+                                <Link href="/gestor_lecturas/crear">
+                                    <Button
+                                        icon={<AddIcon />}
+                                        label="Nueva lectura"
+                                        severity="success"
+                                    />
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

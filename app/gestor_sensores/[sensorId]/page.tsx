@@ -13,8 +13,11 @@ import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
 import Swal from 'sweetalert2'
 
-import { sensoresService, type TipoSensor, type UpdateSensorDto } from '@/app/services/api.service'
+import { sensoresService, type TipoSensor, type UpdateSensorDto, type Sensor, dispositivosService, type Dispositivo, type AsignarSensorDto } from '@/app/services/api.service'
 import { useAppContext } from '@/context/appContext'
+import DevicesIcon from '@mui/icons-material/Devices'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import styles from '../crear/crear.module.css'
 
@@ -27,6 +30,11 @@ interface FormData {
     estado: string
     rango_min: number | null
     rango_max: number | null
+}
+
+interface AsignacionDispositivo {
+    dispositivo_id: number
+    configuracion_json: string
 }
 
 interface FormErrors {
@@ -49,6 +57,8 @@ export default function EditarSensorPage() {
     const [loading, setLoading] = useState(false)
     const [loadingData, setLoadingData] = useState(true)
     const [tiposSensor, setTiposSensor] = useState<TipoSensor[]>([])
+    const [dispositivos, setDispositivos] = useState<Dispositivo[]>([])
+    const [sensorData, setSensorData] = useState<Sensor | null>(null)
     const [formData, setFormData] = useState<FormData>({
         nombre: '',
         tipo: '',
@@ -60,6 +70,13 @@ export default function EditarSensorPage() {
     })
     const [originalData, setOriginalData] = useState<FormData | null>(null)
     const [errors, setErrors] = useState<FormErrors>({})
+    
+    // Estados para asignación de dispositivos
+    const [asignacion, setAsignacion] = useState<AsignacionDispositivo>({
+        dispositivo_id: 0,
+        configuracion_json: '{}'
+    })
+    const [loadingAsignacion, setLoadingAsignacion] = useState(false)
 
     const estadosOptions = [
         { label: 'Activo', value: 'Activo' },
@@ -69,6 +86,7 @@ export default function EditarSensorPage() {
 
     useEffect(() => {
         loadTipos()
+        loadDispositivos()
         loadSensor()
         // eslint-disable-next-line
     }, [sensorId])
@@ -82,12 +100,22 @@ export default function EditarSensorPage() {
         }
     }
 
+    const loadDispositivos = async () => {
+        try {
+            const response = await dispositivosService.getAll({ page_size: 1000 })
+            setDispositivos(response.results)
+        } catch (error) {
+            console.error('Error al cargar dispositivos:', error)
+        }
+    }
+
     const loadSensor = async () => {
         setLoadingData(true)
         showLoader(true)
 
         try {
             const sensor = await sensoresService.getById(Number(sensorId))
+            setSensorData(sensor)
             
             const initialData: FormData = {
                 nombre: sensor.nombre,
@@ -229,6 +257,107 @@ export default function EditarSensorPage() {
                 confirmButtonText: 'Ok'
             })
         }
+    }
+
+    const handleAsignarDispositivo = async () => {
+        if (!asignacion.dispositivo_id || asignacion.dispositivo_id === 0) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Debe seleccionar un dispositivo',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+            })
+            return
+        }
+
+        // Validar JSON
+        try {
+            JSON.parse(asignacion.configuracion_json)
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'La configuración JSON no es válida',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+            return
+        }
+
+        setLoadingAsignacion(true)
+
+        try {
+            const dataToSend: AsignarSensorDto = {
+                sensor_id: Number(sensorId)
+            }
+
+            // Solo agregar configuracion_json si no está vacío
+            const configJson = JSON.parse(asignacion.configuracion_json)
+            if (Object.keys(configJson).length > 0) {
+                dataToSend.configuracion_json = configJson
+            }
+
+            await dispositivosService.assignSensor(asignacion.dispositivo_id, dataToSend)
+
+            setLoadingAsignacion(false)
+
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Sensor asignado correctamente al dispositivo',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            }).then(() => {
+                // Recargar datos del sensor para actualizar la lista de dispositivos
+                loadSensor()
+                // Resetear formulario de asignación
+                setAsignacion({ dispositivo_id: 0, configuracion_json: '{}' })
+            })
+
+        } catch (error) {
+            console.error('Error al asignar sensor:', error)
+            setLoadingAsignacion(false)
+            Swal.fire({
+                title: 'Error',
+                text: error instanceof Error ? error.message : 'Error al asignar el sensor al dispositivo',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        }
+    }
+
+    const handleDesasignarDispositivo = async (dispositivoId: number, dispositivoNombre: string) => {
+        Swal.fire({
+            title: '¿Desasignar sensor?',
+            text: `¿Estás seguro de desasignar este sensor del dispositivo "${dispositivoNombre}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--error)',
+            cancelButtonColor: 'var(--secondary)',
+            confirmButtonText: 'Sí, desasignar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await dispositivosService.removeSensor(dispositivoId, Number(sensorId))
+                    
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Sensor desasignado correctamente',
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
+                    }).then(() => {
+                        loadSensor()
+                    })
+                } catch (error) {
+                    console.error('Error al desasignar sensor:', error)
+                    Swal.fire({
+                        title: 'Error',
+                        text: error instanceof Error ? error.message : 'Error al desasignar el sensor',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                }
+            }
+        })
     }
 
     const handleCancel = () => {
@@ -445,6 +574,117 @@ export default function EditarSensorPage() {
                                     )}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Sección de asignación a dispositivos */}
+                        <div className={styles.formSection} style={{ marginTop: '2rem', borderTop: '1px solid var(--border-color)', paddingTop: '2rem' }}>
+                            <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <DevicesIcon />
+                                Asignar a Dispositivo
+                            </h2>
+                            
+                            <div className={styles.formGroup}>
+                                <label htmlFor="dispositivo" className={styles.formLabel}>
+                                    Seleccionar dispositivo
+                                    <span className={styles.labelSubtext}>Dispositivo al que desea asignar este sensor</span>
+                                </label>
+                                <div className={styles.formInputWrapper}>
+                                    <Dropdown
+                                        id="dispositivo"
+                                        value={asignacion.dispositivo_id}
+                                        onChange={(e) => setAsignacion(prev => ({ ...prev, dispositivo_id: e.value }))}
+                                        options={dispositivos.map(d => ({ 
+                                            label: `${d.nombre} (${d.identificador_unico})`, 
+                                            value: d.id 
+                                        }))}
+                                        placeholder="Seleccione un dispositivo"
+                                        className={styles.formInput}
+                                        disabled={loadingAsignacion}
+                                        filter
+                                        emptyMessage="No hay dispositivos disponibles"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="configuracion" className={styles.formLabel}>
+                                    Configuración JSON (opcional)
+                                    <span className={styles.labelSubtext}>Configuración específica del sensor en este dispositivo</span>
+                                </label>
+                                <div className={styles.formInputWrapper}>
+                                    <InputTextarea
+                                        id="configuracion"
+                                        value={asignacion.configuracion_json}
+                                        onChange={(e) => setAsignacion(prev => ({ ...prev, configuracion_json: e.target.value }))}
+                                        placeholder='{"intervalo": 60, "umbral_alerta": 100}'
+                                        rows={3}
+                                        className={styles.formInput}
+                                        disabled={loadingAsignacion}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleAsignarDispositivo}
+                                className={styles.btnPrimary}
+                                disabled={loadingAsignacion || asignacion.dispositivo_id === 0}
+                                style={{ marginBottom: '1.5rem' }}
+                            >
+                                <AddCircleIcon className={styles.btnIcon} />
+                                <span>{loadingAsignacion ? 'Asignando...' : 'Asignar a dispositivo'}</span>
+                            </button>
+
+                            {/* Lista de dispositivos asignados */}
+                            {sensorData && sensorData.dispositivos_asignados && sensorData.dispositivos_asignados.length > 0 && (
+                                <div style={{ marginTop: '1.5rem' }}>
+                                    <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                                        Dispositivos asignados ({sensorData.cantidad_dispositivos})
+                                    </h3>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                        {sensorData.dispositivos_asignados.map((dispositivo) => (
+                                            <div
+                                                key={dispositivo.id}
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    padding: '1rem',
+                                                    border: '1px solid var(--border-color)',
+                                                    borderRadius: '8px',
+                                                    backgroundColor: 'var(--surface)'
+                                                }}
+                                            >
+                                                <div>
+                                                    <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
+                                                        {dispositivo.nombre}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                                                        {dispositivo.identificador_unico} • {dispositivo.tipo_display}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                                                        Asignado: {new Date(dispositivo.fecha_asignacion).toLocaleDateString()}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDesasignarDispositivo(dispositivo.id, dispositivo.nombre)}
+                                                    className={styles.btnSecondary}
+                                                    style={{ 
+                                                        padding: '0.5rem 1rem',
+                                                        fontSize: '0.875rem',
+                                                        backgroundColor: 'var(--error)',
+                                                        color: 'white',
+                                                        border: 'none'
+                                                    }}
+                                                >
+                                                    <DeleteIcon style={{ fontSize: '1rem' }} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 

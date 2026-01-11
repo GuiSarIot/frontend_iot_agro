@@ -150,6 +150,7 @@
 
     --border-width: 1px;
     --border-color: var(--neutral-300);
+    --border-color-secondary: var(--neutral-200);
     --border-color-hover: var(--neutral-400);
     --border-color-focus: var(--primary);
 
@@ -206,6 +207,7 @@
     --background-color-third: #4a5568;
 
     --border-color: #4a5568;
+    --border-color-secondary: #2d3748;
     --border-color-hover: #718096;
     --border-color-focus: var(--primary-400);
 
@@ -482,6 +484,29 @@ a:hover {
 }
 
 .p-inputtext:enabled:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Password */
+.p-password {
+    display: inline-flex !important;
+    position: relative !important;
+}
+
+.p-password input {
+    border-radius: 10px !important;
+    border: 2px solid var(--border-color) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.p-password input:enabled:hover {
+    border-color: var(--primary) !important;
+}
+
+.p-password input:enabled:focus {
     outline: none !important;
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 3px rgba(63, 173, 50, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08) !important;

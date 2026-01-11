@@ -13,6 +13,7 @@ import { InputTextarea } from 'primereact/inputtextarea'
 import Swal from 'sweetalert2'
 
 import { dispositivosService, type TipoDispositivo } from '@/app/services/api.service'
+import { useAppContext } from '@/context/appContext'
 
 import styles from './crear.module.css'
 
@@ -51,6 +52,14 @@ const ESTADOS = [
 // ---- Componente principal ----
 export default function CrearDispositivoPage() {
     const router = useRouter()
+    const { appState } = useAppContext()
+    const { userInfo } = appState
+    
+    // Determinar si el usuario es superusuario
+    const isSuperUser = userInfo.levelAccessRolSistema === 'ROOT' || 
+                       userInfo.levelAccessRolSistema === 'SUPERUSER' ||
+                       userInfo.nameRolSistema?.toLowerCase().includes('superusuario')
+    
     const [loading, setLoading] = useState(false)
     const [tiposDispositivo, setTiposDispositivo] = useState<TipoDispositivo[]>([])
     const [formData, setFormData] = useState<FormData>({
@@ -65,7 +74,20 @@ export default function CrearDispositivoPage() {
 
     // Cargar tipos de dispositivos al montar
     useEffect(() => {
+        // Verificar permisos
+        if (!isSuperUser) {
+            Swal.fire({
+                title: 'Acceso denegado',
+                text: 'Solo los superusuarios pueden crear dispositivos',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            }).then(() => {
+                router.push('/gestor_dispositivos')
+            })
+            return
+        }
         loadTipos()
+        // eslint-disable-next-line
     }, [])
 
     const loadTipos = async () => {

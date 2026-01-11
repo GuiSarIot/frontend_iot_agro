@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
+import DevicesIcon from '@mui/icons-material/Devices'
 import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
 import SensorsIcon from '@mui/icons-material/Sensors'
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2'
 
 import useAccessLogger from '@/app/hooks/useAccessLogger'
 import { sensoresService, type Sensor } from '@/app/services/api.service'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import { useAppContext } from '@/context/appContext'
@@ -41,6 +43,9 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
 }) => {
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = checkIsSuperUser(userInfo)
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
@@ -188,10 +193,12 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
                             />
                         </div>
                     </div>
-                    <Link href="/gestor_sensores/crear" className={stylesPage.btnCreate}>
-                        <AddIcon />
-                        <span>Nuevo sensor</span>
-                    </Link>
+                    {isSuperUser && (
+                        <Link href="/gestor_sensores/crear" className={stylesPage.btnCreate}>
+                            <AddIcon />
+                            <span>Nuevo sensor</span>
+                        </Link>
+                    )}
                 </div>
 
                 {/* Estadísticas */}
@@ -213,7 +220,7 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
                                         ? 'No se encontraron sensores con los criterios de búsqueda'
                                         : 'Comienza creando tu primer sensor'}
                                 </p>
-                                {!searchTerm && (
+                                {!searchTerm && isSuperUser && (
                                     <Link href="/gestor_sensores/crear" className={stylesPage.btnEmptyCreate}>
                                         <AddIcon />
                                         <span>Crear primer sensor</span>
@@ -231,17 +238,19 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
                                             <Link 
                                                 href={`/gestor_sensores/${sensor.id}`}
                                                 className={stylesPage.btnActionIcon}
-                                                title="Editar sensor"
+                                                title={isSuperUser ? "Editar sensor" : "Ver sensor"}
                                             >
                                                 <EditIcon />
                                             </Link>
-                                            <button
-                                                onClick={() => handleDelete(sensor.id, sensor.nombre)}
-                                                className={`${stylesPage.btnActionIcon} ${stylesPage.btnActionDelete}`}
-                                                title="Eliminar sensor"
-                                            >
-                                                <DeleteIcon />
-                                            </button>
+                                            {isSuperUser && (
+                                                <button
+                                                    onClick={() => handleDelete(sensor.id, sensor.nombre)}
+                                                    className={`${stylesPage.btnActionIcon} ${stylesPage.btnActionDelete}`}
+                                                    title="Eliminar sensor"
+                                                >
+                                                    <DeleteIcon />
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 
@@ -279,6 +288,63 @@ const ManageSensoresPage: React.FC<ManageSensoresPageProps> = ({
                                                     </span>
                                                 </div>
                                             )}
+                                            
+                                            {/* Dispositivos asignados */}
+                                            <div className={`${stylesPage.infoItemRow} ${stylesPage.fullWidth}`}>
+                                                <div className={stylesPage.infoSection}>
+                                                    <DevicesIcon className={stylesPage.infoIcon} />
+                                                    <div className={stylesPage.infoContent}>
+                                                        <span className={stylesPage.cardLabel}>DISPOSITIVOS ASIGNADOS</span>
+                                                        {sensor.cantidad_dispositivos > 0 ? (
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                                <span className={stylesPage.cardValue} style={{
+                                                                    color: 'var(--primary)',
+                                                                    fontWeight: 600
+                                                                }}>
+                                                                    {sensor.cantidad_dispositivos} {sensor.cantidad_dispositivos === 1 ? 'dispositivo' : 'dispositivos'}
+                                                                </span>
+                                                                {sensor.dispositivos_asignados.slice(0, 2).map((dispositivo, index) => (
+                                                                    <span key={index} className={stylesPage.cardInfoSubtext} style={{
+                                                                        fontSize: '0.75rem',
+                                                                        color: dispositivo.activo ? 'var(--text-secondary)' : 'var(--text-tertiary)',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '4px'
+                                                                    }}>
+                                                                        <span style={{
+                                                                            width: '6px',
+                                                                            height: '6px',
+                                                                            borderRadius: '50%',
+                                                                            backgroundColor: dispositivo.activo && dispositivo.estado === 'activo' 
+                                                                                ? 'var(--success)' 
+                                                                                : 'var(--neutral-400)',
+                                                                            display: 'inline-block'
+                                                                        }}></span>
+                                                                        {dispositivo.nombre}
+                                                                    </span>
+                                                                ))}
+                                                                {sensor.dispositivos_asignados.length > 2 && (
+                                                                    <span className={stylesPage.cardInfoSubtext} style={{
+                                                                        fontSize: '0.75rem',
+                                                                        color: 'var(--text-tertiary)',
+                                                                        fontStyle: 'italic'
+                                                                    }}>
+                                                                        +{sensor.dispositivos_asignados.length - 2} más...
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <span className={stylesPage.cardValue} style={{
+                                                                color: 'var(--text-tertiary)',
+                                                                fontStyle: 'italic',
+                                                                fontSize: '0.875rem'
+                                                            }}>
+                                                                Sin dispositivos asignados
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 

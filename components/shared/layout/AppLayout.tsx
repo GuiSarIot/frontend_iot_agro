@@ -35,6 +35,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const { appState } = useAppContext()
     const title = pageTitle || appState.title
     const userPermissions = appState.userInfo.roles || []
+    const userInfo = appState.userInfo
     const { sidebarCollapsed } = appState
     
     // Obtener la ruta actual
@@ -59,7 +60,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     if (!sidebarContent && showSidebar) {
         // Si se solicita el menú principal o no hay menú de módulo disponible
         if (showMainMenu) {
-            const availableModules = getAvailableModules(userPermissions)
+            const availableModules = getAvailableModules(userPermissions, userInfo)
             finalSidebarContent = (
                 <SidebarMenu 
                     title={getActiveModuleTitle()}
@@ -79,7 +80,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 )
             } else {
                 // Mostrar módulos principales como fallback
-                const availableModules = getAvailableModules(userPermissions)
+                const availableModules = getAvailableModules(userPermissions, userInfo)
                 finalSidebarContent = (
                     <SidebarMenu 
                         title={getActiveModuleTitle()}

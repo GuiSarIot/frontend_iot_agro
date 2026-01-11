@@ -9,7 +9,7 @@ export interface UserInfo {
     nameImage: string;
     hasRolSistema: boolean;
     nameRolSistema: string;
-    levelAccessRolSistema: string | number;
+    levelAccessRolSistema: string;
     phone?: string;
     profession?: string;
 }

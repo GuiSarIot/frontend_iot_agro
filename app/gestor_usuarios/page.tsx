@@ -17,6 +17,7 @@ import { InputText } from 'primereact/inputtext'
 import Swal from 'sweetalert2'
 
 import useAccessLogger from '@/app/hooks/useAccessLogger'
+import { isSuperUser as checkIsSuperUser } from '@/app/utils/permissions'
 import GetRoute from '@/components/protectedRoute/getRoute'
 import SaveRoute from '@/components/protectedRoute/saveRoute'
 import consumerPublicAPI from '@/components/shared/consumerAPI/consumerPublicAPI'
@@ -84,6 +85,9 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
 }) => {
     const { changeTitle, showNavbar, changeUserInfo, appState, showLoader } = useAppContext()
     const { userInfo } = appState
+
+    // Determinar si el usuario es superusuario
+    const isSuperUser = checkIsSuperUser(userInfo)
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
@@ -465,27 +469,31 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                         </span>
                     </div>
                     <div className={stylesPage.cardActions}>
-                        <button 
-                            className={`${stylesPage.actionBtn} ${user.isActive ? stylesPage.actionBtnToggleActive : stylesPage.actionBtnToggleInactive}`}
-                            onClick={() => handleToggleActive(user)}
-                            title={user.isActive ? 'Desactivar usuario' : 'Activar usuario'}
-                        >
-                            {user.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
-                        </button>
+                        {isSuperUser && (
+                            <button 
+                                className={`${stylesPage.actionBtn} ${user.isActive ? stylesPage.actionBtnToggleActive : stylesPage.actionBtnToggleInactive}`}
+                                onClick={() => handleToggleActive(user)}
+                                title={user.isActive ? 'Desactivar usuario' : 'Activar usuario'}
+                            >
+                                {user.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
+                            </button>
+                        )}
                         <Link 
                             href={`/gestor_usuarios/${user.id}`}
                             className={stylesPage.actionBtn}
-                            title="Editar"
+                            title={isSuperUser ? "Editar" : "Ver detalles"}
                         >
                             <EditIcon />
                         </Link>
-                        <button 
-                            className={`${stylesPage.actionBtn} ${stylesPage.actionBtnDelete}`}
-                            onClick={() => handleDelete(user)}
-                            title="Eliminar"
-                        >
-                            <DeleteIcon />
-                        </button>
+                        {isSuperUser && (
+                            <button 
+                                className={`${stylesPage.actionBtn} ${stylesPage.actionBtnDelete}`}
+                                onClick={() => handleDelete(user)}
+                                title="Eliminar"
+                            >
+                                <DeleteIcon />
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -566,12 +574,14 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                             )}
                         </div>
                     </div>
-                    <div className={stylesPage.btnNewUser}>
-                        <Link href="/gestor_usuarios/crear">
-                            <AddIcon />
-                            <span>Nuevo usuario</span>
-                        </Link>
-                    </div>
+                    {isSuperUser && (
+                        <div className={stylesPage.btnNewUser}>
+                            <Link href="/gestor_usuarios/crear">
+                                <AddIcon />
+                                <span>Nuevo usuario</span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 <div className={stylesPage.cardsContainer}>
