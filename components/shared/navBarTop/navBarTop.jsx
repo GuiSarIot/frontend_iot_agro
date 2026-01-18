@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import PersonIcon from '@mui/icons-material/Person'
 
-import { getAvailableModules } from '@/components/shared/layout/modulesConfig'
+import { getNavbarModules } from '@/components/shared/layout/modulesConfig'
 import AppContext from '@/context/appContext'
 
 import stylesNavBarTop from './navBarTop.module.css'
@@ -47,7 +47,7 @@ const NavBarTop = () => {
     
     // Obtener módulos disponibles basados en permisos y rol del usuario
     const permissions = Array.isArray(userPermissions) ? userPermissions : []
-    const availableModules = getAvailableModules(permissions, userInfo)
+    const availableModules = getNavbarModules(permissions, userInfo)
     
     // Verificar si la ruta actual corresponde a un módulo
     const isActiveModule = (href) => {

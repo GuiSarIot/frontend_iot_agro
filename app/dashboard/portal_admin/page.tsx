@@ -351,216 +351,230 @@ const PortalAdminPage: React.FC = () => {
 
     return (
         <AppLayout showMainMenu={true}>
-            <div className="dashboardExecutive">
-                {/* Header Ejecutivo */}
-                <div className="executiveHeader">
-                    <div className="executiveTitle">
-                        <AdminPanelSettingsIcon style={{ fontSize: '2.5rem', marginRight: '1rem' }} />
-                        Portal Ejecutivo - Administrador
-                    </div>
-                    <div className="executiveSubtitle">
-                        Panel de control gerencial para supervisión completa del sistema IoT
-                    </div>
-                </div>
-
-                {/* Estadísticas Ejecutivas */}
-                <div className="executiveStats">
-                    <div className="statCard">
-                        <span className="statIcon">👥</span>
-                        <div className="statLabel">Total Usuarios</div>
-                        <div className="statValue">{estadisticas.totalUsuarios}</div>
-                        <div className="statTrend">
-                            <TrendingUpIcon style={{ fontSize: '1rem', marginRight: '0.25rem' }} />
-                            {estadisticas.usuariosActivos} activos
+            <div className={styles.containerPage}>
+                <div className={styles.mainCard}>
+                    {/* Page Header */}
+                    <div className={styles.pageHeader}>
+                        <div className={styles.titleSection}>
+                            <div className={styles.titleWrapper}>
+                                <AdminPanelSettingsIcon className={styles.titleIcon} />
+                                <h1 className={styles.pageTitle}>Portal Administrador</h1>
+                            </div>
+                            <p className={styles.pageSubtitle}>Panel de control gerencial para supervisión completa del sistema IoT</p>
                         </div>
                     </div>
 
-                    <div className="statCard">
-                        <span className="statIcon">📡</span>
-                        <div className="statLabel">Dispositivos IoT</div>
-                        <div className="statValue">{estadisticas.totalDispositivos}</div>
-                        <div className="statTrend">
-                            <TrendingUpIcon style={{ fontSize: '1rem', marginRight: '0.25rem' }} />
-                            {estadisticas.tasaActivacion}% operativos
+                    {/* Card Header - Búsqueda y acciones */}
+                    <div className={styles.cardHeader}>
+                        <div className={styles.searchContainer}>
+                            <div className={styles.searchBox}>
+                                <SearchIcon className={styles.searchIcon} />
+                                <input
+                                    type="text"
+                                    className={styles.searchInput}
+                                    value={globalFilter}
+                                    onChange={(e) => setGlobalFilter(e.target.value)}
+                                    placeholder="Buscar por nombre, email, ubicación..."
+                                    autoComplete="off"
+                                />
+                            </div>
                         </div>
+                        <button 
+                            onClick={cargarDatos} 
+                            className={styles.btnRefresh}
+                            disabled={loading}
+                            title="Actualizar datos"
+                        >
+                            <RefreshIcon />
+                            <span>Actualizar</span>
+                        </button>
                     </div>
 
-                    <div className="statCard">
-                        <span className="statIcon">🟢</span>
-                        <div className="statLabel">Dispositivos Activos</div>
-                        <div className="statValue">{estadisticas.dispositivosActivos}</div>
-                        <div className="statTrend" style={{ color: '#10b981' }}>
-                            En tiempo real
-                        </div>
-                    </div>
-
-                    <div className="statCard">
-                        <span className="statIcon">📊</span>
-                        <div className="statLabel">Total Lecturas</div>
-                        <div className="statValue">{estadisticas.totalLecturas.toLocaleString()}</div>
-                        <div className="statTrend">
-                            Datos procesados
-                        </div>
-                    </div>
-                </div>
-
-                {/* Mapa de Dispositivos */}
-                <div className="mapSection">
-                    <div className="mapHeader">
-                        <div className="mapTitle">
-                            <MapIcon />
-                            Monitoreo Geográfico en Tiempo Real
-                        </div>
-                        <div className="mapControls">
-                            <button 
-                                className={`mapFilter ${vistaActual === 'mapa' ? 'active' : ''}`}
-                                onClick={() => setVistaActual('mapa')}
-                            >
-                                <MapIcon />
-                                Vista Mapa
-                            </button>
-                            <button 
-                                className={`mapFilter ${vistaActual === 'tabla' ? 'active' : ''}`}
-                                onClick={() => setVistaActual('tabla')}
-                            >
-                                <DevicesIcon />
-                                Vista Tabla
-                            </button>
-                            <button 
-                                className="actionButton"
-                                onClick={cargarDatos}
-                                disabled={loading}
-                            >
-                                <RefreshIcon />
-                                Actualizar
-                            </button>
-                        </div>
-                    </div>
-
-                    {vistaActual === 'mapa' ? (
-                        <>
-                            <DispositivosMap 
-                                dispositivos={marcadoresDispositivos}
-                                height="600px"
-                                centerOnDevices={true}
-                                onDeviceClick={handleDeviceClick}
-                            />
-                            <div className="legend">
-                                <div className="legendItem">
-                                    <span className="legendDot active"></span>
-                                    <span>Dispositivo Activo ({estadisticas.dispositivosActivos})</span>
-                                </div>
-                                <div className="legendItem">
-                                    <span className="legendDot inactive"></span>
-                                    <span>Dispositivo Inactivo ({estadisticas.dispositivosInactivos})</span>
+                    {/* Estadísticas */}
+                    <div className={styles.statsSection}>
+                        <div className={styles.statCard}>
+                            <span className={styles.statIcon}>👥</span>
+                            <div className={styles.statContent}>
+                                <div className={styles.statLabel}>Total Usuarios</div>
+                                <div className={styles.statValue}>{estadisticas.totalUsuarios}</div>
+                                <div className={styles.statTrend}>
+                                    <TrendingUpIcon />
+                                    {estadisticas.usuariosActivos} activos
                                 </div>
                             </div>
-                        </>
-                    ) : (
-                        <div className="executiveCard">
-                            <div className="cardHeader">
-                                <div className="searchContainer">
-                                    <SearchIcon />
-                                    <input
-                                        type="text"
-                                        className="executiveSearchInput"
-                                        value={globalFilter}
-                                        onChange={(e) => setGlobalFilter(e.target.value)}
-                                        placeholder="Buscar por nombre, email, ubicación..."
-                                        autoComplete="off"
-                                    />
+                        </div>
+
+                        <div className={styles.statCard}>
+                            <span className={styles.statIcon}>📡</span>
+                            <div className={styles.statContent}>
+                                <div className={styles.statLabel}>Dispositivos IoT</div>
+                                <div className={styles.statValue}>{estadisticas.totalDispositivos}</div>
+                                <div className={styles.statTrend}>
+                                    <TrendingUpIcon />
+                                    {estadisticas.tasaActivacion}% operativos
                                 </div>
                             </div>
-
-                            <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
-                                <TabPanel header="Usuarios" leftIcon="pi pi-users">
-                                    <DataTable
-                                        value={usuarios}
-                                        loading={loading}
-                                        paginator
-                                        rows={10}
-                                        rowsPerPageOptions={[5, 10, 25, 50]}
-                                        emptyMessage="No hay usuarios registrados"
-                                        stripedRows
-                                        showGridlines
-                                        globalFilter={globalFilter}
-                                        globalFilterFields={['username', 'email', 'first_name', 'last_name']}
-                                    >
-                                        <Column 
-                                            field="username" 
-                                            header="USUARIO" 
-                                            body={usuarioNombreTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            field="email" 
-                                            header="EMAIL" 
-                                            sortable
-                                        />
-                                        <Column 
-                                            field="is_active" 
-                                            header="ESTADO" 
-                                            body={usuarioEstadoTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            header="DISPOSITIVOS" 
-                                            body={usuarioDispositivosTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            header="ACCIONES" 
-                                            body={usuarioAccionesTemplate}
-                                            style={{ width: '180px' }}
-                                        />
-                                    </DataTable>
-                                </TabPanel>
-
-                                <TabPanel header="Dispositivos" leftIcon="pi pi-tablet">
-                                    <DataTable
-                                        value={dispositivos}
-                                        loading={loading}
-                                        paginator
-                                        rows={10}
-                                        rowsPerPageOptions={[5, 10, 25, 50]}
-                                        emptyMessage="No hay dispositivos registrados"
-                                        stripedRows
-                                        showGridlines
-                                        globalFilter={globalFilter}
-                                        globalFilterFields={['nombre', 'ubicacion', 'propietario_nombre', 'propietario_email']}
-                                    >
-                                        <Column 
-                                            field="nombre" 
-                                            header="DISPOSITIVO" 
-                                            body={dispositivoNombreTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            header="PROPIETARIO" 
-                                            body={propietarioTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            field="ubicacion" 
-                                            header="UBICACIÓN" 
-                                            sortable
-                                        />
-                                        <Column 
-                                            field="estado" 
-                                            header="ESTADO" 
-                                            body={dispositivoEstadoTemplate}
-                                            sortable
-                                        />
-                                        <Column 
-                                            header="ACCIONES" 
-                                            body={dispositivoAccionesTemplate}
-                                            style={{ width: '180px' }}
-                                        />
-                                    </DataTable>
-                                </TabPanel>
-                            </TabView>
                         </div>
-                    )}
+
+                        <div className={styles.statCard}>
+                            <span className={styles.statIcon}>🟢</span>
+                            <div className={styles.statContent}>
+                                <div className={styles.statLabel}>Dispositivos Activos</div>
+                                <div className={styles.statValue}>{estadisticas.dispositivosActivos}</div>
+                                <div className={styles.statTrendPositive}>
+                                    En tiempo real
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.statCard}>
+                            <span className={styles.statIcon}>📊</span>
+                            <div className={styles.statContent}>
+                                <div className={styles.statLabel}>Total Lecturas</div>
+                                <div className={styles.statValue}>{estadisticas.totalLecturas.toLocaleString()}</div>
+                                <div className={styles.statTrend}>
+                                    Datos procesados
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Sección de Datos */}
+                    <div className={styles.dataSection}>
+                        <div className={styles.sectionHeader}>
+                            <div className={styles.sectionTitle}>
+                                <MapIcon className={styles.sectionIcon} />
+                                <span>Monitoreo Geográfico en Tiempo Real</span>
+                            </div>
+                            <div className={styles.viewControls}>
+                                <button 
+                                    className={`${styles.viewButton} ${vistaActual === 'mapa' ? styles.active : ''}`}
+                                    onClick={() => setVistaActual('mapa')}
+                                >
+                                    <MapIcon />
+                                    Vista Mapa
+                                </button>
+                                <button 
+                                    className={`${styles.viewButton} ${vistaActual === 'tabla' ? styles.active : ''}`}
+                                    onClick={() => setVistaActual('tabla')}
+                                >
+                                    <DevicesIcon />
+                                    Vista Tabla
+                                </button>
+                            </div>
+                        </div>
+
+                        {vistaActual === 'mapa' ? (
+                            <div className={styles.mapContainer}>
+                                <DispositivosMap 
+                                    dispositivos={marcadoresDispositivos}
+                                    height="600px"
+                                    centerOnDevices={true}
+                                    onDeviceClick={handleDeviceClick}
+                                />
+                                <div className={styles.legend}>
+                                    <div className={styles.legendItem}>
+                                        <span className={`${styles.legendDot} ${styles.active}`}></span>
+                                        <span>Dispositivo Activo ({estadisticas.dispositivosActivos})</span>
+                                    </div>
+                                    <div className={styles.legendItem}>
+                                        <span className={`${styles.legendDot} ${styles.inactive}`}></span>
+                                        <span>Dispositivo Inactivo ({estadisticas.dispositivosInactivos})</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles.tablesContainer}>
+                                <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+                                    <TabPanel header="Usuarios" leftIcon="pi pi-users">
+                                        <DataTable
+                                            value={usuarios}
+                                            loading={loading}
+                                            paginator
+                                            rows={10}
+                                            rowsPerPageOptions={[5, 10, 25, 50]}
+                                            emptyMessage="No hay usuarios registrados"
+                                            stripedRows
+                                            showGridlines
+                                            globalFilter={globalFilter}
+                                            globalFilterFields={['username', 'email', 'first_name', 'last_name']}
+                                        >
+                                            <Column 
+                                                field="username" 
+                                                header="USUARIO" 
+                                                body={usuarioNombreTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                field="email" 
+                                                header="EMAIL" 
+                                                sortable
+                                            />
+                                            <Column 
+                                                field="is_active" 
+                                                header="ESTADO" 
+                                                body={usuarioEstadoTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                header="DISPOSITIVOS" 
+                                                body={usuarioDispositivosTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                header="ACCIONES" 
+                                                body={usuarioAccionesTemplate}
+                                                style={{ width: '180px' }}
+                                            />
+                                        </DataTable>
+                                    </TabPanel>
+
+                                    <TabPanel header="Dispositivos" leftIcon="pi pi-tablet">
+                                        <DataTable
+                                            value={dispositivos}
+                                            loading={loading}
+                                            paginator
+                                            rows={10}
+                                            rowsPerPageOptions={[5, 10, 25, 50]}
+                                            emptyMessage="No hay dispositivos registrados"
+                                            stripedRows
+                                            showGridlines
+                                            globalFilter={globalFilter}
+                                            globalFilterFields={['nombre', 'ubicacion', 'propietario_nombre', 'propietario_email']}
+                                        >
+                                            <Column 
+                                                field="nombre" 
+                                                header="DISPOSITIVO" 
+                                                body={dispositivoNombreTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                header="PROPIETARIO" 
+                                                body={propietarioTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                field="ubicacion" 
+                                                header="UBICACIÓN" 
+                                                sortable
+                                            />
+                                            <Column 
+                                                field="estado" 
+                                                header="ESTADO" 
+                                                body={dispositivoEstadoTemplate}
+                                                sortable
+                                            />
+                                            <Column 
+                                                header="ACCIONES" 
+                                                body={dispositivoAccionesTemplate}
+                                                style={{ width: '180px' }}
+                                            />
+                                        </DataTable>
+                                    </TabPanel>
+                                </TabView>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AppLayout>

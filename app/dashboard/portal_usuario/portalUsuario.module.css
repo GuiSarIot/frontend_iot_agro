@@ -1,507 +1,632 @@
-/* Portal Usuario - Diseño como Gestión de Lecturas */
+/* ============================================
+   PORTAL USUARIO
+   ============================================ */
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
 
 .containerPage {
-    padding: var(--spacing-xl);
-    max-width: 1400px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    max-width: 100%;
     margin: 0 auto;
 }
 
+/* ============================================
+   TARJETA PRINCIPAL
+   ============================================ */
+
 .mainCard {
     background: var(--bg-primary);
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-base);
     overflow: hidden;
-    border: 1px solid rgba(20, 121, 16, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
 }
 
 .mainCard:hover {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
-    border-color: rgba(20, 121, 16, 0.2);
+    box-shadow: var(--shadow-md);
 }
 
-/* ===== PAGE HEADER ===== */
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
 .pageHeader {
     padding: var(--spacing-md) var(--spacing-lg);
     border-bottom: 2px solid #e0e0e0;
     background: var(--bg-primary);
 }
 
-.headerContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--spacing-xl);
-    flex-wrap: wrap;
-}
-
 .titleSection {
-    flex: 1;
-    min-width: 300px;
+    width: 100%;
 }
 
 .titleWrapper {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .titleIcon {
-    width: 48px;
-    height: 48px;
+    font-size: 2rem !important;
     color: var(--primary);
-    flex-shrink: 0;
-    margin-top: 4px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .pageTitle {
     font-size: var(--font-size-3xl);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
-    margin: 0 0 var(--spacing-xs) 0;
+    margin: 0;
 }
 
 .pageSubtitle {
     font-size: var(--font-size-base);
     color: var(--text-secondary);
     margin: 0;
-    font-weight: 400;
 }
 
-.headerActions {
+/* ============================================
+   CARD HEADER (Búsqueda y acciones)
+   ============================================ */
+
+.cardHeader {
     display: flex;
-    gap: var(--spacing-md);
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
     flex-wrap: wrap;
-    flex-shrink: 0;
 }
 
-/* Estilos mejorados para botones en el header */
-.headerActions :global(.p-button) {
-    height: 42px;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s;
+.searchContainer {
+    flex: 1;
+    max-width: 900px;
+    min-width: 350px;
+}
+
+.searchBox {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 2;
+    transition: var(--transition-base);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.searchInput {
+    width: 100%;
+    height: 50px;
+    padding: 14px 16px 14px 50px;
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-xs);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    outline: none;
+}
+
+.searchInput::placeholder {
+    color: var(--text-muted);
+}
+
+.searchInput:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-primary);
+}
+
+.searchInput:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(20, 121, 16, 0.12), var(--shadow-md);
+    background: var(--bg-primary);
+}
+
+[data-theme='dark'] .searchInput {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+[data-theme='dark'] .searchInput:focus {
+    box-shadow: 0 0 0 4px rgba(79, 193, 112, 0.2), var(--shadow-md);
+}
+
+.btnFilter,
+.btnRefresh {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-}
-
-.headerActions :global(.p-button.p-button-outlined) {
-    background: white;
-    border: 1px solid #e5e7eb;
-}
-
-.headerActions :global(.p-button.p-button-outlined:hover) {
-    background: #f9fafb;
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.headerActions :global(.p-button.p-button-success) {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
     background: var(--primary);
-    border-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-base);
+    white-space: nowrap;
+    min-height: 50px;
 }
 
-.headerActions :global(.p-button.p-button-success:hover) {
+.btnFilter:hover,
+.btnRefresh:hover:not(:disabled) {
     background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
 }
 
+.btnFilter:active,
+.btnRefresh:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(20, 121, 16, 0.2);
+}
+
+.btnRefresh:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btnRefresh svg,
+.btnFilter svg {
+    font-size: 1.25rem;
+}
+
 /* ============================================
-    FILTERS SECTION - VISTA TABLA
+   ESTADÍSTICAS
+   ============================================ */
+
+.statsSection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.statCard {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(255, 255, 255, 0.5) 100%);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.statCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+[data-theme='dark'] .statCard {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.statIcon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    flex-shrink: 0;
+}
+
+.statContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.statLabel {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statValue {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1;
+}
+
+.statTrend {
+    font-size: var(--font-size-sm);
+    color: var(--primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.statTrendPositive {
+    font-size: var(--font-size-sm);
+    color: #10b981;
+    font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   SECCIÓN DE DATOS
+   ============================================ */
+
+.dataSection {
+    padding: var(--spacing-lg);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+}
+
+.sectionIcon {
+    color: var(--primary);
+    font-size: 1.5rem !important;
+}
+
+.viewControls {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.viewButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.viewButton svg {
+    font-size: 1.1rem;
+}
+
+.viewButton:hover {
+    background: var(--bg-primary);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.viewButton.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* ============================================
+   CONTENEDOR DE MAPA
+   ============================================ */
+
+.mapContainer {
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.legend {
+    display: flex;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.legendDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.legendDot.active {
+    background: #10b981;
+}
+
+.legendDot.inactive {
+    background: #ef4444;
+}
+
+/* ============================================
+   CONTENEDOR DE TABLAS
+   ============================================ */
+
+.tablesContainer {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* ============================================
+   FILTROS
    ============================================ */
 
 .filtrosContainer {
-    margin-bottom: 1.5rem;
-    padding: 1.5rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid var(--border-color);
+}
+
+[data-theme='dark'] .filtrosContainer {
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.5) 0%, rgba(20, 20, 20, 0.5) 100%);
 }
 
 .filtrosGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    gap: var(--spacing-lg);
     align-items: end;
 }
 
 .filtroItem {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-xs);
 }
 
 .filtroLabel {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 0.5rem;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    display: block;
 }
 
 /* Estilos para InputText de PrimeReact */
-.filtroItem :global(.p-inputtext) {
+.filtrosContainer :global(.p-inputtext) {
     width: 100%;
     height: 42px;
-    padding: 0.625rem 0.875rem;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    transition: all 0.2s;
-    background: white;
-    color: #1e293b;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    transition: all 0.3s ease;
 }
 
-.filtroItem :global(.p-inputtext:hover) {
-    border-color: #cbd5e1;
+.filtrosContainer :global(.p-inputtext:hover) {
+    border-color: var(--primary);
 }
 
-.filtroItem :global(.p-inputtext:focus) {
+.filtrosContainer :global(.p-inputtext:focus) {
     outline: none;
-    border-color: #94a3b8;
-    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 121, 16, 0.12);
 }
 
 /* Estilos para Dropdown de PrimeReact */
-.filtroItem :global(.p-dropdown) {
+.filtrosContainer :global(.p-dropdown) {
     width: 100%;
     height: 42px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.2s;
-    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-primary);
+    transition: all 0.3s ease;
 }
 
-.filtroItem :global(.p-dropdown:hover) {
-    border-color: #cbd5e1;
+.filtrosContainer :global(.p-dropdown:hover) {
+    border-color: var(--primary);
 }
 
-.filtroItem :global(.p-dropdown.p-focus) {
+.filtrosContainer :global(.p-dropdown:not(.p-disabled).p-focus) {
     outline: none;
-    border-color: #94a3b8;
-    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(20, 121, 16, 0.12);
 }
 
-.filtroItem :global(.p-dropdown .p-dropdown-label) {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    color: #1e293b;
+.filtrosContainer :global(.p-dropdown .p-dropdown-label) {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+}
+
+.filtrosContainer :global(.p-dropdown .p-dropdown-trigger) {
+    width: 2.5rem;
+    color: var(--text-secondary);
+}
+
+.filtrosContainer :global(.p-dropdown-clear-icon) {
+    color: var(--text-secondary);
 }
 
 /* Botón de limpiar filtros */
-.filtroItem :global(.p-button) {
-    height: 42px;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.filtroItem :global(.p-button.p-button-outlined),
-.filtroItem :global(.p-button.p-button-secondary) {
-    background: white;
-    border: 1.5px solid #e5e7eb;
-    color: #475569;
-}
-
-.filtroItem :global(.p-button.p-button-outlined:hover),
-.filtroItem :global(.p-button.p-button-secondary:hover) {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: #334155;
-}
-
-/* ============================================
-    FILTERS SECTION - OLD
-   ============================================ */
-
-.filtrosSection {
-    padding: 1.5rem 2rem;
-    background: #f8fafc;
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
-}
-
-.filtrosGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    align-items: end;
-}
-
-.filtroItem {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.filtroLabel {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #475569;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: block;
-}
-
-/* Estilos para InputText de PrimeReact */
-.filtroItem :global(.p-inputtext) {
+.filtrosContainer :global(.p-button) {
     width: 100%;
     height: 42px;
-    padding: 0.625rem 0.875rem;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    transition: all 0.2s;
-    background: white;
-    color: #1e293b;
+    background: transparent;
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+    transition: all 0.3s ease;
 }
 
-.filtroItem :global(.p-inputtext:hover) {
-    border-color: #cbd5e1;
+.filtrosContainer :global(.p-button:hover) {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
-.filtroItem :global(.p-inputtext:focus) {
-    outline: none;
-    border-color: #94a3b8;
-    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
-}
-
-/* Estilos para Dropdown de PrimeReact */
-.filtroItem :global(.p-dropdown) {
-    width: 100%;
-    height: 42px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.2s;
-    background: white;
-}
-
-.filtroItem :global(.p-dropdown:hover) {
-    border-color: #cbd5e1;
-}
-
-.filtroItem :global(.p-dropdown.p-focus) {
-    outline: none;
-    border-color: #94a3b8;
-    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
-}
-
-.filtroItem :global(.p-dropdown .p-dropdown-label) {
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    color: #1e293b;
-}
-
-/* Botón de limpiar filtros */
-.filtroItem :global(.p-button) {
-    height: 42px;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.filtroItem :global(.p-button.p-button-outlined),
-.filtroItem :global(.p-button.p-button-secondary) {
-    background: white;
-    border: 1.5px solid #e5e7eb;
-    color: #475569;
-}
-
-.filtroItem :global(.p-button.p-button-outlined:hover),
-.filtroItem :global(.p-button.p-button-secondary:hover) {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    color: #334155;
+.filtrosContainer :global(.p-button:focus) {
+    box-shadow: 0 0 0 3px rgba(20, 121, 16, 0.12);
 }
 
 /* ============================================
-    TABLE SECTION
+   TABLAS DENTRO DE TABS
    ============================================ */
 
-.tableSection {
-    padding: var(--spacing-xl);
+.tablesContainer :global(.p-datatable) {
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
 }
 
-.tableContainer {
-    background: white;
+.tablesContainer :global(.p-datatable-header) {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    padding: var(--spacing-md);
+}
+
+.tablesContainer :global(.p-datatable-thead > tr > th) {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    padding: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tablesContainer :global(.p-datatable-tbody > tr) {
+    transition: all 0.2s ease;
+}
+
+.tablesContainer :global(.p-datatable-tbody > tr:hover) {
+    background: rgba(20, 121, 16, 0.05) !important;
+}
+
+.tablesContainer :global(.p-datatable-tbody > tr > td) {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tablesContainer :global(.p-paginator) {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    padding: var(--spacing-md);
+}
+
+.tablesContainer :global(.p-paginator .p-paginator-pages .p-paginator-page.p-highlight) {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.tablesContainer :global(.p-paginator-page:not(.p-highlight):hover) {
+    background: rgba(20, 121, 16, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 /* ============================================
-    DATATABLE STYLES
+   RESPONSIVE
    ============================================ */
-
-.tableSection :global(.p-datatable .p-datatable-thead > tr > th) {
-    background: #f9fafb !important;
-    color: #374151 !important;
-    font-weight: 700 !important;
-    font-size: 0.813rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    padding: 1rem !important;
-    border: 1px solid #e5e7eb !important;
-}
-
-.tableSection :global(.p-datatable .p-datatable-tbody > tr) {
-    transition: background-color 0.2s;
-}
-
-.tableSection :global(.p-datatable .p-datatable-tbody > tr:hover) {
-    background: #f9fafb !important;
-}
-
-.tableSection :global(.p-datatable .p-datatable-tbody > tr > td) {
-    padding: 1rem !important;
-    border-bottom: 1px solid #e5e7eb !important;
-    font-size: 0.875rem !important;
-    color: var(--text-primary) !important;
-}
-
-/* ============================================
-    TEMPLATES DE COLUMNAS
-   ============================================ */
-
-.deviceName {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-}
-
-.deviceIcon {
-    color: #64748b !important;
-    font-size: 1.25rem !important;
-}
-
-.estadoActivo {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.75rem;
-    background: #dcfce7;
-    color: #166534;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 0.75rem;
-}
-
-.estadoActivo::before {
-    content: '●';
-    color: #22c55e;
-}
-
-.estadoInactivo {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.75rem;
-    background: #fee2e2;
-    color: #991b1b;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 0.75rem;
-}
-
-.estadoInactivo::before {
-    content: '●';
-    color: #ef4444;
-}
-
-.lecturaInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.lecturaValor {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-weight: 500;
-    color: #2563eb;
-}
-
-.unidad {
-    font-size: 0.75rem;
-    color: #64748b;
-    font-weight: 400;
-}
-
-.lecturaFecha {
-    font-size: 0.75rem;
-    color: #64748b;
-}
-
-.sinDatos {
-    color: #64748b;
-    font-style: italic;
-}
-
-.totalLecturas {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-weight: 500;
-    color: #1e293b;
-}
-
-/* ============================================
-    RESPONSIVE
-   ============================================ */
-
-@media (max-width: 1200px) {
-    .filtrosGrid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
 
 @media (max-width: 1024px) {
-    .filtrosGrid {
+    .statsSection {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .headerContent {
+    .cardHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .searchContainer {
+        max-width: 100%;
+        min-width: 100%;
+    }
+
+    .btnRefresh,
+    .btnFilter {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sectionHeader {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
     }
 
-    .headerActions {
+    .viewControls {
         width: 100%;
-        justify-content: flex-start;
     }
-}
 
-@media (max-width: 768px) {
-    .containerPage {
-        padding: 1rem;
+    .viewButton {
+        flex: 1;
+        justify-content: center;
     }
 
     .filtrosGrid {
         grid-template-columns: 1fr;
     }
+}
 
-    .pageHeader {
-        padding: 1rem;
+@media (max-width: 768px) {
+    .containerPage {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .statsSection {
+        grid-template-columns: 1fr;
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+
+    .statCard {
+        padding: var(--spacing-md);
+    }
+
+    .pageHeader,
+    .cardHeader,
+    .dataSection {
+        padding: var(--spacing-md);
     }
 
     .pageTitle {
-        font-size: 1.5rem;
+        font-size: var(--font-size-2xl);
     }
 
-    .tableSection {
-        padding: 1rem;
-        overflow-x: auto;
+    .titleIcon {
+        font-size: 1.5rem !important;
     }
 }

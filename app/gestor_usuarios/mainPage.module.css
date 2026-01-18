@@ -6,7 +6,7 @@
     flex-direction: column;
     min-height: 70vh;
     width: 100%;
-    padding: 8px 12px;
+    padding: 0;
 }
 
 /* ============================================
@@ -180,16 +180,16 @@
 .usersMainContainer {
     width: 100%;
     max-width: 100%;
-    background: var(--background-color-secondary);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--border-color-primary);
+    background: var(--bg-primary);
+    border-radius: 24px;
+    padding: var(--spacing-2xl);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
 }
 
 [data-theme='dark'] .usersMainContainer {
-    background: var(--background-color-secondary);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: var(--bg-primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .cardsContainer {

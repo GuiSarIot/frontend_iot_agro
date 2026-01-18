@@ -8,21 +8,20 @@
     flex-direction: column;
     min-height: 70vh;
     width: 100%;
-    padding: 20px;
+    padding: 0;
 }
 
 .pageContainer {
     width: 100%;
-    max-width: 1400px;
     background: var(--bg-primary);
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--border-color-primary);
+    border-radius: 24px;
+    padding: var(--spacing-2xl);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
 }
 
 [data-theme='dark'] .pageContainer {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================

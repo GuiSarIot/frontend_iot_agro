@@ -1,101 +1,416 @@
 /* ==========================================
    DASHBOARD - SISTEMA IOTCorp
-   Diseño alineado con identidad corporativa
+   Diseño moderno y vanguardista
    ========================================== */
 
 .dashboardContainer {
-    padding: var(--spacing-xl);
-    max-width: 1400px;
+    padding: var(--spacing-lg);
+    max-width: 1600px;
     margin: 0 auto;
     min-height: 100vh;
 }
 
-/* ===== WELCOME SECTION ===== */
-.welcomeSection {
-    text-align: center;
-    margin-bottom: var(--spacing-2xl);
+.contentWrapper {
+    background: var(--bg-primary);
+    border-radius: 24px;
     padding: var(--spacing-2xl);
-    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
-    border-radius: 16px;
-    color: white;
-    box-shadow: 0 8px 32px rgba(20, 121, 16, 0.15), 0 4px 12px rgba(20, 121, 16, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='dark'] .contentWrapper {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== HERO SECTION ===== */
+.heroSection {
+    background: linear-gradient(135deg, #147910 0%, #0d5e0a 100%);
+    border-radius: 24px;
+    padding: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+    box-shadow: 0 20px 60px rgba(20, 121, 16, 0.25), 
+                0 8px 24px rgba(20, 121, 16, 0.15);
     position: relative;
     overflow: hidden;
 }
 
-.welcomeSection::before {
+.heroSection::before {
     content: '';
     position: absolute;
     top: -50%;
     right: -10%;
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 500px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     border-radius: 50%;
+    animation: float 20s ease-in-out infinite;
 }
 
-.welcomeSection::after {
+.heroSection::after {
     content: '';
     position: absolute;
     bottom: -30%;
     left: -5%;
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
     border-radius: 50%;
+    animation: float 15s ease-in-out infinite reverse;
 }
 
-.welcomeSection .icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-lg);
-    opacity: 0.95;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(5deg); }
+    66% { transform: translate(-20px, 20px) rotate(-5deg); }
+}
+
+.heroContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-2xl);
     position: relative;
     z-index: 1;
 }
 
-.welcomeSection h1 {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-md);
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    position: relative;
-    z-index: 1;
+.heroText {
+    flex: 1;
 }
 
-.welcomeSection p {
-    font-size: 1.2rem;
-    opacity: 0.95;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-    position: relative;
-    z-index: 1;
-}
-
-/* ===== INFO SECTION ===== */
-.infoSection {
-    padding: var(--spacing-2xl);
-    background: var(--bg-primary);
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(63, 173, 50, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.infoSection:hover {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
-    border-color: rgba(63, 173, 50, 0.2);
-}
-
-.infoSection h2 {
-    font-size: 1.875rem;
-    margin-bottom: var(--spacing-lg);
-    color: var(--text-primary);
-    font-weight: 700;
+.greeting {
     display: flex;
     align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.heroIcon {
+    font-size: 3.5rem !important;
+    color: white;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
+.heroSection h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.heroSubtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+}
+
+.dateTime {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.dateTime svg {
+    font-size: 1.25rem !important;
+}
+
+.heroStats {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+.statBadge {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 150px;
+}
+
+.statLabel {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* ===== SECTION COMMON ===== */
+.section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.sectionHeader {
+    margin-bottom: var(--spacing-xl);
+}
+
+.sectionHeader h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.sectionHeader p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* ===== QUICK ACCESS GRID ===== */
+.quickAccessGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.quickAccessCard {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: var(--spacing-xl);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.quickAccessCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent-color, var(--primary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.quickAccessCard:hover::before {
+    transform: scaleX(1);
+}
+
+.quickAccessCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 
+                0 8px 16px rgba(0, 0, 0, 0.08);
+    border-color: var(--accent-color, var(--primary));
+}
+
+.cardIcon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, 
+        color-mix(in srgb, var(--accent-color, var(--primary)) 10%, transparent),
+        color-mix(in srgb, var(--accent-color, var(--primary)) 5%, transparent)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.cardIcon svg {
+    font-size: 2rem !important;
+}
+
+.quickAccessCard h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.quickAccessCard p {
+    font-size: 0.938rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ===== NEWS SECTION ===== */
+.newsGrid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.newsCard {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-lg);
+    transition: all 0.3s ease;
+}
+
+.newsCard:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+}
+
+.newsIcon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #147910 0%, #0d5e0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.newsIcon svg {
+    font-size: 1.75rem !important;
+}
+
+.newsContent {
+    flex: 1;
+}
+
+.newsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: var(--spacing-sm);
     gap: var(--spacing-md);
+}
+
+.newsCard h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.newsDate {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.newsCard p {
+    font-size: 0.938rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-md);
+}
+
+.newsType {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 8px;
+    font-size: 0.813rem;
+    font-weight: 600;
+}
+
+.newsType.update {
+    background: rgba(33, 150, 243, 0.1);
+    color: #1976d2;
+}
+
+.newsType.feature {
+    background: rgba(76, 175, 80, 0.1);
+    color: #388e3c;
+}
+
+/* ===== INFO FOOTER ===== */
+.infoFooter {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-2xl);
+}
+
+.infoCard {
+    background: linear-gradient(135deg, 
+        rgba(20, 121, 16, 0.03) 0%, 
+        rgba(20, 121, 16, 0.01) 100%
+    );
+    border: 1px solid rgba(20, 121, 16, 0.1);
+    border-radius: 16px;
+    padding: var(--spacing-xl);
+    transition: all 0.3s ease;
+}
+
+.infoCard:hover {
+    background: linear-gradient(135deg, 
+        rgba(20, 121, 16, 0.06) 0%, 
+        rgba(20, 121, 16, 0.02) 100%
+    );
+    border-color: rgba(20, 121, 16, 0.2);
+}
+
+.infoCard h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.infoCard p {
+    font-size: 0.938rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media screen and (max-width: 1024px) {
+    .heroContent {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .quickAccessGrid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboardContainer {
+        padding: var(--spacing-md);
+    }
+
+    .heroSection {
+        padding: var(--spacing-xl);
+    }
+
+    .heroSection h1 {
+        font-size: 1.875rem;
+    }
+
+    .heroSubtitle {
+        font-size: 1rem;
+    }
+
+    .quickAccessGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .newsCard {
+        flex-direction: column;
+    }
+
+    .infoFooter {
+        grid-template-columns: 1fr;
+    }
 }
 
 .infoSection h2::before {

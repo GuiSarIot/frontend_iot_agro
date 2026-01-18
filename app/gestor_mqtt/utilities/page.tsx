@@ -252,11 +252,31 @@ const MqttUtilitiesPage: React.FC<MqttUtilitiesPageProps> = ({
                                 <DevicesIcon /> Estado de Dispositivos MQTT
                             </h2>
                             <Button
-                                variant="outlined"
+                                variant="contained"
                                 size="small"
                                 startIcon={<RefreshIcon />}
                                 onClick={loadDeviceStatus}
                                 disabled={loadingDeviceStatus}
+                                sx={{
+                                    backgroundColor: '#0d5309',
+                                    color: '#ffffff',
+                                    '&:hover': {
+                                        backgroundColor: '#0a4207'
+                                    },
+                                    '&:disabled': {
+                                        backgroundColor: '#d1d5db',
+                                        color: '#9ca3af'
+                                    },
+                                    textTransform: 'none',
+                                    fontWeight: 600,
+                                    padding: '6px 16px',
+                                    fontSize: '14px',
+                                    boxShadow: '0 4px 12px rgba(13, 83, 9, 0.3)',
+                                    '&:hover': {
+                                        boxShadow: '0 6px 16px rgba(13, 83, 9, 0.4)',
+                                        transform: 'translateY(-1px)'
+                                    }
+                                }}
                             >
                                 Actualizar
                             </Button>
@@ -398,21 +418,27 @@ const MqttUtilitiesPage: React.FC<MqttUtilitiesPageProps> = ({
                                     <Button
                                         variant="contained"
                                         size="medium"
-                                        startIcon={testingConnection ? <CircularProgress size={18} /> : <NetworkCheckIcon />}
+                                        startIcon={testingConnection ? <CircularProgress size={18} sx={{ color: '#ffffff' }} /> : <NetworkCheckIcon />}
                                         onClick={handleTestConnection}
                                         disabled={!selectedBrokerId || testingConnection || loadingBrokers}
                                         sx={{
-                                            backgroundColor: '#10b981',
+                                            backgroundColor: '#0d5309',
+                                            color: '#ffffff',
                                             '&:hover': {
-                                                backgroundColor: '#059669'
+                                                backgroundColor: '#0a4207',
+                                                boxShadow: '0 6px 16px rgba(13, 83, 9, 0.4)',
+                                                transform: 'translateY(-1px)'
                                             },
                                             '&:disabled': {
-                                                backgroundColor: '#d1d5db'
+                                                backgroundColor: '#d1d5db',
+                                                color: '#9ca3af'
                                             },
                                             textTransform: 'none',
                                             fontWeight: 600,
-                                            padding: '8px 20px',
-                                            fontSize: '14px'
+                                            padding: '10px 24px',
+                                            fontSize: '15px',
+                                            boxShadow: '0 4px 12px rgba(13, 83, 9, 0.3)',
+                                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                                         }}
                                     >
                                         {testingConnection ? 'Probando conexión...' : 'Probar Conexión'}

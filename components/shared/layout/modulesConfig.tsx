@@ -175,6 +175,70 @@ export const getAvailableModules = (userPermissions: string[], userInfo?: any): 
 }
 
 /**
+ * Obtiene solo los módulos del dashboard (Portal Admin y Portal Usuario)
+ * según los permisos del usuario
+ * @param userPermissions Array de códigos de permisos del usuario
+ * @param userInfo Información completa del usuario (para verificar si es superusuario)
+ * @returns Array de items de menú del dashboard ordenados por prioridad
+ */
+export const getDashboardModules = (userPermissions: string[], userInfo?: any): SidebarMenuItem[] => {
+    if (!Array.isArray(userPermissions)) {
+        userPermissions = []
+    }
+
+    const isUserSuperUser = userInfo ? isSuperUser(userInfo) : false
+    const dashboardModules: SidebarMenuItem[] = []
+
+    // Portal Usuario - disponible para todos
+    const portalUsuarioConfig = MODULES_CONFIG['portalUsuario']
+    if (portalUsuarioConfig) {
+        dashboardModules.push({
+            icon: portalUsuarioConfig.icon,
+            label: portalUsuarioConfig.label,
+            href: portalUsuarioConfig.href,
+            title: portalUsuarioConfig.description
+        })
+    }
+
+    // Portal Admin - solo para superusuarios
+    if (isUserSuperUser) {
+        const portalAdminConfig = MODULES_CONFIG['portalAdmin']
+        if (portalAdminConfig) {
+            dashboardModules.push({
+                icon: portalAdminConfig.icon,
+                label: portalAdminConfig.label,
+                href: portalAdminConfig.href,
+                title: portalAdminConfig.description
+            })
+        }
+    }
+
+    // Ordenar por prioridad
+    return dashboardModules.sort((a, b) => {
+        const configA = Object.values(MODULES_CONFIG).find(c => c.label === a.label)
+        const configB = Object.values(MODULES_CONFIG).find(c => c.label === b.label)
+        return (configA?.priority || 99) - (configB?.priority || 99)
+    })
+}
+
+/**
+ * Obtiene los módulos para mostrar en el navbar superior
+ * Excluye los portales del dashboard (Portal Admin y Mi Portal)
+ * @param userPermissions Array de códigos de permisos del usuario
+ * @param userInfo Información completa del usuario (para verificar si es superusuario)
+ * @returns Array de items de menú para el navbar ordenados por prioridad
+ */
+export const getNavbarModules = (userPermissions: string[], userInfo?: any): SidebarMenuItem[] => {
+    const allModules = getAvailableModules(userPermissions, userInfo)
+    
+    // Filtrar excluyendo los portales del dashboard
+    return allModules.filter(module => 
+        module.href !== '/dashboard/portal_usuario' && 
+        module.href !== '/dashboard/portal_admin'
+    )
+}
+
+/**
  * Verifica si el usuario tiene acceso a un módulo específico
  * @param moduleKey Clave del módulo a verificar
  * @param userPermissions Array de códigos de permisos del usuario

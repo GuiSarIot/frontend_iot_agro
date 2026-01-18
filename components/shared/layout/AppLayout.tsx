@@ -9,7 +9,7 @@ import NavBarTop from '@/components/shared/navBarTop/navBarTop'
 import SideBarLeft from '@/components/shared/sideBarLeft/sideBarLeft'
 import { useAppContext } from '@/context/appContext'
 
-import { getAvailableModules, MODULES_CONFIG } from './modulesConfig.tsx'
+import { getAvailableModules, getDashboardModules, MODULES_CONFIG } from './modulesConfig.tsx'
 import { getModuleMenuByPath } from './moduleMenuConfig.tsx'
 import SidebarMenu from './SidebarMenu'
 import styles from './AppLayout.module.css'
@@ -58,13 +58,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
     // Si no hay contenido personalizado del sidebar
     if (!sidebarContent && showSidebar) {
-        // Si se solicita el menú principal o no hay menú de módulo disponible
+        // Si se solicita el menú principal (caso del dashboard)
         if (showMainMenu) {
-            const availableModules = getAvailableModules(userPermissions, userInfo)
+            // Verificar si estamos en el dashboard
+            const isDashboardRoute = pathname?.startsWith('/dashboard')
+            
+            // Si estamos en el dashboard, mostrar solo módulos de dashboard
+            // Si no, mostrar todos los módulos disponibles
+            const modules = isDashboardRoute 
+                ? getDashboardModules(userPermissions, userInfo)
+                : getAvailableModules(userPermissions, userInfo)
+            
             finalSidebarContent = (
                 <SidebarMenu 
                     title={getActiveModuleTitle()}
-                    items={availableModules} 
+                    items={modules} 
                 />
             )
         } else {
