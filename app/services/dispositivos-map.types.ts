@@ -4,6 +4,10 @@
 
 import { Dispositivo } from './api.service'
 
+interface TipoDispositivo {
+    nombre: string
+}
+
 export interface DispositivoConCoordenadas extends Dispositivo {
     latitud?: number
     longitud?: number
@@ -21,7 +25,7 @@ export interface DispositivoMapMarker {
     latitud: number
     longitud: number
     ultimaLectura?: {
-        valor: string
+        valor: string | number
         unidad?: string
         fecha: string
     }
@@ -38,12 +42,20 @@ export interface MapBounds {
     maxLng: number
 }
 
+export interface UltimaLectura {
+    valor: string
+    unidad?: string
+    sensor_unidad?: string
+    fecha_lectura?: string
+    timestamp?: string
+}
+
 /**
  * Convierte un dispositivo a un marcador de mapa
  */
 export function dispositivoToMapMarker(
     dispositivo: DispositivoConCoordenadas,
-    ultimaLectura?: any
+    ultimaLectura?: UltimaLectura
 ): DispositivoMapMarker | null {
     const lat = dispositivo.latitud ?? dispositivo.lat
     const lng = dispositivo.longitud ?? dispositivo.lng
@@ -59,7 +71,7 @@ export function dispositivoToMapMarker(
         estado: dispositivo.estado as 'activo' | 'inactivo',
         tipo: typeof dispositivo.tipo === 'string' 
             ? dispositivo.tipo 
-            : (dispositivo.tipo as any)?.nombre || 'Desconocido',
+            : (dispositivo.tipo as TipoDispositivo)?.nombre || 'Desconocido',
         ubicacion: dispositivo.ubicacion,
         latitud: lat,
         longitud: lng,
@@ -69,7 +81,7 @@ export function dispositivoToMapMarker(
             fecha: ultimaLectura.fecha_lectura || ultimaLectura.timestamp
         } : undefined,
         propietario: dispositivo.propietario ? {
-            nombre: dispositivo.propietario.username || dispositivo.propietario.first_name,
+            nombre: dispositivo.propietario.username,
             email: dispositivo.propietario.email
         } : undefined
     }

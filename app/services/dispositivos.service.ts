@@ -155,21 +155,33 @@ export interface AsignarOperadorResponse {
 }
 
 /**
- * Credenciales MQTT del dispositivo
+ * Información MQTT del dispositivo
  */
 export interface MqttCredentials {
-    has_emqx_user: boolean
-    emqx_username: string
-    password?: string // Solo para superusuarios
-    client_id: string
-    mqtt_enabled: boolean
+    has_mqtt_user: boolean
+    mqtt_username: string
     broker_host: string
     broker_port: number
-    topics?: {
-        publish: string[]
-        subscribe: string[]
+    mqtt_password?: string
+    acl_rules_count?: number
+    created?: string
+    is_superuser?: boolean
+    message?: string
+}
+
+/**
+ * Respuesta al regenerar contraseña MQTT
+ */
+export interface RegenerateMqttPasswordResponse {
+    success: boolean
+    message: string
+    mqtt_credentials: {
+        username: string
+        password: string
+        broker_host: string
+        broker_port: number
+        warning: string
     }
-    message?: string // Para operadores sin permisos completos
 }
 
 /**
@@ -326,12 +338,23 @@ export const dispositivosService = {
     },
 
     /**
-     * 11. Obtener Credenciales MQTT del Dispositivo
-     * GET /api/devices/{id}/mqtt-credentials/
+     * 11. Obtener Información MQTT del Dispositivo
+     * GET /api/devices/{id}/mqtt-info/
      */
     getMqttCredentials: async (dispositivoId: number): Promise<MqttCredentials> => {
         return authenticatedGet<MqttCredentials>(
-            `${API_BASE_URL}/api/devices/${dispositivoId}/mqtt-credentials/`
+            `${API_BASE_URL}/api/devices/${dispositivoId}/mqtt-info/`
+        )
+    },
+
+    /**
+     * 12. Regenerar Contraseña MQTT del Dispositivo
+     * POST /api/devices/{id}/regenerate-mqtt-password/
+     */
+    regenerateMqttPassword: async (dispositivoId: number, password?: string): Promise<RegenerateMqttPasswordResponse> => {
+        return authenticatedPost<RegenerateMqttPasswordResponse>(
+            `${API_BASE_URL}/api/devices/${dispositivoId}/regenerate-mqtt-password/`,
+            password ? { password } : {}
         )
     },
 }

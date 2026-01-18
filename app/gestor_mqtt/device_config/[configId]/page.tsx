@@ -34,7 +34,7 @@ const EditDeviceConfigPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_device_config',
+        customModule: 'other',
         action: 'update'
     })
 

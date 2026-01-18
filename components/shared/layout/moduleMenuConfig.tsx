@@ -5,6 +5,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DevicesIcon from '@mui/icons-material/Devices'
 import ListIcon from '@mui/icons-material/List'
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck'
 import PeopleIcon from '@mui/icons-material/People'
 import PersonIcon from '@mui/icons-material/Person'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -131,6 +132,18 @@ export const MODULE_MENUS: Record<string, SidebarMenuItem[]> = {
             label: 'ACL EMQX',
             href: '/gestor_mqtt/acl',
             title: 'Control de acceso a topics'
+        },
+        {
+            icon: <NetworkCheckIcon />,
+            label: 'Utilidades',
+            href: '/gestor_mqtt/utilities',
+            title: 'Probar conexiones y estado de dispositivos'
+        },
+        {
+            icon: <SensorsIcon />,
+            label: 'Simuladores',
+            href: '/gestor_mqtt/simulators',
+            title: 'Probar comandos MQTT en dispositivos IoT'
         }
     ],
     '/gestor_mqtt/brokers': [

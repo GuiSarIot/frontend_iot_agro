@@ -53,7 +53,7 @@ const ManageMqttBrokersPage: React.FC<ManageMqttBrokersPageProps> = ({
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
-        customModule: 'mqtt_brokers',
+        customModule: 'other',
         action: 'list'
     })
 

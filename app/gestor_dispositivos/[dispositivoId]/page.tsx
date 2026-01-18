@@ -6,13 +6,19 @@ import { useRouter, useParams } from 'next/navigation'
 
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DevicesIcon from '@mui/icons-material/Devices'
 import PersonIcon from '@mui/icons-material/Person'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import SaveIcon from '@mui/icons-material/Save'
 import SensorsIcon from '@mui/icons-material/Sensors'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
+import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
@@ -23,6 +29,7 @@ import {
     type TipoDispositivo, 
     type Dispositivo,
     type SensorAsignado,
+    type MqttCredentials,
     usuariosService,
     type Usuario 
 } from '@/app/services/api.service'
@@ -97,11 +104,19 @@ export default function EditarDispositivoPage() {
     const [showAsignarSensorModal, setShowAsignarSensorModal] = useState(false)
     const [operadores, setOperadores] = useState<Usuario[]>([])
     const [loadingSensorAction, setLoadingSensorAction] = useState(false)
+    
+    // Estados para MQTT
+    const [mqttCredentials, setMqttCredentials] = useState<MqttCredentials | null>(null)
+    const [loadingMqtt, setLoadingMqtt] = useState(false)
+    const [showPasswordModal, setShowPasswordModal] = useState(false)
+    const [newPassword, setNewPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
 
     useEffect(() => {
         loadTipos()
         loadDispositivo()
         loadOperadores()
+        loadMqttCredentials()
         // eslint-disable-next-line
     }, [dispositivoId])
 
@@ -160,30 +175,18 @@ export default function EditarDispositivoPage() {
 
     const loadOperadores = async () => {
         try {
-            console.log('🔍 Cargando lista de operadores...')
             const response = await usuariosService.getAll()
-            console.log('✅ Respuesta obtenida:', response)
-            console.log('📊 Total de usuarios:', response.count)
             
             const todosLosUsuarios = response.results || []
-            console.log('📊 Usuarios en results:', todosLosUsuarios.length)
             
             // Filtrar usuarios activos (puedes ajustar según tu lógica de roles)
             // Por ahora mostramos todos los usuarios activos
             const operadoresList = todosLosUsuarios.filter(u => u.is_active)
-            console.log('✅ Operadores activos filtrados:', operadoresList)
-            console.log('📊 Total de operadores activos:', operadoresList.length)
             
             setOperadores(operadoresList)
             
             if (operadoresList.length === 0) {
                 console.warn('⚠️ No se encontraron operadores activos en el sistema')
-                console.log('💡 Usuarios disponibles:', todosLosUsuarios.map(u => ({
-                    id: u.id,
-                    username: u.username,
-                    is_active: u.is_active,
-                    nombre: `${u.first_name} ${u.last_name}`
-                })))
             }
         } catch (error) {
             console.error('❌ Error al cargar operadores:', error)
@@ -195,6 +198,67 @@ export default function EditarDispositivoPage() {
                 confirmButtonText: 'Ok'
             })
         }
+    }
+
+    const loadMqttCredentials = async () => {
+        try {
+            const credentials = await dispositivosService.getMqttCredentials(Number(dispositivoId))
+            setMqttCredentials(credentials)
+        } catch (error: unknown) {
+            // Si es 404, significa que el endpoint no está implementado aún
+            // No mostramos error ya que es una funcionalidad opcional
+            if (error instanceof Error && error.message.includes('404')) {
+                // console.log('ℹ️ Endpoint de credenciales MQTT no disponible (funcionalidad en desarrollo)')
+            } else {
+                console.error('Error al cargar credenciales MQTT:', error)
+            }
+        }
+    }
+
+    const handleRegenerateMqttPassword = async () => {
+        const result = await Swal.fire({
+            title: '¿Regenerar contraseña MQTT?',
+            text: 'Se generará una nueva contraseña y la anterior dejará de funcionar',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--primary)',
+            cancelButtonColor: 'var(--secondary)',
+            confirmButtonText: 'Sí, regenerar',
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (result.isConfirmed) {
+            setLoadingMqtt(true)
+            try {
+                const response = await dispositivosService.regenerateMqttPassword(Number(dispositivoId))
+                setNewPassword(response.mqtt_credentials.password)
+                setShowPasswordModal(true)
+                
+                // Recargar credenciales
+                await loadMqttCredentials()
+            } catch (error) {
+                console.error('Error al regenerar contraseña:', error)
+                Swal.fire({
+                    title: 'Error',
+                    text: error instanceof Error ? error.message : 'Error al regenerar la contraseña',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+            } finally {
+                setLoadingMqtt(false)
+            }
+        }
+    }
+
+    const handleCopyPassword = () => {
+        navigator.clipboard.writeText(newPassword)
+        Swal.fire({
+            title: 'Copiado',
+            text: 'Contraseña copiada al portapapeles',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        })
     }
 
     const handleAsignarSensor = async (sensorId: number, config: { intervalo?: number; umbral_alerta?: number }) => {
@@ -699,6 +763,155 @@ export default function EditarDispositivoPage() {
                             )}
                         </div>
 
+                        {/* Sección de Credenciales MQTT - Solo mostrar si hay credenciales */}
+                        {mqttCredentials && (
+                            <div className={tableStyles.section}>
+                                <div className={tableStyles.sectionHeader}>
+                                    <div className={tableStyles.sectionTitle}>
+                                        <VpnKeyIcon style={{ fontSize: '24px', color: '#4caf50' }} />
+                                        <h3>Credenciales MQTT</h3>
+                                    </div>
+                                    {isSuperUser && mqttCredentials?.has_mqtt_user && (
+                                        <button
+                                            type="button"
+                                            onClick={handleRegenerateMqttPassword}
+                                            className={tableStyles.btnAddSensor}
+                                            disabled={loadingMqtt}
+                                            style={{ 
+                                                backgroundColor: '#4caf50',
+                                                color: 'white',
+                                                border: 'none'
+                                            }}
+                                        >
+                                            <RefreshIcon />
+                                            <span>{loadingMqtt ? 'Regenerando...' : 'Regenerar Contraseña'}</span>
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div style={{ padding: '20px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
+                                    {mqttCredentials.has_mqtt_user ? (
+                                        <div style={{ display: 'grid', gap: '16px' }}>
+                                            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
+                                                <label className={styles.formLabel}>
+                                                    Usuario MQTT
+                                                    <span className={styles.labelSubtext}>Nombre de usuario para conectarse al broker</span>
+                                                </label>
+                                                <div style={{ 
+                                                    padding: '12px 16px', 
+                                                    backgroundColor: '#f5f5f5', 
+                                                    borderRadius: '6px',
+                                                    fontFamily: 'monospace',
+                                                    fontSize: '14px',
+                                                    fontWeight: '500',
+                                                    color: '#333',
+                                                    border: '1px solid #e0e0e0'
+                                                }}>
+                                                    {mqttCredentials.mqtt_username}
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.formGroup} style={{ marginBottom: 0 }}>
+                                                <label className={styles.formLabel}>
+                                                    Broker
+                                                    <span className={styles.labelSubtext}>Servidor MQTT</span>
+                                                </label>
+                                                <div style={{ 
+                                                    padding: '12px 16px', 
+                                                    backgroundColor: '#f5f5f5', 
+                                                    borderRadius: '6px',
+                                                    fontFamily: 'monospace',
+                                                    fontSize: '14px',
+                                                    fontWeight: '500',
+                                                    color: '#333',
+                                                    border: '1px solid #e0e0e0'
+                                                }}>
+                                                    {mqttCredentials.broker_host}:{mqttCredentials.broker_port}
+                                                </div>
+                                            </div>
+
+                                            {mqttCredentials.mqtt_password && (
+                                                <div className={styles.formGroup} style={{ marginBottom: 0 }}>
+                                                    <label className={styles.formLabel}>
+                                                        Contraseña MQTT
+                                                        <span className={styles.labelSubtext}>Contraseña para autenticación (visible solo para superusuarios)</span>
+                                                    </label>
+                                                    <div style={{ position: 'relative' }}>
+                                                        <div style={{ 
+                                                            padding: '12px 50px 12px 16px', 
+                                                            backgroundColor: '#fff9e6', 
+                                                            borderRadius: '6px',
+                                                            fontFamily: 'monospace',
+                                                            fontSize: '14px',
+                                                            fontWeight: '600',
+                                                            color: '#d97706',
+                                                            border: '2px solid #fbbf24',
+                                                            wordBreak: 'break-all'
+                                                        }}>
+                                                            {showPassword ? mqttCredentials.mqtt_password : '•'.repeat(mqttCredentials.mqtt_password.length)}
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setShowPassword(!showPassword)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                right: '12px',
+                                                                top: '50%',
+                                                                transform: 'translateY(-50%)',
+                                                                background: 'none',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                                color: '#d97706',
+                                                                padding: '4px',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
+                                                            }}
+                                                            title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                                                        >
+                                                            {showPassword ? <VisibilityOffIcon style={{ fontSize: '20px' }} /> : <VisibilityIcon style={{ fontSize: '20px' }} />}
+                                                        </button>
+                                                    </div>
+                                                    <small style={{
+                                                        display: 'block',
+                                                        marginTop: '8px',
+                                                        color: '#d97706',
+                                                        fontSize: '12px',
+                                                        fontStyle: 'italic'
+                                                    }}>
+                                                        ⚠️ Guarda esta contraseña en un lugar seguro
+                                                    </small>
+                                                </div>
+                                            )}
+
+                                            {mqttCredentials.message && (
+                                                <div style={{
+                                                    padding: '14px 16px',
+                                                    backgroundColor: '#e3f2fd',
+                                                    border: '1px solid #90caf9',
+                                                    borderRadius: '6px',
+                                                    fontSize: '13px',
+                                                    color: '#1565c0',
+                                                    lineHeight: '1.6'
+                                                }}>
+                                                    💡 {mqttCredentials.message}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div style={{ 
+                                            padding: '20px', 
+                                            textAlign: 'center', 
+                                            color: 'var(--text-color-secondary)' 
+                                        }}>
+                                            <VpnKeyIcon style={{ fontSize: '48px', opacity: 0.3, marginBottom: '12px' }} />
+                                            <p>{mqttCredentials.message || 'Este dispositivo no tiene credenciales MQTT configuradas'}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Sección de Operador */}
                         {isSuperUser && (
                             <div className={tableStyles.section}>
@@ -723,7 +936,7 @@ export default function EditarDispositivoPage() {
                                                 label: `${op.first_name} ${op.last_name} (${op.username})`,
                                                 value: op.id
                                             }))}
-                                            placeholder={operadores.length > 0 ? "Selecciona un operador" : "No hay operadores disponibles"}
+                                            placeholder={operadores.length > 0 ? 'Selecciona un operador' : 'No hay operadores disponibles'}
                                             className={styles.formSelect}
                                             showClear
                                             disabled={operadores.length === 0}
@@ -825,6 +1038,101 @@ export default function EditarDispositivoPage() {
                 onAssign={handleAsignarSensor}
                 loading={loadingSensorAction}
             />
+
+            {/* Modal para mostrar nueva contraseña MQTT */}
+            <Dialog
+                header="Contraseña MQTT Regenerada"
+                visible={showPasswordModal}
+                style={{ width: '600px' }}
+                onHide={() => {
+                    setShowPasswordModal(false)
+                    setNewPassword('')
+                }}
+                modal
+            >
+                <div style={{ padding: '24px 8px' }}>
+                    <div style={{
+                        padding: '32px 28px 28px 28px',
+                        backgroundColor: '#e8f5e9',
+                        border: '2px solid #81c784',
+                        borderRadius: '12px',
+                        marginBottom: '28px'
+                    }}>
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '14px',
+                            marginBottom: '28px',
+                            paddingBottom: '24px',
+                            borderBottom: '2px solid #c8e6c9'
+                        }}>
+                            <VpnKeyIcon style={{ color: '#2e7d32', fontSize: '34px' }} />
+                            <strong style={{ color: '#1b5e20', fontSize: '20px', letterSpacing: '0.3px' }}>
+                                Nueva Contraseña MQTT
+                            </strong>
+                        </div>
+                        
+                        <div style={{ 
+                            padding: '18px 20px', 
+                            backgroundColor: 'white', 
+                            borderRadius: '8px',
+                            fontFamily: 'monospace',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            color: '#2e7d32',
+                            wordBreak: 'break-all',
+                            marginBottom: '20px',
+                            border: '2px solid #a5d6a7',
+                            letterSpacing: '0.5px',
+                            lineHeight: '1.6'
+                        }}>
+                            {newPassword}
+                        </div>
+
+                        <button
+                            onClick={handleCopyPassword}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                padding: '14px 24px',
+                                backgroundColor: '#4caf50',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                fontSize: '15px',
+                                fontWeight: '600',
+                                width: '100%',
+                                justifyContent: 'center',
+                                transition: 'background-color 0.2s'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
+                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4caf50'}
+                        >
+                            <ContentCopyIcon style={{ fontSize: '20px' }} />
+                            Copiar contraseña
+                        </button>
+                    </div>
+
+                    <div style={{
+                        padding: '20px 24px',
+                        backgroundColor: '#fff3e0',
+                        border: '1px solid #ffb74d',
+                        borderRadius: '10px',
+                        fontSize: '14px',
+                        color: '#e65100'
+                    }}>
+                        <strong style={{ fontSize: '15px', display: 'block', marginBottom: '12px' }}>⚠️ Importante:</strong>
+                        <ul style={{ margin: '0', paddingLeft: '24px', lineHeight: '2' }}>
+                            <li style={{ marginBottom: '8px' }}>Esta es la única vez que se mostrará la contraseña completa</li>
+                            <li style={{ marginBottom: '8px' }}>Guárdala en un lugar seguro</li>
+                            <li style={{ marginBottom: '8px' }}>La contraseña anterior ya no funcionará</li>
+                            <li>Actualiza la configuración del dispositivo con esta nueva contraseña</li>
+                        </ul>
+                    </div>
+                </div>
+            </Dialog>
         </div>
     )
 }

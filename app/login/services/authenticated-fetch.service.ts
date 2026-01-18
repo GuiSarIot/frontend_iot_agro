@@ -23,7 +23,12 @@ export async function authenticatedFetch<T = unknown>(
     const token = await ensureValidToken()
 
     if (!token) {
-        throw new Error('No hay token de autenticación válido')
+        // Limpiar tokens y redirigir al login
+        tokenService.clearTokens()
+        if (typeof window !== 'undefined') {
+            window.location.href = '/login'
+        }
+        throw new Error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.')
     }
 
     // Preparar headers

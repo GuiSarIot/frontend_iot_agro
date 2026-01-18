@@ -116,9 +116,7 @@ export const useAccessLogger = (options: UseAccessLoggerOptions = {}) => {
                     response_time_ms: responseTime
                 }
 
-                const result = await accessLogsService.create(logData)
-
-                console.log('[AccessLogger] Acceso registrado exitosamente:', result)
+                await accessLogsService.create(logData)
 
                 hasLoggedRef.current = true
             } catch (error) {

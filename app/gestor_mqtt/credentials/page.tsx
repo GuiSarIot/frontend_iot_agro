@@ -52,7 +52,7 @@ const ManageMqttCredentialsPage: React.FC<ManageMqttCredentialsPageProps> = ({
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
-        customModule: 'mqtt_credentials',
+        customModule: 'other',
         action: 'list'
     })
 

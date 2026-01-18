@@ -30,7 +30,7 @@ const EditCredentialPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_credentials',
+        customModule: 'other',
         action: 'update'
     })
 

@@ -1,0 +1,221 @@
+.mapWrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--surface-card);
+}
+
+.mapContainer {
+    z-index: 1;
+}
+
+.mapPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-card);
+    border-radius: 12px;
+    border: 2px dashed var(--surface-border);
+}
+
+.loadingMap {
+    text-align: center;
+}
+
+.spinner {
+    border: 4px solid var(--surface-border);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Popup personalizado */
+.customPopup {
+    font-family: var(--font-family);
+}
+
+.popupContent {
+    min-width: 250px;
+    padding: 0.5rem;
+}
+
+.popupTitle {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.popupInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.infoRow strong {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+.infoRow span {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.estadoActivo {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.estadoInactivo {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.lecturaSection {
+    background: var(--surface-100);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.lecturaSection strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+.lecturaValor {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.lecturaFecha {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+}
+
+.propietarioSection {
+    background: var(--surface-50);
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.propietarioSection strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+.propietarioSection div {
+    color: var(--text-color);
+}
+
+.email {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+}
+
+.verDetallesBtn {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.verDetallesBtn:hover {
+    background: var(--primary-color-hover, var(--primary-color));
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Overlay cuando no hay dispositivos */
+.noDevicesOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.noDevicesMessage {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.noDevicesIcon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.noDevicesMessage p {
+    margin: 0;
+    color: var(--text-color-secondary);
+    font-size: 1.125rem;
+}
+
+/* Dark mode */
+[data-theme="dark"] .mapWrapper {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .noDevicesOverlay {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .noDevicesMessage {
+    background: var(--surface-card);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .popupContent {
+        min-width: 200px;
+    }
+
+    .popupTitle {
+        font-size: 1rem;
+    }
+
+    .lecturaValor {
+        font-size: 1.1rem;
+    }
+}

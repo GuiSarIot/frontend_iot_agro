@@ -45,7 +45,7 @@ const ManageMqttTopicsPage: React.FC<ManageMqttTopicsPageProps> = ({
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
-        customModule: 'mqtt_topics',
+        customModule: 'other',
         action: 'list'
     })
 

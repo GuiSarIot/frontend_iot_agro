@@ -27,7 +27,7 @@ const CreateBrokerPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_brokers',
+        customModule: 'other',
         action: 'create'
     })
 

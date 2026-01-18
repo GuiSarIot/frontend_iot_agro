@@ -542,13 +542,23 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
         <div className={stylesPage.content}>
             <div className={stylesPage.usersMainContainer}>
                 <div className={stylesPage.titleSection}>
-                    <div className={stylesPage.titleWrapper}>
-                        <PersonIcon className={stylesPage.titleIcon} />
-                        <h1 className={stylesPage.pageTitle}>Gestión de usuarios</h1>
+                    <div className={stylesPage.titleContent}>
+                        <div className={stylesPage.titleWrapper}>
+                            <PersonIcon className={stylesPage.titleIcon} />
+                            <h1 className={stylesPage.pageTitle}>Gestión de usuarios</h1>
+                        </div>
+                        <p className={stylesPage.pageSubtitle}>
+                            Administra los usuarios del sistema, sus roles y permisos
+                        </p>
                     </div>
-                    <p className={stylesPage.pageSubtitle}>
-                        Administra los usuarios del sistema, sus roles y permisos
-                    </p>
+                    {isSuperUser && (
+                        <div className={stylesPage.btnNewUser}>
+                            <Link href="/gestor_usuarios/crear">
+                                <AddIcon />
+                                <span>Nuevo usuario</span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
                 
                 <div className={stylesPage.header}>
@@ -574,14 +584,6 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({
                             )}
                         </div>
                     </div>
-                    {isSuperUser && (
-                        <div className={stylesPage.btnNewUser}>
-                            <Link href="/gestor_usuarios/crear">
-                                <AddIcon />
-                                <span>Nuevo usuario</span>
-                            </Link>
-                        </div>
-                    )}
                 </div>
 
                 <div className={stylesPage.cardsContainer}>

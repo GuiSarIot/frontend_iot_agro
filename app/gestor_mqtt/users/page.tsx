@@ -49,7 +49,7 @@ const ManageEmqxUsersPage: React.FC<ManageEmqxUsersPageProps> = ({
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
-        customModule: 'emqx_users',
+        customModule: 'other',
         action: 'list'
     })
 

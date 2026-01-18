@@ -1,0 +1,290 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 8px 0;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.sectionIcon {
+    color: #318d26;
+    font-size: 1.5rem !important;
+}
+
+.sectionHeader h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* LED Control */
+.ledControl {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.ledVisual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.ledBulb {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ledOff {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ledOff .bulbIcon {
+    color: #9ca3af;
+    font-size: 3rem !important;
+}
+
+.ledOn {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.6),
+                0 0 60px rgba(251, 191, 36, 0.4),
+                0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.ledOn .bulbIcon {
+    color: #fff;
+    font-size: 3rem !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(251, 191, 36, 0.6),
+                    0 0 60px rgba(251, 191, 36, 0.4),
+                    0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(251, 191, 36, 0.8),
+                    0 0 80px rgba(251, 191, 36, 0.5),
+                    0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.ledStatus {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.ledButtons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ledButton {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ledButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ledOnButton {
+    background: #10b981;
+    color: white;
+}
+
+.ledOnButton:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.ledOffButton {
+    background: #ef4444;
+    color: white;
+}
+
+.ledOffButton:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.ledToggleButton {
+    background: #3b82f6;
+    color: white;
+}
+
+.ledToggleButton:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Dimmer Control */
+.dimmerControl {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dimmerDisplay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.dimmerValue {
+    font-size: 32px;
+    font-weight: 700;
+    color: #318d26;
+}
+
+.dimmerBar {
+    width: 100%;
+    max-width: 400px;
+    height: 24px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.dimmerFill {
+    height: 100%;
+    background: linear-gradient(90deg, #318d26 0%, #147910 100%);
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.dimmerFill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.sliderContainer {
+    padding: 0 8px;
+}
+
+.slider {
+    width: 100%;
+}
+
+.dimmerPresets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.presetButton {
+    padding: 8px 16px;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.presetButton:hover:not(:disabled) {
+    background: #318d26;
+    color: white;
+    border-color: #318d26;
+    transform: translateY(-1px);
+}
+
+.presetButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Sensor Control */
+.sensorControl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.sensorDescription {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+}
+
+.sensorButton {
+    padding: 12px 32px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sensorButton:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.sensorButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.sensorButton svg {
+    font-size: 1.3rem !important;
+}

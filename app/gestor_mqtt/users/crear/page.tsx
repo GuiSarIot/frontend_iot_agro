@@ -33,7 +33,7 @@ const CreateEmqxUserPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'emqx_users',
+        customModule: 'other',
         action: 'create'
     })
 

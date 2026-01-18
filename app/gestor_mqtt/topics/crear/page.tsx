@@ -24,7 +24,7 @@ const CreateTopicPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_topics',
+        customModule: 'other',
         action: 'create'
     })
 

@@ -29,7 +29,7 @@ const EmqxAclPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'emqx_acl',
+        customModule: 'other',
         action: 'list'
     })
 

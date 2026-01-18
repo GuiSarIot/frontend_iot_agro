@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import { usuariosService, type Usuario } from '@/app/services/api.service'
 
 /**
@@ -16,11 +17,8 @@ export default function DiagnosticoUsuarios() {
         setLoading(true)
         setError(null)
         try {
-            console.log('🔍 Ejecutando usuariosService.getAll()...')
             const response = await usuariosService.getAll()
-            console.log('✅ Respuesta recibida:', response)
             const usuariosData = response.results || []
-            console.log('✅ Usuarios extraídos:', usuariosData)
             setUsuarios(usuariosData)
         } catch (err) {
             console.error('❌ Error:', err)

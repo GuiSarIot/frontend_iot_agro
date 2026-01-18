@@ -25,7 +25,7 @@ const EditEmqxAclPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'emqx_acl',
+        customModule: 'other',
         action: 'update'
     })
 

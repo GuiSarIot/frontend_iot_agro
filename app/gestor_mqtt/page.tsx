@@ -5,6 +5,7 @@ import { useState, useEffect, ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 
 import DevicesIcon from '@mui/icons-material/Devices'
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck'
 import PeopleIcon from '@mui/icons-material/People'
 import RouterIcon from '@mui/icons-material/Router'
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest'
@@ -118,6 +119,20 @@ const ManageMqttPage: React.FC<ManageMqttPageProps> = ({
             icon: <ShieldIcon sx={{ fontSize: 48 }} />,
             href: '/gestor_mqtt/acl',
             permissions: ['gestionar_mqtt', 'is_superuser']
+        },
+        {
+            title: 'Utilidades MQTT',
+            description: 'Probar conexiones y verificar estado de dispositivos',
+            icon: <NetworkCheckIcon sx={{ fontSize: 48 }} />,
+            href: '/gestor_mqtt/utilities',
+            permissions: ['gestionar_mqtt', 'ver_mqtt']
+        },
+        {
+            title: 'Simuladores MQTT',
+            description: 'Probar comandos MQTT en dispositivos IoT en tiempo real',
+            icon: <DevicesIcon sx={{ fontSize: 48 }} />,
+            href: '/gestor_mqtt/simulators',
+            permissions: ['gestionar_mqtt', 'ver_dispositivos', 'ver_mqtt']
         }
     ]
 

@@ -33,12 +33,16 @@ export async function refreshAccessToken(): Promise<string | null> {
 
         if (response.status === 'success' && response.data.access) {
             tokenService.setAccessToken(response.data.access)
+            console.info('Token refrescado exitosamente')
             return response.data.access
         }
 
+        console.error('Respuesta inesperada del servidor al refrescar token:', response)
         return null
     } catch (error) {
         console.error('Error al refrescar el token:', error)
+        // Limpiar tokens si el refresh token también expiró
+        tokenService.clearTokens()
         return null
     }
 }
@@ -51,6 +55,7 @@ export async function ensureValidToken(): Promise<string | null> {
     const accessToken = tokenService.getAccessToken()
 
     if (!accessToken) {
+        console.warn('No hay access token disponible')
         return null
     }
 
@@ -60,5 +65,13 @@ export async function ensureValidToken(): Promise<string | null> {
     }
 
     // Si está expirado, intentar refrescarlo
-    return await refreshAccessToken()
+    console.info('Token expirado, intentando refrescar...')
+    const newToken = await refreshAccessToken()
+    
+    if (!newToken) {
+        console.warn('No se pudo refrescar el token, sesión expirada')
+        tokenService.clearTokens()
+    }
+    
+    return newToken
 }

@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import DevicesIcon from '@mui/icons-material/Devices'
 import FilterListIcon from '@mui/icons-material/FilterList'
+import MapIcon from '@mui/icons-material/Map'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import SearchIcon from '@mui/icons-material/Search'
 import SensorsIcon from '@mui/icons-material/Sensors'
@@ -25,12 +28,24 @@ import {
     type Dispositivo, 
     type Lectura 
 } from '@/app/services/api.service'
+import {
+    dispositivoToMapMarker,
+    type DispositivoMapMarker,
+    type DispositivoConCoordenadas
+} from '@/app/services/dispositivos-map.types'
 import AppLayout from '@/components/shared/layout/AppLayout'
 import { useAppContext } from '@/context/appContext'
 
 import styles from './portalUsuario.module.css'
+import '@/styles/dashboard-executive.css'
 
-interface DispositivoConLecturas extends Dispositivo {
+// Importar componente de mapa dinámicamente
+const DispositivosMap = dynamic(
+    () => import('@/components/shared/maps/DispositivosMap'),
+    { ssr: false }
+)
+
+interface DispositivoConLecturas extends DispositivoConCoordenadas {
     ultimaLectura?: Lectura
     totalLecturas: number
 }
@@ -38,11 +53,13 @@ interface DispositivoConLecturas extends Dispositivo {
 const PortalUsuarioPage: React.FC = () => {
     const { changeTitle, showNavbar, appState, showLoader } = useAppContext()
     const { userInfo: _userInfo } = appState
+    const router = useRouter()
 
     const [dispositivos, setDispositivos] = useState<DispositivoConLecturas[]>([])
     const [dispositivosFiltrados, setDispositivosFiltrados] = useState<DispositivoConLecturas[]>([])
     const [loading, setLoading] = useState(false)
     const [mostrarFiltros, setMostrarFiltros] = useState(true)
+    const [vistaActual, setVistaActual] = useState<'tabla' | 'mapa'>('tabla')
     
     // Filtros
     const [filtroNombre, setFiltroNombre] = useState('')
@@ -94,17 +111,23 @@ const PortalUsuarioPage: React.FC = () => {
                                 page_size: 1
                             })
 
+                            // Generar coordenadas aleatorias si no existen (para demostración)
+                            const lat = (dispositivo as any).latitud ?? (4.60971 + (Math.random() - 0.5) * 0.1)
+                            const lng = (dispositivo as any).longitud ?? (-74.08175 + (Math.random() - 0.5) * 0.1)
+
                             return {
                                 ...dispositivo,
+                                latitud: lat,
+                                longitud: lng,
                                 ultimaLectura: lecturasResponse.results?.[0],
                                 totalLecturas: totalLecturasResponse.count || 0
-                            }
+                            } as DispositivoConLecturas
                         } catch (error) {
                             console.error(`Error al cargar lecturas del dispositivo ${dispositivo.id}:`, error)
                             return {
                                 ...dispositivo,
                                 totalLecturas: 0
-                            }
+                            } as DispositivoConLecturas
                         }
                     })
                 )
@@ -227,159 +250,268 @@ const PortalUsuarioPage: React.FC = () => {
         </div>
     )
 
+    // Preparar marcadores para el mapa
+    const marcadoresDispositivos = useMemo<DispositivoMapMarker[]>(() => {
+        return dispositivosFiltrados
+            .map(dispositivo => {
+                const ultimaLecturaForMap = dispositivo.ultimaLectura ? {
+                    valor: String(dispositivo.ultimaLectura.valor),
+                    unidad: dispositivo.ultimaLectura.unidad || dispositivo.ultimaLectura.sensor_unidad,
+                    fecha: dispositivo.ultimaLectura.fecha_lectura || dispositivo.ultimaLectura.timestamp
+                } : undefined
+                return dispositivoToMapMarker(dispositivo, ultimaLecturaForMap as any)
+            })
+            .filter((marker): marker is DispositivoMapMarker => marker !== null)
+    }, [dispositivosFiltrados])
+
+    const handleDeviceClick = (dispositivoId: number) => {
+        router.push(`/dashboard/portal_usuario/dispositivo/${dispositivoId}`)
+    }
+
+    // Calcular estadísticas
+    const estadisticas = useMemo(() => {
+        const total = dispositivos.length
+        const activos = dispositivos.filter(d => d.estado === 'activo').length
+        const totalLecturas = dispositivos.reduce((acc, d) => acc + d.totalLecturas, 0)
+        const promedioLecturas = total > 0 ? Math.round(totalLecturas / total) : 0
+
+        return {
+            total,
+            activos,
+            inactivos: total - activos,
+            totalLecturas,
+            promedioLecturas,
+            tasaActivacion: total > 0 ? Math.round((activos / total) * 100) : 0
+        }
+    }, [dispositivos])
+
     return (
         <AppLayout showMainMenu={true}>
-            <div className={styles.containerPage}>
-                <div className={styles.mainCard}>
-                    {/* Encabezado */}
-                    <div className={styles.pageHeader}>
-                        <div className={styles.headerContent}>
-                            <div className={styles.titleSection}>
-                                <div className={styles.titleWrapper}>
-                                    <DevicesIcon className={styles.titleIcon} />
-                                    <div>
-                                        <h1 className={styles.pageTitle}>Mis Dispositivos</h1>
-                                        <p className={styles.pageSubtitle}>
-                                            Gestiona y monitorea tus dispositivos IoT
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={styles.headerActions}>
-                                <Button
-                                    icon={<FilterListIcon />}
-                                    label={mostrarFiltros ? 'Ocultar filtros' : 'Mostrar filtros'}
-                                    onClick={() => setMostrarFiltros(!mostrarFiltros)}
-                                    severity="secondary"
-                                    outlined
-                                />
-                                
-                                <Button
-                                    icon={<RefreshIcon />}
-                                    label="Actualizar"
-                                    onClick={cargarMisDispositivos}
-                                    severity="success"
-                                    disabled={loading}
-                                />
-                            </div>
-                        </div>
+            <div className="dashboardProfessional">
+                {/* Header Profesional */}
+                <div className="professionalHeader">
+                    <div className="professionalTitle">
+                        <DevicesIcon style={{ fontSize: '2.5rem', marginRight: '1rem' }} />
+                        Mi Portal IoT
                     </div>
-
-                {/* Sección de filtros colapsable */}
-                {mostrarFiltros && (
-                    <div className={styles.filtrosSection}>
-                        <div className={styles.filtrosGrid}>
-                            <div className={styles.filtroItem}>
-                                <label className={styles.filtroLabel}>NOMBRE</label>
-                                <InputText
-                                    value={filtroNombre}
-                                    onChange={(e) => setFiltroNombre(e.target.value)}
-                                    placeholder="Buscar por nombre..."
-                                />
-                            </div>
-
-                            <div className={styles.filtroItem}>
-                                <label className={styles.filtroLabel}>TIPO</label>
-                                <Dropdown
-                                    value={filtroTipo}
-                                    onChange={(e) => setFiltroTipo(e.value)}
-                                    options={opcionesTipo}
-                                    placeholder="Todos"
-                                    showClear
-                                    filter
-                                />
-                            </div>
-
-                            <div className={styles.filtroItem}>
-                                <label className={styles.filtroLabel}>ESTADO</label>
-                                <Dropdown
-                                    value={filtroEstado}
-                                    onChange={(e) => setFiltroEstado(e.value)}
-                                    options={opcionesEstado}
-                                    placeholder="Todos"
-                                    showClear
-                                />
-                            </div>
-
-                            <div className={styles.filtroItem}>
-                                <label className={styles.filtroLabel}>UBICACIÓN</label>
-                                <InputText
-                                    value={filtroUbicacion}
-                                    onChange={(e) => setFiltroUbicacion(e.target.value)}
-                                    placeholder="Buscar por ubicación..."
-                                />
-                            </div>
-
-                            <div className={styles.filtroItem}>
-                                <Button
-                                    label="Limpiar filtros"
-                                    onClick={limpiarFiltros}
-                                    severity="secondary"
-                                    outlined
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tabla de dispositivos */}
-                <div className={styles.tableSection}>
-                    <div className={styles.tableContainer}>
-                        <DataTable
-                            value={dispositivosFiltrados}
-                            loading={loading}
-                            paginator
-                            rows={10}
-                            rowsPerPageOptions={[5, 10, 20, 50]}
-                            emptyMessage="No se encontraron dispositivos"
-                            stripedRows
-                            showGridlines
-                        >
-                            <Column 
-                                field="id" 
-                                header="ID" 
-                                sortable
-                                style={{ width: '80px' }}
-                            />
-                            <Column 
-                                field="nombre" 
-                                header="DISPOSITIVO" 
-                                body={nombreTemplate}
-                                sortable
-                            />
-                            <Column 
-                                field="tipo.nombre" 
-                                header="TIPO" 
-                                sortable
-                            />
-                            <Column 
-                                field="ubicacion" 
-                                header="UBICACIÓN" 
-                                sortable
-                            />
-                            <Column 
-                                field="estado" 
-                                header="ESTADO" 
-                                body={estadoTemplate}
-                                sortable
-                            />
-                            <Column 
-                                header="ÚLTIMA LECTURA" 
-                                body={ultimaLecturaTemplate}
-                            />
-                            <Column 
-                                header="TOTAL LECTURAS" 
-                                body={totalLecturasTemplate}
-                                sortable
-                            />
-                            <Column 
-                                header="ACCIONES" 
-                                body={accionesTemplate}
-                                style={{ width: '180px' }}
-                            />
-                        </DataTable>
+                    <div className="professionalSubtitle">
+                        Monitoreo y gestión de tus dispositivos conectados
                     </div>
                 </div>
+
+                {/* Estadísticas Profesionales */}
+                <div className="professionalStats">
+                    <div className="statCardProfessional">
+                        <span className="statIcon">📡</span>
+                        <div className="statLabel">Mis Dispositivos</div>
+                        <div className="statValue">{estadisticas.total}</div>
+                        <div className="statTrend" style={{ color: '#0891b2' }}>
+                            Total asignados
+                        </div>
+                    </div>
+
+                    <div className="statCardProfessional">
+                        <span className="statIcon">🟢</span>
+                        <div className="statLabel">Dispositivos Activos</div>
+                        <div className="statValue">{estadisticas.activos}</div>
+                        <div className="statTrend" style={{ color: '#10b981' }}>
+                            {estadisticas.tasaActivacion}% operativos
+                        </div>
+                    </div>
+
+                    <div className="statCardProfessional">
+                        <span className="statIcon">📊</span>
+                        <div className="statLabel">Total Lecturas</div>
+                        <div className="statValue">{estadisticas.totalLecturas.toLocaleString()}</div>
+                        <div className="statTrend">
+                            Datos registrados
+                        </div>
+                    </div>
+
+                    <div className="statCardProfessional">
+                        <span className="statIcon">📈</span>
+                        <div className="statLabel">Promedio Lecturas</div>
+                        <div className="statValue">{estadisticas.promedioLecturas}</div>
+                        <div className="statTrend">
+                            Por dispositivo
+                        </div>
+                    </div>
+                </div>
+
+                {/* Sección de Mapa */}
+                <div className="mapSection">
+                    <div className="mapHeader">
+                        <div className="mapTitle">
+                            <MapIcon style={{ fontSize: '1.75rem' }} />
+                            Localización de Dispositivos
+                        </div>
+                        <div className="mapControls">
+                            <button 
+                                className={`mapFilter ${vistaActual === 'mapa' ? 'active' : ''}`}
+                                onClick={() => setVistaActual('mapa')}
+                            >
+                                <MapIcon style={{ fontSize: '1.25rem', marginRight: '0.5rem' }} />
+                                Vista Mapa
+                            </button>
+                            <button 
+                                className={`mapFilter ${vistaActual === 'tabla' ? 'active' : ''}`}
+                                onClick={() => setVistaActual('tabla')}
+                            >
+                                <DevicesIcon style={{ fontSize: '1.25rem', marginRight: '0.5rem' }} />
+                                Vista Tabla
+                            </button>
+                            <button 
+                                className="actionButton secondary"
+                                onClick={() => setMostrarFiltros(!mostrarFiltros)}
+                            >
+                                <FilterListIcon />
+                                {mostrarFiltros ? 'Ocultar' : 'Filtros'}
+                            </button>
+                            <button 
+                                className="actionButton"
+                                onClick={cargarMisDispositivos}
+                                disabled={loading}
+                            >
+                                <RefreshIcon />
+                                Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    {vistaActual === 'mapa' ? (
+                        <>
+                            <DispositivosMap 
+                                dispositivos={marcadoresDispositivos}
+                                height="600px"
+                                centerOnDevices={true}
+                                onDeviceClick={handleDeviceClick}
+                            />
+                            <div className="legend">
+                                <div className="legendItem">
+                                    <span className="legendDot active"></span>
+                                    <span>Dispositivo Activo ({estadisticas.activos})</span>
+                                </div>
+                                <div className="legendItem">
+                                    <span className="legendDot inactive"></span>
+                                    <span>Dispositivo Inactivo ({estadisticas.inactivos})</span>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="professionalCard">
+                            {/* Sección de filtros */}
+                            {mostrarFiltros && (
+                                <div className={styles.filtrosContainer}>
+                                    <div className={styles.filtrosGrid}>
+                                        <div className={styles.filtroItem}>
+                                            <label className={styles.filtroLabel}>Nombre</label>
+                                            <InputText
+                                                value={filtroNombre}
+                                                onChange={(e) => setFiltroNombre(e.target.value)}
+                                                placeholder="Buscar por nombre..."
+                                            />
+                                        </div>
+
+                                        <div className={styles.filtroItem}>
+                                            <label className={styles.filtroLabel}>Tipo</label>
+                                            <Dropdown
+                                                value={filtroTipo}
+                                                onChange={(e) => setFiltroTipo(e.value)}
+                                                options={opcionesTipo}
+                                                placeholder="Todos"
+                                                showClear
+                                                filter
+                                            />
+                                        </div>
+
+                                        <div className={styles.filtroItem}>
+                                            <label className={styles.filtroLabel}>Estado</label>
+                                            <Dropdown
+                                                value={filtroEstado}
+                                                onChange={(e) => setFiltroEstado(e.value)}
+                                                options={opcionesEstado}
+                                                placeholder="Todos"
+                                                showClear
+                                            />
+                                        </div>
+
+                                        <div className={styles.filtroItem}>
+                                            <label className={styles.filtroLabel}>Ubicación</label>
+                                            <InputText
+                                                value={filtroUbicacion}
+                                                onChange={(e) => setFiltroUbicacion(e.target.value)}
+                                                placeholder="Buscar por ubicación..."
+                                            />
+                                        </div>
+
+                                        <div className={styles.filtroItem}>
+                                            <Button
+                                                label="Limpiar filtros"
+                                                onClick={limpiarFiltros}
+                                                severity="secondary"
+                                                outlined
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Tabla de dispositivos */}
+                            <DataTable
+                                value={dispositivosFiltrados}
+                                loading={loading}
+                                paginator
+                                rows={10}
+                                rowsPerPageOptions={[5, 10, 20, 50]}
+                                emptyMessage="No se encontraron dispositivos"
+                                stripedRows
+                                showGridlines
+                            >
+                                <Column 
+                                    field="id" 
+                                    header="ID" 
+                                    sortable
+                                    style={{ width: '80px' }}
+                                />
+                                <Column 
+                                    field="nombre" 
+                                    header="DISPOSITIVO" 
+                                    body={nombreTemplate}
+                                    sortable
+                                />
+                                <Column 
+                                    field="tipo.nombre" 
+                                    header="TIPO" 
+                                    sortable
+                                />
+                                <Column 
+                                    field="ubicacion" 
+                                    header="UBICACIÓN" 
+                                    sortable
+                                />
+                                <Column 
+                                    field="estado" 
+                                    header="ESTADO" 
+                                    body={estadoTemplate}
+                                    sortable
+                                />
+                                <Column 
+                                    header="ÚLTIMA LECTURA" 
+                                    body={ultimaLecturaTemplate}
+                                />
+                                <Column 
+                                    header="TOTAL LECTURAS" 
+                                    body={totalLecturasTemplate}
+                                    sortable
+                                />
+                                <Column 
+                                    header="ACCIONES" 
+                                    body={accionesTemplate}
+                                    style={{ width: '180px' }}
+                                />
+                            </DataTable>
+                        </div>
+                    )}
                 </div>
             </div>
         </AppLayout>

@@ -28,6 +28,7 @@ export {
     type AsignarOperadorDto,
     type AsignarSensorResponse,
     type MqttCredentials,
+    type RegenerateMqttPasswordResponse,
     type DispositivoMqtt
 } from './dispositivos.service'
 
@@ -105,6 +106,20 @@ export {
     // Utilities
     mqttUtilitiesService
 } from './mqtt.service'
+
+// Re-exportar el servicio de comandos MQTT
+export {
+    mqttCommandsService,
+    type DimmerParams,
+    type CustomCommandParams,
+    type AvailableCommand,
+    type AvailableCommandsResponse,
+    type SendCommandRequest,
+    type SendCommandResponse,
+    type LedStatus,
+    type DimmerStatus,
+    type DeviceStatus
+} from './mqtt-commands.service'
 
 /**
  * Ejemplo de servicio para gestionar usuarios

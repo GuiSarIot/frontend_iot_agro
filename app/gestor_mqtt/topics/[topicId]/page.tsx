@@ -27,7 +27,7 @@ const EditTopicPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_topics',
+        customModule: 'other',
         action: 'update'
     })
 

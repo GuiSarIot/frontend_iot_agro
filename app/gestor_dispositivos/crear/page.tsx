@@ -25,6 +25,7 @@ interface FormData {
     estado: string
     ubicacion: string
     descripcion: string
+    mqtt_password: string
 }
 
 interface FormErrors {
@@ -32,6 +33,7 @@ interface FormErrors {
     tipo?: string
     identificador_unico?: string
     ubicacion?: string
+    mqtt_password?: string
 }
 
 // ---- Opciones por defecto (fallback) ----
@@ -68,7 +70,8 @@ export default function CrearDispositivoPage() {
         identificador_unico: '',
         estado: 'activo',
         ubicacion: '',
-        descripcion: ''
+        descripcion: '',
+        mqtt_password: ''
     })
     const [errors, setErrors] = useState<FormErrors>({})
 
@@ -132,6 +135,12 @@ export default function CrearDispositivoPage() {
             newErrors.ubicacion = 'La ubicación es requerida'
         }
 
+        if (!formData.mqtt_password.trim()) {
+            newErrors.mqtt_password = 'La contraseña MQTT es requerida'
+        } else if (formData.mqtt_password.trim().length < 8) {
+            newErrors.mqtt_password = 'La contraseña debe tener al menos 8 caracteres'
+        }
+
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
@@ -158,7 +167,8 @@ export default function CrearDispositivoPage() {
                 identificador_unico: formData.identificador_unico.trim(),
                 estado: formData.estado,
                 ubicacion: formData.ubicacion.trim(),
-                descripcion: formData.descripcion.trim() || undefined
+                descripcion: formData.descripcion.trim() || undefined,
+                mqtt_password: formData.mqtt_password.trim()
             })
 
             setLoading(false)
@@ -186,7 +196,7 @@ export default function CrearDispositivoPage() {
 
     const handleCancel = () => {
         const hasData = formData.nombre || formData.tipo || formData.identificador_unico || 
-                        formData.ubicacion || formData.descripcion
+                        formData.ubicacion || formData.descripcion || formData.mqtt_password
         
         if (hasData) {
             Swal.fire({
@@ -329,6 +339,28 @@ export default function CrearDispositivoPage() {
                                     />
                                     {errors.ubicacion && (
                                         <span className={styles.errorMessage}>{errors.ubicacion}</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Contraseña MQTT */}
+                            <div className={styles.formGroup}>
+                                <label htmlFor="mqtt_password" className={styles.formLabel}>
+                                    Contraseña MQTT*
+                                    <span className={styles.labelSubtext}>Contraseña para que el dispositivo se conecte al broker MQTT (mínimo 8 caracteres)</span>
+                                </label>
+                                <div className={styles.formInputWrapper}>
+                                    <InputText
+                                        id="mqtt_password"
+                                        type="password"
+                                        value={formData.mqtt_password}
+                                        onChange={(e) => handleInputChange('mqtt_password', e.target.value)}
+                                        placeholder="Ingrese una contraseña segura"
+                                        className={`${styles.formInput} ${errors.mqtt_password ? styles.inputError : ''}`}
+                                        disabled={loading}
+                                    />
+                                    {errors.mqtt_password && (
+                                        <span className={styles.errorMessage}>{errors.mqtt_password}</span>
                                     )}
                                 </div>
                             </div>

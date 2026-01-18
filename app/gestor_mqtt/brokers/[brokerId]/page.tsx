@@ -29,7 +29,7 @@ const EditBrokerPage = () => {
 
     // Registrar acceso automáticamente
     useAccessLogger({
-        customModule: 'mqtt_brokers',
+        customModule: 'other',
         action: 'update'
     })
 

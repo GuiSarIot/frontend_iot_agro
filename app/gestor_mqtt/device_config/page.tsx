@@ -49,7 +49,7 @@ const ManageMqttDeviceConfigPage: React.FC<ManageMqttDeviceConfigPageProps> = ({
 
     // Registrar acceso al módulo automáticamente
     useAccessLogger({ 
-        customModule: 'mqtt_device_config',
+        customModule: 'other',
         action: 'list'
     })
 
