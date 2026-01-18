@@ -308,6 +308,7 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
 }
 
 .statCardProfessional {
