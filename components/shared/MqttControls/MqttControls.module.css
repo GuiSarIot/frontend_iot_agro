@@ -1,14 +1,15 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    padding: 8px 0;
+    gap: 24px;
+    width: 100%;
 }
 
 .section {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
 }
 
 .sectionHeader {
@@ -36,7 +37,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    align-items: center;
+    width: 100%;
 }
 
 .ledVisual {
@@ -44,6 +45,7 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    width: 100%;
 }
 
 .ledBulb {
@@ -163,6 +165,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 }
 
 .dimmerDisplay {
@@ -170,6 +173,7 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    width: 100%;
 }
 
 .dimmerValue {
@@ -180,7 +184,6 @@
 
 .dimmerBar {
     width: 100%;
-    max-width: 400px;
     height: 24px;
     background: #e5e7eb;
     border-radius: 12px;
@@ -248,8 +251,8 @@
 .sensorControl {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 16px;
+    width: 100%;
 }
 
 .sensorDescription {
@@ -260,24 +263,29 @@
 }
 
 .sensorButton {
-    padding: 12px 32px;
-    background: #3b82f6;
+    padding: 14px 40px;
+    background: #318d26;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 10px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .sensorButton:hover:not(:disabled) {
-    background: #2563eb;
+    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
 }
 
 .sensorButton:disabled {

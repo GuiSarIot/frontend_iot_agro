@@ -240,16 +240,15 @@ const PortalUsuarioPage: React.FC = () => {
     )
 
     const accionesTemplate = (rowData: DispositivoConLecturas) => (
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
             <Link href={`/dashboard/portal_usuario/dispositivo/${rowData.id}`}>
                 <Button
-                    icon={<VisibilityIcon style={{ fontSize: '1rem' }} />}
-                    label="Ver Lecturas"
+                    icon={<VisibilityIcon style={{ fontSize: '1.2rem' }} />}
                     rounded
                     text
                     severity="info"
-                    aria-label="Ver lecturas"
-                    title="Ver lecturas"
+                    aria-label="Ver lecturas del dispositivo"
+                    title="Ver lecturas del dispositivo"
                 />
             </Link>
         </div>

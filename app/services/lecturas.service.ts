@@ -65,6 +65,9 @@ export interface CreateLecturaDto {
     sensor: number
     valor: number
     metadata_json?: Record<string, unknown>
+    mqtt_message_id?: string
+    mqtt_qos?: number
+    mqtt_retained?: boolean
 }
 
 /**

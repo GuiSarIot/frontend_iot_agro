@@ -1,52 +1,130 @@
-.container {
-    padding: 2rem;
-    max-width: 1400px;
+/* ============================================
+   DETALLE DISPOSITIVO - PORTAL USUARIO
+   Usando sistema de diseño consistente con simuladores
+   ============================================ */
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+
+.containerPage {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    max-width: 100%;
     margin: 0 auto;
 }
 
-.header {
+/* ============================================
+   TARJETA PRINCIPAL
+   ============================================ */
+
+.mainCard {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-base);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.mainCard:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+
+.pageHeader {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 2px solid #e0e0e0;
+    background: var(--bg-primary);
+}
+
+.titleSection {
+    width: 100%;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.titleIcon {
+    font-size: 2rem !important;
+    color: var(--primary);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.pageTitle {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.pageSubtitle {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ============================================
+   CARD HEADER (Acciones)
+   ============================================ */
+
+.cardHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    gap: 1rem;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.actionsLeft {
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 .btnBack,
 .btnRefresh {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: var(--primary);
+    color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    transition: var(--transition-base);
+    white-space: nowrap;
+    min-height: 42px;
 }
 
 .btnBack {
-    background-color: var(--surface-card);
-    color: var(--text-color-primary);
-    border: 1px solid var(--border-color-primary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .btnBack:hover {
-    background-color: var(--surface-hover);
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+    color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.btnRefresh {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.btnRefresh:hover {
-    background-color: var(--primary-color-dark);
+.btnRefresh:hover:not(:disabled) {
+    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
 }
 
 .btnRefresh:disabled {
@@ -55,62 +133,470 @@
     transform: none;
 }
 
-/* Tarjeta del dispositivo */
-.deviceCard {
-    background: var(--surface-card);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.btnRefresh svg,
+.btnBack svg {
+    font-size: 1.25rem;
 }
 
-.deviceHeader {
+/* ============================================
+   FILTROS
+   ============================================ */
+
+.filtersBar {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 200px;
+    flex: 1;
+}
+
+.filterLabel {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filterInput {
+    height: 40px;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.btnClearFilters {
+    padding: var(--spacing-sm) var(--spacing-xl);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: var(--transition-base);
+    min-height: 40px;
+    white-space: nowrap;
+}
+
+.btnClearFilters:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btnClearFilters:active {
+    transform: translateY(0);
+}
+
+/* Manteniendo estilos originales para compatibilidad */
+
+.container {
+    padding: var(--spacing-md);
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   LAYOUT DE DOS COLUMNAS
+   ============================================ */
+
+.twoColumnLayout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+.leftColumn, .rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+@media (max-width: 1200px) {
+    .twoColumnLayout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+}
+
+/* ============================================
+   TARJETAS BASE
+   ============================================ */
+
+.deviceCard,
+.mqttCard {
+    background: var(--bg-primary);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.deviceCard::before,
+.mqttCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary) 0%, #10b981 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.deviceCard:hover,
+.mqttCard:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.deviceCard:hover::before,
+.mqttCard:hover::before {
+    opacity: 1;
+}
+
+.mqttCard::before {
+    background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+/* ============================================
+   HEADERS DE TARJETAS
+   ============================================ */
+
+.deviceCardHeader,
+.mqttCardHeader {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color-primary);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, rgba(20, 121, 16, 0.05) 0%, rgba(16, 185, 129, 0.03) 100%);
+    border-radius: var(--border-radius-md);
+    flex-wrap: wrap;
+}
+
+.mqttCardHeader {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(99, 102, 241, 0.03) 100%);
+}
+
+.deviceCardHeader h2,
+.mqttCardHeader h2 {
+    flex: 1;
+    font-size: var(--font-size-xl);
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: var(--font-weight-bold);
+    min-width: 150px;
 }
 
 .deviceIcon {
-    font-size: 4rem !important;
-    color: var(--primary-color);
+    font-size: 1.75rem !important;
+    color: var(--primary);
+    background: rgba(20, 121, 16, 0.1);
+    padding: 8px;
+    border-radius: var(--border-radius-sm);
 }
 
-.deviceInfo h1 {
+.mqttIcon {
+    font-size: 1.75rem !important;
+    color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.1);
+    padding: 8px;
+    border-radius: var(--border-radius-sm);
+}
+
+.statusBadge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.statusBadge.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.statusBadge.inactive {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.deviceName {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    max-width: 180px;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   INFORMACIÓN DEL DISPOSITIVO
+   ============================================ */
+
+.deviceInfo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+.infoItem {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.infoItem:hover {
+    background: linear-gradient(90deg, rgba(20, 121, 16, 0.05) 0%, var(--bg-secondary) 100%);
+    border-left-color: var(--primary);
+    transform: translateX(2px);
+}
+
+.infoItem label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin: 0;
-    font-size: 2rem;
-    color: var(--text-color-primary);
 }
 
-.deviceType {
-    margin: 0.5rem 0 0 0;
-    color: var(--text-color-secondary);
-    font-size: 1rem;
+.infoValue {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-medium);
+    word-break: break-word;
+    line-height: 1.5;
 }
 
-.deviceDetails {
+@media (max-width: 768px) {
+    .infoItem {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+}
+
+/* ============================================
+   TARJETAS DE ESTADÍSTICAS
+   ============================================ */
+
+.statsCards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
-.detailItem {
+.statCard {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.statCard:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    border-color: var(--primary);
+}
+
+.statIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+    color: white;
+}
+
+.statIcon svg {
+    font-size: 28px;
+}
+
+.statInfo {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    flex: 1;
 }
 
-.label {
-    font-size: 0.875rem;
-    color: var(--text-color-secondary);
-    font-weight: 500;
+.statValue {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
 }
 
-.value {
-    font-size: 1rem;
-    color: var(--text-color-primary);
+.statLabel {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+}
+/* ============================================
+   SECCIÓN DE SENSORES EN TIEMPO REAL
+   ============================================ */
+
+.realtimeSection {
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-base);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+}
+
+.realtimeSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.realtimeSectionHeader h2 {
+    flex: 1;
+    font-size: var(--font-size-2xl);
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: var(--font-weight-bold);
+}
+
+.realtimeSectionHeader svg {
+    font-size: 2rem !important;
+    color: var(--primary);
+}
+
+.connectionBadge {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 20px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.connectionBadge.connected {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.connectionBadge.disconnected {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    color: white;
+}
+
+.sensorsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.sensorRealtimeCard {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.sensorRealtimeCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.sensorCardIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.sensorCardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sensorCardLabel {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sensorCardValue {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.sensorCardUnit {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-weight: var(--font-weight-medium);
+}
+
+.sensorCardTime {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-sm);
+    margin-top: auto;
 }
 
 .estadoActivo {
@@ -123,137 +609,115 @@
     font-weight: 600;
 }
 
-/* Tarjetas de estadísticas */
-.statsCards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+/* ============================================
+   TARJETA DE FILTROS
+   ============================================ */
 
-.statCard {
-    background: var(--surface-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.statCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-
-.statIcon {
-    font-size: 3rem !important;
-    color: var(--primary-color);
-}
-
-.statInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.statValue {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-color-primary);
-    line-height: 1;
-}
-
-.statLabel {
-    font-size: 0.875rem;
-    color: var(--text-color-secondary);
-    font-weight: 500;
-}
-
-/* Filtros */
 .filtersCard {
-    background: var(--surface-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-base);
+    border: 1px solid var(--border-color);
 }
 
 .filtersCard h3 {
-    margin: 0 0 1rem 0;
-    color: var(--text-color-primary);
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
 }
 
 .filters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: var(--spacing-md);
     align-items: end;
 }
 
 .filterItem {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 .filterItem label {
-    font-size: 0.875rem;
-    color: var(--text-color-secondary);
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-semibold);
 }
 
 .filterActions {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
 }
 
 .btnFiltrar,
 .btnLimpiar {
-    padding: 0.625rem 1.25rem;
+    padding: var(--spacing-md) var(--spacing-xl);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    transition: var(--transition-base);
+    min-height: 50px;
 }
 
 .btnFiltrar {
-    background-color: var(--primary-color);
+    background-color: var(--primary);
     color: white;
 }
 
 .btnFiltrar:hover {
-    background-color: var(--primary-color-dark);
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(20, 121, 16, 0.25);
 }
 
 .btnLimpiar {
-    background-color: var(--surface-hover);
-    color: var(--text-color-primary);
-    border: 1px solid var(--border-color-primary);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .btnLimpiar:hover {
-    background-color: var(--surface-border);
+    background-color: var(--bg-tertiary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Tabla */
+/* ============================================
+   TABLA DE LECTURAS
+   ============================================ */
+
 .tableContainer {
-    background: var(--surface-card);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-base);
+    border: 1px solid var(--border-color);
 }
 
 .tableContainer h2 {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1.5rem 0;
-    color: var(--text-color-primary);
+    gap: var(--spacing-sm);
+    margin: 0 0 var(--spacing-lg) 0;
+    font-size: var(--font-size-2xl);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
 }
+
+.tableContainer h2 svg {
+    font-size: 2rem !important;
+    color: var(--primary);
+}
+
+/* ============================================
+   TEMPLATES DE COLUMNAS
+   ============================================ */
 
 .fechaInfo {
     display: flex;
@@ -261,37 +725,378 @@
     gap: 0.25rem;
 }
 
-.fecha {
-    font-weight: 600;
-    color: var(--text-color-primary);
+.fechaInfo .fecha {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
 }
 
-.hora {
-    font-size: 0.875rem;
-    color: var(--text-color-secondary);
+.fechaInfo .hora {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
 }
 
 .valorInfo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1.1rem;
-    color: var(--text-color-primary);
+    gap: var(--spacing-sm);
+}
+
+.valorInfo strong {
+    font-size: var(--font-size-lg);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+}
+
+.valorInfo .unidad {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
 }
 
 .sensorIcon {
-    color: var(--primary-color);
-}
-
-.unidad {
-    color: var(--text-color-secondary);
-    font-size: 0.875rem;
-    font-weight: normal;
+    color: var(--primary) !important;
 }
 
 .sensorInfo {
-    font-weight: 500;
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   DATA TABLE OVERRIDES
+   ============================================ */
+
+.dataTable {
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+/* Sección MQTT */
+.mqttSection {
+    background: var(--surface-card);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mqttHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color-primary);
+}
+
+.mqttHeader h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
     color: var(--text-color-primary);
+}
+
+.connectionStatus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.connectedIcon {
+    color: #4caf50;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.connectedText {
+    color: #4caf50;
+    font-weight: 600;
+}
+
+.disconnectedIcon {
+    color: #f44336;
+}
+
+.disconnectedText {
+    color: #f44336;
+    font-weight: 600;
+}
+
+.reconnectButton {
+    margin-left: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.reconnectButton:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.mqttContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Lecturas en Tiempo Real */
+.realtimeReadings {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+}
+
+.realtimeReadings h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+}
+
+.sensorGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sensorCard {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.sensorCard:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.sensorIcon {
+    font-size: 2.5rem !important;
+}
+
+.sensorData {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.sensorLabel {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.sensorValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.timestamp {
+    text-align: center;
+    font-size: 0.875rem;
+    opacity: 0.8;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+/* Controles MQTT */
+.mqttControls h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.25rem;
+    color: var(--text-color-primary);
+}
+
+.controlCard {
+    background: var(--surface-hover);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color-primary);
+}
+
+.controlHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.controlHeader h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.controlContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ledOn,
+.ledOff {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.ledOn {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #333;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.ledOn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+}
+
+.ledOff {
+    background: linear-gradient(135deg, #555 0%, #333 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ledOff:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ledOn:disabled,
+.ledOff:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.dimmerControl {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dimmerLabel {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    text-align: center;
+}
+
+.dimmerSlider {
+    width: 100%;
+}
+
+.btnReadSensor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btnReadSensor:hover {
+    background-color: var(--primary-color-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btnReadSensor:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.phReading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+}
+
+.phValue {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* ============================================
+   TABLA DE LECTURAS
+   ============================================ */
+
+.tableContainer {
+    padding: var(--spacing-lg);
+    background: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-base);
+    border: 1px solid var(--border-color);
+}
+
+.tableHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tableIcon {
+    font-size: 2rem !important;
+    color: var(--primary);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.tableHeader h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.dataTable {
+    width: 100%;
+}
+
+/* ============================================
+   CONTENIDO DENTRO DE MAINCARD
+   ============================================ */
+
+.contentWrapper {
+    padding: var(--spacing-lg);
 }
 
 /* Responsive */
@@ -329,4 +1134,19 @@
         padding: 1rem;
         overflow-x: auto;
     }
+
+    .mqttContent {
+        grid-template-columns: 1fr;
+    }
+
+    .sensorGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .mqttHeader {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
 }
+

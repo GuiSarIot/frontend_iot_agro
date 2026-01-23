@@ -66,6 +66,7 @@ export interface Dispositivo {
     propietario?: { id: number; username: string; email: string }
     mqtt_enabled?: boolean
     mqtt_client_id?: string
+    mqtt_credentials?: MqttCredentials
     connection_status?: string
     last_seen?: string
     sensores_asignados: SensorAsignado[]
@@ -223,7 +224,9 @@ export const dispositivosService = {
 
     /**
      * Obtener Mis Dispositivos (dispositivos asignados al usuario actual)
-     * GET /api/devices/my-devices/
+     * GET /api/dispositivos/mis_dispositivos/
+     * Retorna únicamente los dispositivos donde operador_asignado = usuario_actual
+     * Soporta filtros opcionales: tipo, estado, búsqueda, paginación
      */
     getMyDevices: async (params?: DispositivoQueryParams): Promise<DispositivosResponse> => {
         const queryParams = new URLSearchParams()
@@ -235,7 +238,7 @@ export const dispositivosService = {
         if (params?.page_size) queryParams.append('page_size', String(params.page_size))
 
         const query = queryParams.toString()
-        const url = query ? `${API_BASE_URL}/api/devices/my-devices/?${query}` : `${API_BASE_URL}/api/devices/my-devices/`
+        const url = query ? `${API_BASE_URL}/api/devices/mis_dispositivos/?${query}` : `${API_BASE_URL}/api/devices/mis_dispositivos/`
 
         return authenticatedGet<DispositivosResponse>(url)
     },

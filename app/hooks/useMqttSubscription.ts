@@ -14,6 +14,7 @@ export interface SensorData {
     humidity?: number
     pressure?: number
     light?: number
+    ph?: number
     timestamp?: string
     device_id?: string
 }
@@ -97,6 +98,7 @@ export function useMqttSubscription(
                 humidity: 30 + Math.random() * 40,    // 30-70%
                 pressure: 1000 + Math.random() * 20,  // 1000-1020 hPa
                 light: Math.random() * 100,           // 0-100 lux
+                ph: 6.5 + Math.random() * 1.5,        // 6.5-8.0 pH
                 timestamp: new Date().toISOString(),
                 device_id: deviceId || 'mock-device',
             }
@@ -158,6 +160,13 @@ export function useMqttSubscription(
             const brokerPort = 8083
             const brokerUrl = `ws://${brokerHost}:${brokerPort}/mqtt`
 
+            console.log('🔌 Conectando al broker MQTT:', {
+                url: brokerUrl,
+                deviceId,
+                username: credentialsRef.current.username,
+                clientId: `frontend_${deviceId}_${Date.now()}`
+            })
+
             // Crear cliente MQTT con las credenciales del dispositivo
             const client = mqtt.connect(brokerUrl, {
                 clientId: `frontend_${deviceId}_${Date.now()}`,
@@ -172,15 +181,19 @@ export function useMqttSubscription(
 
             // Event: Conexión exitosa
             client.on('connect', () => {
+                console.log('✅ Conectado al broker MQTT')
                 setConnectionStatus('connected')
                 setError(null)
 
                 // Suscribirse al tópico de sensores del dispositivo (coincide con permisos ACL)
                 const topic = `iot/sensors/${deviceId}/#`
+                console.log('📡 Suscribiéndose al topic:', topic)
                 client.subscribe(topic, (err) => {
                     if (err) {
                         console.error(`❌ Error suscribiéndose a ${topic}:`, err)
                         setError(`Error suscribiéndose al tópico: ${err.message}`)
+                    } else {
+                        console.log(`✅ Suscrito exitosamente a: ${topic}`)
                     }
                 })
             })
@@ -189,20 +202,63 @@ export function useMqttSubscription(
             client.on('message', (topic, message) => {
                 try {
                     const payload = JSON.parse(message.toString())
-
-                    // El backend envía los datos dentro de payload.readings
-                    // Cada sensor tiene { value, unit, timestamp }
-                    const readings = payload.readings || {}
                     
-                    // Actualizar datos de sensores (extraer .value de cada sensor)
+                    console.log('📥 Mensaje MQTT recibido:', topic, payload)
+
+                    // Soportar múltiples formatos de payload:
+                    // Formato 1: Backend con readings { ph: { value: 7.13 } }
+                    // Formato 2: Backend con sensor_reading (singular) { ph: 7.13, ... }
+                    // Formato 3: Directo del Raspberry { ph: 7.13, temperature: 25.5 }
+                    
+                    let sensorValues: SensorData = {}
+                    
+                    if (payload.readings) {
+                        // Formato 1: backend con readings (plural) - extraer .value de cada sensor
+                        const readings = payload.readings
+                        sensorValues = {
+                            temperature: readings.temperature?.value !== undefined ? Number(readings.temperature.value) : undefined,
+                            humidity: readings.humidity?.value !== undefined ? Number(readings.humidity.value) : undefined,
+                            pressure: readings.pressure?.value !== undefined ? Number(readings.pressure.value) : undefined,
+                            light: readings.light?.value !== undefined ? Number(readings.light.value) : undefined,
+                            ph: readings.ph?.value !== undefined ? Number(readings.ph.value) : undefined,
+                        }
+                    } else if (payload.sensor_reading) {
+                        // Formato 2: backend con sensor_reading (singular)
+                        // Busca valores con sufijos: ph_value, temperature_value, etc.
+                        const reading = payload.sensor_reading
+                        console.log('🔍 Contenido de sensor_reading:', reading)
+                        
+                        sensorValues = {
+                            temperature: reading.temperature_value !== undefined ? Number(reading.temperature_value) : 
+                                        reading.temperature !== undefined ? Number(reading.temperature) : undefined,
+                            humidity: reading.humidity_value !== undefined ? Number(reading.humidity_value) : 
+                                     reading.humidity !== undefined ? Number(reading.humidity) : undefined,
+                            pressure: reading.pressure_value !== undefined ? Number(reading.pressure_value) : 
+                                     reading.pressure !== undefined ? Number(reading.pressure) : undefined,
+                            light: reading.light_value !== undefined ? Number(reading.light_value) : 
+                                  reading.light !== undefined ? Number(reading.light) : undefined,
+                            ph: reading.ph_value !== undefined ? Number(reading.ph_value) : 
+                               reading.ph !== undefined ? Number(reading.ph) : undefined,
+                        }
+                    } else {
+                        // Formato 3: directo del Raspberry - valores en el nivel raíz
+                        sensorValues = {
+                            temperature: payload.temperature !== undefined ? Number(payload.temperature) : undefined,
+                            humidity: payload.humidity !== undefined ? Number(payload.humidity) : undefined,
+                            pressure: payload.pressure !== undefined ? Number(payload.pressure) : undefined,
+                            light: payload.light !== undefined ? Number(payload.light) : undefined,
+                            ph: payload.ph !== undefined ? Number(payload.ph) : undefined,
+                        }
+                    }
+                    
+                    // Actualizar datos de sensores
                     setSensorData({
-                        temperature: readings.temperature?.value !== undefined ? Number(readings.temperature.value) : undefined,
-                        humidity: readings.humidity?.value !== undefined ? Number(readings.humidity.value) : undefined,
-                        pressure: readings.pressure?.value !== undefined ? Number(readings.pressure.value) : undefined,
-                        light: readings.light?.value !== undefined ? Number(readings.light.value) : undefined,
+                        ...sensorValues,
                         timestamp: payload.timestamp || new Date().toISOString(),
                         device_id: payload.device_id || deviceId,
                     })
+                    
+                    console.log('✅ Datos de sensores actualizados:', sensorValues)
                 } catch (err) {
                     console.error('❌ Error parseando mensaje MQTT:', err)
                 }
