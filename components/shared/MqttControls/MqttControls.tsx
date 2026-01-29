@@ -6,6 +6,8 @@ import { Slider } from 'primereact/slider'
 import LightbulbIcon from '@mui/icons-material/Lightbulb'
 import TuneIcon from '@mui/icons-material/Tune'
 import SensorsIcon from '@mui/icons-material/Sensors'
+import PowerIcon from '@mui/icons-material/Power'
+import PowerOffIcon from '@mui/icons-material/PowerOff'
 import styles from './MqttControls.module.css'
 
 interface MqttControlsProps {
@@ -13,9 +15,24 @@ interface MqttControlsProps {
 }
 
 export function MqttControls({ deviceId }: MqttControlsProps) {
-    const { ledOn, ledOff, ledToggle, dimmerSet, readSensors, loading } = useMqttCommands()
+    const { 
+        ledOn, 
+        ledOff, 
+        ledToggle, 
+        dimmerSet, 
+        readSensors, 
+        relay1On,
+        relay1Off,
+        relay2On,
+        relay2Off,
+        relayBothOn,
+        relayBothOff,
+        loading 
+    } = useMqttCommands()
     const [ledState, setLedState] = useState(false)
     const [dimmerValue, setDimmerValue] = useState(50)
+    const [relay1State, setRelay1State] = useState(false)
+    const [relay2State, setRelay2State] = useState(false)
 
     const handleLedToggle = async () => {
         await ledToggle(deviceId)
@@ -39,6 +56,41 @@ export function MqttControls({ deviceId }: MqttControlsProps) {
 
     const handleReadSensors = async () => {
         await readSensors(deviceId)
+    }
+
+    // Handlers para Relay 1
+    const handleRelay1On = async () => {
+        await relay1On(deviceId)
+        setRelay1State(true)
+    }
+
+    const handleRelay1Off = async () => {
+        await relay1Off(deviceId)
+        setRelay1State(false)
+    }
+
+    // Handlers para Relay 2
+    const handleRelay2On = async () => {
+        await relay2On(deviceId)
+        setRelay2State(true)
+    }
+
+    const handleRelay2Off = async () => {
+        await relay2Off(deviceId)
+        setRelay2State(false)
+    }
+
+    // Handlers para ambos relays
+    const handleRelayBothOn = async () => {
+        await relayBothOn(deviceId)
+        setRelay1State(true)
+        setRelay2State(true)
+    }
+
+    const handleRelayBothOff = async () => {
+        await relayBothOff(deviceId)
+        setRelay1State(false)
+        setRelay2State(false)
     }
 
     return (
@@ -143,6 +195,42 @@ export function MqttControls({ deviceId }: MqttControlsProps) {
                             className={styles.presetButton}
                         >
                             100%
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Control de Relays */}
+            <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                    <PowerIcon className={styles.sectionIcon} />
+                    <h4>Control de Relays</h4>
+                </div>
+                
+                {/* Relay 1 */}
+                <div className={styles.relayControl}>
+                    <div className={styles.relayHeader}>
+                        <span className={styles.relayLabel}>Relay 1 (GPIO17)</span>
+                        <span className={`${styles.relayStatus} ${relay1State ? styles.relayOn : styles.relayOff}`}>
+                            {relay1State ? '● ON' : '○ OFF'}
+                        </span>
+                    </div>
+                    <div className={styles.relayButtons}>
+                        <button
+                            onClick={handleRelay1On}
+                            disabled={loading}
+                            className={`${styles.relayButton} ${styles.relayOnButton}`}
+                        >
+                            <PowerIcon />
+                            Encender
+                        </button>
+                        <button
+                            onClick={handleRelay1Off}
+                            disabled={loading}
+                            className={`${styles.relayButton} ${styles.relayOffButton}`}
+                        >
+                            <PowerOffIcon />
+                            Apagar
                         </button>
                     </div>
                 </div>

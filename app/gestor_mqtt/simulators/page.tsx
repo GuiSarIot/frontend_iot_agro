@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SpeedIcon from '@mui/icons-material/Speed'
 import ThermostatIcon from '@mui/icons-material/Thermostat'
+import WaterIcon from '@mui/icons-material/Water'
 import WifiIcon from '@mui/icons-material/Wifi'
 import WifiOffIcon from '@mui/icons-material/WifiOff'
 import MenuItem from '@mui/material/MenuItem'
@@ -516,6 +517,54 @@ export default function MqttSimulatorsPage() {
                                             <>
                                                 <span className={`${styles.value} ${dataUpdated ? styles.valueUpdate : ''}`}>{sensorData.light.toFixed(0)}</span>
                                                 <span className={styles.unit}>lux</span>
+                                            </>
+                                        ) : (
+                                            <span className={styles.noData}>--</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* pH */}
+                                <div className={`${styles.sensorCard} ${dataUpdated ? styles.cardPulse : ''}`}>
+                                    <div className={styles.sensorCardHeader}>
+                                        <ScienceIcon className={styles.sensorCardIcon} style={{ color: '#9b59b6' }} />
+                                        <span className={styles.sensorCardLabel}>pH</span>
+                                        {getTrend(sensorData?.ph, prevSensorData?.ph) === 'up' && (
+                                            <span className={styles.trendUp}>↑</span>
+                                        )}
+                                        {getTrend(sensorData?.ph, prevSensorData?.ph) === 'down' && (
+                                            <span className={styles.trendDown}>↓</span>
+                                        )}
+                                    </div>
+                                    <div className={styles.sensorCardValue}>
+                                        {sensorData?.ph !== undefined ? (
+                                            <>
+                                                <span className={`${styles.value} ${dataUpdated ? styles.valueUpdate : ''}`}>{sensorData.ph.toFixed(2)}</span>
+                                                <span className={styles.unit}>pH</span>
+                                            </>
+                                        ) : (
+                                            <span className={styles.noData}>--</span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* TDS */}
+                                <div className={`${styles.sensorCard} ${dataUpdated ? styles.cardPulse : ''}`}>
+                                    <div className={styles.sensorCardHeader}>
+                                        <WaterIcon className={styles.sensorCardIcon} style={{ color: '#3498db' }} />
+                                        <span className={styles.sensorCardLabel}>TDS</span>
+                                        {getTrend(sensorData?.tds, prevSensorData?.tds) === 'up' && (
+                                            <span className={styles.trendUp}>↑</span>
+                                        )}
+                                        {getTrend(sensorData?.tds, prevSensorData?.tds) === 'down' && (
+                                            <span className={styles.trendDown}>↓</span>
+                                        )}
+                                    </div>
+                                    <div className={styles.sensorCardValue}>
+                                        {sensorData?.tds !== undefined ? (
+                                            <>
+                                                <span className={`${styles.value} ${dataUpdated ? styles.valueUpdate : ''}`}>{sensorData.tds.toFixed(0)}</span>
+                                                <span className={styles.unit}>ppm</span>
                                             </>
                                         ) : (
                                             <span className={styles.noData}>--</span>

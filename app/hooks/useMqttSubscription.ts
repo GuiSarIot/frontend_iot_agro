@@ -15,8 +15,18 @@ export interface SensorData {
     pressure?: number
     light?: number
     ph?: number
+    tds?: number  // TDS en ppm
     timestamp?: string
     device_id?: string
+    // Metadatos adicionales
+    ph_voltage?: number
+    ph_adc?: number
+    ph_model?: string
+    tds_voltage?: number
+    tds_adc?: number
+    tds_model?: string
+    temperature_unit?: string
+    temperature_model?: string
 }
 
 /**
@@ -204,15 +214,129 @@ export function useMqttSubscription(
                     const payload = JSON.parse(message.toString())
                     
                     console.log('📥 Mensaje MQTT recibido:', topic, payload)
+                    console.log('🔍 Verificando formato:', {
+                        hasType: 'type' in payload,
+                        typeValue: payload.type,
+                        hasSensors: 'sensors' in payload,
+                        hasSensorReadings: 'sensor_readings' in payload,
+                        isArray: Array.isArray(payload.sensors) || Array.isArray(payload.sensor_readings),
+                        sensorsLength: payload.sensors?.length || payload.sensor_readings?.length
+                    })
 
                     // Soportar múltiples formatos de payload:
                     // Formato 1: Backend con readings { ph: { value: 7.13 } }
                     // Formato 2: Backend con sensor_reading (singular) { ph: 7.13, ... }
                     // Formato 3: Directo del Raspberry { ph: 7.13, temperature: 25.5 }
+                    // Formato 4: Multi-sensor { type: "multi_sensor", sensors: [{sensor_type: "ph", ph: 10.01, ...}] }
+                    // Formato 5: Backend con sensor_readings (array) { sensor_readings: [{type: "ph_sensor", ph_value: 7.13, ...}] }
                     
                     let sensorValues: SensorData = {}
+                    let isMultiSensor = false
                     
-                    if (payload.readings) {
+                    // Formato 5: sensor_readings array (nuevo formato del backend)
+                    if (payload.sensor_readings && Array.isArray(payload.sensor_readings)) {
+                        isMultiSensor = true
+                        console.log('📡 Formato sensor_readings detectado, parseando sensores...')
+                        
+                        payload.sensor_readings.forEach((sensor: any) => {
+                            const sensorType = sensor.type
+                            
+                            switch (sensorType) {
+                                case 'ph_sensor':
+                                    sensorValues.ph = sensor.ph_value !== undefined ? Number(sensor.ph_value) : 
+                                        sensor.ph !== undefined ? Number(sensor.ph) : undefined
+                                    sensorValues.ph_voltage = sensor.voltage !== undefined ? Number(sensor.voltage) : undefined
+                                    sensorValues.ph_adc = sensor.adc !== undefined ? Number(sensor.adc) : undefined
+                                    sensorValues.ph_model = sensor.model
+                                    console.log(`  ✓ pH: ${sensorValues.ph} | V: ${sensorValues.ph_voltage}V | ADC: ${sensorValues.ph_adc} | Model: ${sensorValues.ph_model}`)
+                                    break
+                                    
+                                case 'tds_sensor':
+                                    sensorValues.tds = sensor.tds_ppm !== undefined ? Number(sensor.tds_ppm) : 
+                                        sensor.tds !== undefined ? Number(sensor.tds) : undefined
+                                    sensorValues.tds_voltage = sensor.voltage !== undefined ? Number(sensor.voltage) : undefined
+                                    sensorValues.tds_adc = sensor.adc !== undefined ? Number(sensor.adc) : undefined
+                                    sensorValues.tds_model = sensor.model
+                                    console.log(`  ✓ TDS: ${sensorValues.tds} ppm | V: ${sensorValues.tds_voltage}V | ADC: ${sensorValues.tds_adc} | Model: ${sensorValues.tds_model}`)
+                                    break
+                                    
+                                case 'temperature_sensor':
+                                    sensorValues.temperature = sensor.temperature !== undefined ? Number(sensor.temperature) : undefined
+                                    sensorValues.temperature_unit = sensor.unit
+                                    sensorValues.temperature_model = sensor.model
+                                    console.log(`  ✓ Temp: ${sensorValues.temperature}${sensor.unit || '°C'} | Model: ${sensorValues.temperature_model}`)
+                                    break
+                                    
+                                case 'humidity_sensor':
+                                    sensorValues.humidity = sensor.humidity !== undefined ? Number(sensor.humidity) : undefined
+                                    console.log(`  ✓ Humidity: ${sensorValues.humidity}%`)
+                                    break
+                                    
+                                case 'pressure_sensor':
+                                    sensorValues.pressure = sensor.pressure !== undefined ? Number(sensor.pressure) : undefined
+                                    console.log(`  ✓ Pressure: ${sensorValues.pressure} hPa`)
+                                    break
+                                    
+                                case 'light_sensor':
+                                    sensorValues.light = sensor.light !== undefined ? Number(sensor.light) : undefined
+                                    console.log(`  ✓ Light: ${sensorValues.light} lux`)
+                                    break
+                                    
+                                default:
+                                    console.warn(`  ⚠️ Tipo de sensor desconocido: ${sensorType}`)
+                            }
+                        })
+                    }
+                    // Formato 4: multi_sensor con sensors array (formato anterior)
+                    else if (payload.type === 'multi_sensor' && payload.sensors && Array.isArray(payload.sensors)) {
+                        // Formato 4: multi_sensor - iterar sobre array de sensores
+                        isMultiSensor = true
+                        console.log('📡 Formato multi_sensor detectado, parseando sensores...')
+                        
+                        payload.sensors.forEach((sensor: any) => {
+                            const sensorType = sensor.sensor_type
+                            
+                            switch (sensorType) {
+                                case 'ph':
+                                    sensorValues.ph = sensor.ph !== undefined ? Number(sensor.ph) : undefined
+                                    sensorValues.ph_voltage = sensor.voltage !== undefined ? Number(sensor.voltage) : undefined
+                                    sensorValues.ph_adc = sensor.adc !== undefined ? Number(sensor.adc) : undefined
+                                    sensorValues.ph_model = sensor.model
+                                    console.log(`  ✓ pH: ${sensorValues.ph} | V: ${sensorValues.ph_voltage}V | ADC: ${sensorValues.ph_adc}`)
+                                    break
+                                    
+                                case 'tds':
+                                    sensorValues.tds = sensor.tds_ppm !== undefined ? Number(sensor.tds_ppm) : undefined
+                                    sensorValues.tds_voltage = sensor.voltage !== undefined ? Number(sensor.voltage) : undefined
+                                    sensorValues.tds_adc = sensor.adc !== undefined ? Number(sensor.adc) : undefined
+                                    sensorValues.tds_model = sensor.model
+                                    console.log(`  ✓ TDS: ${sensorValues.tds} ppm | V: ${sensorValues.tds_voltage}V | ADC: ${sensorValues.tds_adc}`)
+                                    break
+                                    
+                                case 'temperature':
+                                    sensorValues.temperature = sensor.temperature !== undefined ? Number(sensor.temperature) : undefined
+                                    sensorValues.temperature_unit = sensor.unit
+                                    sensorValues.temperature_model = sensor.model
+                                    console.log(`  ✓ Temp: ${sensorValues.temperature}${sensor.unit || '°C'}`)
+                                    break
+                                    
+                                case 'humidity':
+                                    sensorValues.humidity = sensor.humidity !== undefined ? Number(sensor.humidity) : undefined
+                                    break
+                                    
+                                case 'pressure':
+                                    sensorValues.pressure = sensor.pressure !== undefined ? Number(sensor.pressure) : undefined
+                                    break
+                                    
+                                case 'light':
+                                    sensorValues.light = sensor.light !== undefined ? Number(sensor.light) : undefined
+                                    break
+                                    
+                                default:
+                                    console.warn(`  ⚠️ Tipo de sensor desconocido: ${sensorType}`)
+                            }
+                        })
+                    } else if (payload.readings) {
                         // Formato 1: backend con readings (plural) - extraer .value de cada sensor
                         const readings = payload.readings
                         sensorValues = {
@@ -221,6 +345,7 @@ export function useMqttSubscription(
                             pressure: readings.pressure?.value !== undefined ? Number(readings.pressure.value) : undefined,
                             light: readings.light?.value !== undefined ? Number(readings.light.value) : undefined,
                             ph: readings.ph?.value !== undefined ? Number(readings.ph.value) : undefined,
+                            tds: readings.tds?.value !== undefined ? Number(readings.tds.value) : undefined,
                         }
                     } else if (payload.sensor_reading) {
                         // Formato 2: backend con sensor_reading (singular)
@@ -230,16 +355,28 @@ export function useMqttSubscription(
                         
                         sensorValues = {
                             temperature: reading.temperature_value !== undefined ? Number(reading.temperature_value) : 
-                                        reading.temperature !== undefined ? Number(reading.temperature) : undefined,
+                                reading.temperature !== undefined ? Number(reading.temperature) : 
+                                    reading.temperature_c !== undefined ? Number(reading.temperature_c) : undefined,
                             humidity: reading.humidity_value !== undefined ? Number(reading.humidity_value) : 
-                                     reading.humidity !== undefined ? Number(reading.humidity) : undefined,
+                                reading.humidity !== undefined ? Number(reading.humidity) : undefined,
                             pressure: reading.pressure_value !== undefined ? Number(reading.pressure_value) : 
-                                     reading.pressure !== undefined ? Number(reading.pressure) : undefined,
+                                reading.pressure !== undefined ? Number(reading.pressure) : undefined,
                             light: reading.light_value !== undefined ? Number(reading.light_value) : 
-                                  reading.light !== undefined ? Number(reading.light) : undefined,
+                                reading.light !== undefined ? Number(reading.light) : undefined,
                             ph: reading.ph_value !== undefined ? Number(reading.ph_value) : 
-                               reading.ph !== undefined ? Number(reading.ph) : undefined,
+                                reading.ph !== undefined ? Number(reading.ph) : undefined,
+                            tds: reading.tds_value !== undefined ? Number(reading.tds_value) : 
+                                reading.tds !== undefined ? Number(reading.tds) : 
+                                    reading.tds_ppm !== undefined ? Number(reading.tds_ppm) : undefined,
+                            // Metadatos adicionales
+                            temperature_unit: reading.unit,
+                            temperature_model: reading.model,
+                            ph_voltage: reading.voltage,
+                            ph_adc: reading.adc,
+                            ph_model: reading.model,
                         }
+                        
+                        console.log('✅ Valores parseados de sensor_reading:', sensorValues)
                     } else {
                         // Formato 3: directo del Raspberry - valores en el nivel raíz
                         sensorValues = {
@@ -248,17 +385,47 @@ export function useMqttSubscription(
                             pressure: payload.pressure !== undefined ? Number(payload.pressure) : undefined,
                             light: payload.light !== undefined ? Number(payload.light) : undefined,
                             ph: payload.ph !== undefined ? Number(payload.ph) : undefined,
+                            tds: payload.tds !== undefined ? Number(payload.tds) : 
+                                payload.tds_ppm !== undefined ? Number(payload.tds_ppm) : undefined,
                         }
                     }
                     
                     // Actualizar datos de sensores
-                    setSensorData({
-                        ...sensorValues,
-                        timestamp: payload.timestamp || new Date().toISOString(),
-                        device_id: payload.device_id || deviceId,
-                    })
-                    
-                    console.log('✅ Datos de sensores actualizados:', sensorValues)
+                    if (isMultiSensor) {
+                        // Multi-sensor: reemplazar completamente con los nuevos datos
+                        // Convertir timestamp de millis del dispositivo a ISO string
+                        const timestampValue = payload.timestamp 
+                            ? (typeof payload.timestamp === 'number' 
+                                ? new Date().toISOString() // Usar timestamp actual ya que el del dispositivo es relativo
+                                : payload.timestamp)
+                            : new Date().toISOString()
+                        
+                        const updatedData = {
+                            ...sensorValues,
+                            timestamp: timestampValue,
+                            device_id: payload.device_id || deviceId,
+                        }
+                        
+                        setSensorData(updatedData)
+                        console.log('✅ Datos multi-sensor actualizados (reemplazo completo):', updatedData)
+                        console.log('📊 Valores finales:', {
+                            ph: updatedData.ph,
+                            tds: updatedData.tds,
+                            temperature: updatedData.temperature,
+                            timestamp: updatedData.timestamp
+                        })
+                    } else {
+                        // Otros formatos: acumular valores (mantener valores previos)
+                        setSensorData(prev => ({
+                            ...prev,
+                            ...Object.fromEntries(
+                                Object.entries(sensorValues).filter(([_, v]) => v !== undefined)
+                            ),
+                            timestamp: payload.timestamp || new Date().toISOString(),
+                            device_id: payload.device_id || deviceId,
+                        }))
+                        console.log('✅ Datos de sensores actualizados (acumulados):', sensorValues)
+                    }
                 } catch (err) {
                     console.error('❌ Error parseando mensaje MQTT:', err)
                 }

@@ -296,3 +296,98 @@
 .sensorButton svg {
     font-size: 1.3rem !important;
 }
+
+/* Relay Control */
+.relayControl {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.relayHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.relayLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.relayStatus {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.relayOn {
+    color: #10b981;
+    background: #d1fae5;
+}
+
+.relayOff {
+    color: #6b7280;
+    background: #e5e7eb;
+}
+
+.relayButtons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.relayButton {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.relayButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.relayButton svg {
+    font-size: 1.2rem !important;
+}
+
+.relayOnButton {
+    background: #10b981;
+    color: white;
+}
+
+.relayOnButton:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.relayOffButton {
+    background: #ef4444;
+    color: white;
+}
+
+.relayOffButton:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}

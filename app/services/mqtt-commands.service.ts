@@ -189,6 +189,64 @@ export const mqttCommandsService = {
     },
 
     // ============================================
+    // COMANDOS DE RELAYS
+    // ============================================
+
+    /**
+     * Encender relay 1 (GPIO17)
+     */
+    relay1On: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_1_on',
+        })
+    },
+
+    /**
+     * Apagar relay 1 (GPIO17)
+     */
+    relay1Off: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_1_off',
+        })
+    },
+
+    /**
+     * Encender relay 2 (GPIO18)
+     */
+    relay2On: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_2_on',
+        })
+    },
+
+    /**
+     * Apagar relay 2 (GPIO18)
+     */
+    relay2Off: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_2_off',
+        })
+    },
+
+    /**
+     * Encender ambos relays
+     */
+    relayBothOn: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_both_on',
+        })
+    },
+
+    /**
+     * Apagar ambos relays
+     */
+    relayBothOff: async (deviceId: string): Promise<SendCommandResponse> => {
+        return mqttCommandsService.sendCommand(deviceId, {
+            command: 'relay_both_off',
+        })
+    },
+
+    // ============================================
     // COMANDOS DE SENSORES
     // ============================================
 

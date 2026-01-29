@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 
 import { useRouter } from 'next/navigation'
 
@@ -175,7 +175,7 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
         }
     }
 
-    const cargarLecturas = async () => {
+    const cargarLecturas = useCallback(async () => {
         try {
             const params: {
                 dispositivo: number;
@@ -206,7 +206,7 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 icon: 'error'
             })
         }
-    }
+    }, [dispositivoId, fechaInicio, fechaFin])
 
     const aplicarFiltros = () => {
         cargarLecturas()
@@ -219,7 +219,7 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
     }
 
     // Función para guardar lectura en el backend
-    const guardarLecturaMqtt = async (tipoSensor: string, valor: number, metadataAdicional?: any) => {
+    const guardarLecturaMqtt = useCallback(async (tipoSensor: string, valor: number, metadataAdicional?: any) => {
         if (!dispositivo) return
 
         try {
@@ -243,7 +243,8 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 
                 // Mapear tipo MQTT a tipo de sensor
                 const tipoMap: {[key: string]: string[]} = {
-                    'ph': ['ph', 'ph_sensor', 'acidez', 'acidity', 'otro'],
+                    'ph': ['ph', 'ph_sensor', 'acidez', 'acidity'],
+                    'tds': ['tds', 'solidos_disueltos', 'solidos', 'conductividad'],
                     'temperature': ['temperature', 'temperatura', 'temp'],
                     'humidity': ['humidity', 'humedad'],
                     'pressure': ['pressure', 'presion', 'presión'],
@@ -255,15 +256,24 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 const modeloSensor = (detail.modelo || '')?.toLowerCase()
                 const posiblesNombres = tipoMap[tipoSensor] || [tipoSensor]
                 
-                // Buscar en tipo, nombre o modelo
-                const encontrado = posiblesNombres.some(nombre => {
+                // Primero: Buscar coincidencia EXACTA en nombre o modelo (más específico)
+                const coincideNombreModelo = posiblesNombres.some(nombre => {
                     const nombreLower = nombre.toLowerCase()
-                    return tiposSensor.includes(nombreLower) || 
-                           nombreSensor.includes(nombreLower) ||
-                           modeloSensor.includes(nombreLower)
+                    return nombreSensor.includes(nombreLower) || modeloSensor.includes(nombreLower)
                 })
                 
-                console.log(`${encontrado ? '✅' : '❌'} Sensor ${detail.nombre || sensorObj.sensor_nombre}: ${encontrado ? 'coincide' : 'no coincide'}`)
+                // Segundo: Si no hay coincidencia en nombre/modelo, buscar en tipo
+                const coincideTipo = posiblesNombres.some(nombre => {
+                    const nombreLower = nombre.toLowerCase()
+                    return tiposSensor.includes(nombreLower)
+                })
+                
+                // Si el tipo es "otro", solo aceptar si hay coincidencia en nombre/modelo
+                const encontrado = tiposSensor === 'otro' 
+                    ? coincideNombreModelo 
+                    : (coincideNombreModelo || coincideTipo)
+                
+                console.log(`${encontrado ? '✅' : '❌'} Sensor ${detail.nombre || sensorObj.sensor_nombre}: ${encontrado ? 'coincide' : 'no coincide'} (tipo: ${tiposSensor}, nombre: ${nombreSensor})`)
                 
                 return encontrado
             })
@@ -318,11 +328,27 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
             console.error('❌ Error guardando lectura MQTT:', error)
             // No mostrar error al usuario para no interrumpir el flujo
         }
-    }
+    }, [dispositivo, cargarLecturas])
 
     // Efecto para guardar automáticamente las lecturas MQTT
     useEffect(() => {
-        if (!sensorData || !isConnected || !dispositivo) return
+        console.log('🔄 useEffect de guardado automático ejecutado:', {
+            hasSensorData: !!sensorData,
+            sensorDataKeys: sensorData ? Object.keys(sensorData) : [],
+            isConnected,
+            hasDispositivo: !!dispositivo
+        })
+        
+        if (!sensorData || !isConnected || !dispositivo) {
+            console.log('⏭️ Saltando guardado automático:', { 
+                hasSensorData: !!sensorData, 
+                isConnected, 
+                hasDispositivo: !!dispositivo 
+            })
+            return
+        }
+
+        console.log('📊 Procesando lecturas MQTT para guardar:', sensorData)
 
         // Guardar cada tipo de sensor que tenga datos
         const sensoresConDatos: {tipo: string, valor: number, metadata?: any}[] = []
@@ -332,8 +358,21 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 tipo: 'ph',
                 valor: sensorData.ph,
                 metadata: {
-                    ...(sensorData as any).ph_voltage !== undefined && { ph_voltage: (sensorData as any).ph_voltage },
-                    ...(sensorData as any).ph_adc !== undefined && { ph_adc: (sensorData as any).ph_adc }
+                    ...sensorData.ph_voltage !== undefined && { ph_voltage: sensorData.ph_voltage },
+                    ...sensorData.ph_adc !== undefined && { ph_adc: sensorData.ph_adc },
+                    ...sensorData.ph_model !== undefined && { ph_model: sensorData.ph_model }
+                }
+            })
+        }
+
+        if (sensorData.tds !== undefined) {
+            sensoresConDatos.push({
+                tipo: 'tds',
+                valor: sensorData.tds,
+                metadata: {
+                    ...sensorData.tds_voltage !== undefined && { tds_voltage: sensorData.tds_voltage },
+                    ...sensorData.tds_adc !== undefined && { tds_adc: sensorData.tds_adc },
+                    ...sensorData.tds_model !== undefined && { tds_model: sensorData.tds_model }
                 }
             })
         }
@@ -341,7 +380,11 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
         if (sensorData.temperature !== undefined) {
             sensoresConDatos.push({
                 tipo: 'temperature',
-                valor: sensorData.temperature
+                valor: sensorData.temperature,
+                metadata: {
+                    ...sensorData.temperature_unit !== undefined && { temperature_unit: sensorData.temperature_unit },
+                    ...sensorData.temperature_model !== undefined && { temperature_model: sensorData.temperature_model }
+                }
             })
         }
 
@@ -366,19 +409,30 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
             })
         }
 
+        console.log(`💾 Sensores a guardar (${sensoresConDatos.length}):`, sensoresConDatos)
+
         // Guardar cada sensor, evitando duplicados usando timestamp
         sensoresConDatos.forEach(async ({ tipo, valor, metadata }) => {
-            const key = `${tipo}_${valor}_${sensorData.timestamp}`
             const lastTimestamp = lastSavedReadingsRef.current[tipo]
             const currentTimestamp = sensorData.timestamp ? new Date(sensorData.timestamp).getTime() : Date.now()
+
+            console.log(`🔍 Verificando ${tipo}:`, {
+                valor,
+                lastTimestamp,
+                currentTimestamp,
+                shouldSave: !lastTimestamp || currentTimestamp > lastTimestamp
+            })
 
             // Solo guardar si es una lectura nueva (diferente timestamp)
             if (!lastTimestamp || currentTimestamp > lastTimestamp) {
                 lastSavedReadingsRef.current[tipo] = currentTimestamp
+                console.log(`💾 Guardando lectura de ${tipo}: ${valor}`)
                 await guardarLecturaMqtt(tipo, valor, metadata)
+            } else {
+                console.log(`⏭️ Saltando lectura duplicada de ${tipo}`)
             }
         })
-    }, [sensorData, isConnected, dispositivo])
+    }, [sensorData, isConnected, dispositivo, guardarLecturaMqtt])
 
     // Templates para las columnas
     const fechaTemplate = (rowData: Lectura) => {
@@ -577,6 +631,23 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                                                     <span className={styles.sensorCardLabel}>pH</span>
                                                     <span className={styles.sensorCardValue}>{sensorData.ph.toFixed(2)}</span>
                                                     <span className={styles.sensorCardUnit}>pH</span>
+                                                </div>
+                                                {sensorData.timestamp && (
+                                                    <div className={styles.sensorCardTime}>
+                                                        {new Date(sensorData.timestamp).toLocaleTimeString('es-CO')}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                        {sensorData?.tds !== undefined && (
+                                            <div className={styles.sensorRealtimeCard}>
+                                                <div className={styles.sensorCardIcon} style={{ background: 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)' }}>
+                                                    💎
+                                                </div>
+                                                <div className={styles.sensorCardContent}>
+                                                    <span className={styles.sensorCardLabel}>TDS</span>
+                                                    <span className={styles.sensorCardValue}>{sensorData.tds.toFixed(0)}</span>
+                                                    <span className={styles.sensorCardUnit}>ppm</span>
                                                 </div>
                                                 {sensorData.timestamp && (
                                                     <div className={styles.sensorCardTime}>

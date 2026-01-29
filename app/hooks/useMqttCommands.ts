@@ -25,6 +25,14 @@ interface UseMqttCommandsResult extends UseMqttCommandsState {
     ledOff: (deviceId: string) => Promise<SendCommandResponse | null>
     ledToggle: (deviceId: string) => Promise<SendCommandResponse | null>
     
+    // Comandos Relays
+    relay1On: (deviceId: string) => Promise<SendCommandResponse | null>
+    relay1Off: (deviceId: string) => Promise<SendCommandResponse | null>
+    relay2On: (deviceId: string) => Promise<SendCommandResponse | null>
+    relay2Off: (deviceId: string) => Promise<SendCommandResponse | null>
+    relayBothOn: (deviceId: string) => Promise<SendCommandResponse | null>
+    relayBothOff: (deviceId: string) => Promise<SendCommandResponse | null>
+    
     // Comandos Dimmer
     dimmerSet: (deviceId: string, level: number) => Promise<SendCommandResponse | null>
     
@@ -129,6 +137,52 @@ export function useMqttCommands(): UseMqttCommandsResult {
     )
 
     // ============================================
+    // COMANDOS RELAYS
+    // ============================================
+
+    const relay1On = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relay1On(deviceId))
+        },
+        [executeCommand]
+    )
+
+    const relay1Off = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relay1Off(deviceId))
+        },
+        [executeCommand]
+    )
+
+    const relay2On = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relay2On(deviceId))
+        },
+        [executeCommand]
+    )
+
+    const relay2Off = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relay2Off(deviceId))
+        },
+        [executeCommand]
+    )
+
+    const relayBothOn = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relayBothOn(deviceId))
+        },
+        [executeCommand]
+    )
+
+    const relayBothOff = useCallback(
+        (deviceId: string) => {
+            return executeCommand(() => mqttCommandsService.relayBothOff(deviceId))
+        },
+        [executeCommand]
+    )
+
+    // ============================================
     // COMANDOS DIMMER
     // ============================================
 
@@ -211,6 +265,14 @@ export function useMqttCommands(): UseMqttCommandsResult {
         ledOn,
         ledOff,
         ledToggle,
+
+        // Comandos Relays
+        relay1On,
+        relay1Off,
+        relay2On,
+        relay2Off,
+        relayBothOn,
+        relayBothOff,
 
         // Comandos Dimmer
         dimmerSet,
