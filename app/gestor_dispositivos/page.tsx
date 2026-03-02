@@ -85,12 +85,13 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
         if (searchTerm.trim() === '') {
             setFilteredDispositivos(listDispositivos)
         } else {
+            const searchLower = searchTerm.toLowerCase()
             const filtered = listDispositivos.filter(dispositivo => 
-                dispositivo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                dispositivo.tipo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                dispositivo.estado.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                dispositivo.ubicacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (dispositivo.descripcion && dispositivo.descripcion.toLowerCase().includes(searchTerm.toLowerCase()))
+                dispositivo.nombre.toLowerCase().includes(searchLower) ||
+                (typeof dispositivo.tipo === 'string' ? dispositivo.tipo : dispositivo.tipo?.nombre || '').toLowerCase().includes(searchLower) ||
+                dispositivo.estado.toLowerCase().includes(searchLower) ||
+                dispositivo.ubicacion.toLowerCase().includes(searchLower) ||
+                (dispositivo.descripcion && dispositivo.descripcion.toLowerCase().includes(searchLower))
             )
             setFilteredDispositivos(filtered)
         }
@@ -497,7 +498,7 @@ const ManageDispositivosPage: React.FC<ManageDispositivosPageProps> = ({
                                                     <div className={stylesPage.infoContent}>
                                                         <span className={stylesPage.cardInfoLabel}>TIPO</span>
                                                         <span className={stylesPage.deviceType}>
-                                                            {dispositivo.tipo_display || dispositivo.tipo}
+                                                            {dispositivo.tipo_display || (typeof dispositivo.tipo === 'string' ? dispositivo.tipo : dispositivo.tipo?.nombre || '')}
                                                         </span>
                                                     </div>
                                                 </div>

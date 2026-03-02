@@ -232,13 +232,16 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 if (!sensorObj) return false
                 
                 // Acceder a sensor_detail que contiene la información del sensor
-                const detail = sensorObj.sensor_detail || sensorObj
+                const detail = sensorObj.sensor_detail
+                const detailNombre = detail?.nombre || sensorObj.sensor_nombre || ''
+                const detailTipo = detail?.tipo || ''
+                const detailModelo = detail?.descripcion || ''
                 
                 console.log('🔬 Analizando sensor:', {
                     id: sensorObj.sensor || sensorObj.id,
-                    nombre: detail.nombre || sensorObj.sensor_nombre,
-                    tipo: detail.tipo,
-                    modelo: detail.modelo
+                    nombre: detailNombre,
+                    tipo: detailTipo,
+                    modelo: detailModelo
                 })
                 
                 // Mapear tipo MQTT a tipo de sensor
@@ -251,9 +254,9 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                     'light': ['light', 'luz', 'luminosidad']
                 }
 
-                const tiposSensor = detail.tipo?.toLowerCase() || ''
-                const nombreSensor = (detail.nombre || sensorObj.sensor_nombre || '')?.toLowerCase()
-                const modeloSensor = (detail.modelo || '')?.toLowerCase()
+                const tiposSensor = detailTipo.toLowerCase()
+                const nombreSensor = detailNombre.toLowerCase()
+                const modeloSensor = detailModelo.toLowerCase()
                 const posiblesNombres = tipoMap[tipoSensor] || [tipoSensor]
                 
                 // Primero: Buscar coincidencia EXACTA en nombre o modelo (más específico)
@@ -273,7 +276,7 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                     ? coincideNombreModelo 
                     : (coincideNombreModelo || coincideTipo)
                 
-                console.log(`${encontrado ? '✅' : '❌'} Sensor ${detail.nombre || sensorObj.sensor_nombre}: ${encontrado ? 'coincide' : 'no coincide'} (tipo: ${tiposSensor}, nombre: ${nombreSensor})`)
+                console.log(`${encontrado ? '✅' : '❌'} Sensor ${detailNombre}: ${encontrado ? 'coincide' : 'no coincide'} (tipo: ${tiposSensor}, nombre: ${nombreSensor})`)
                 
                 return encontrado
             })
@@ -282,9 +285,10 @@ const DetalleDispositivoPage = ({ params }: DetalleDispositivoProps) => {
                 console.warn(`⚠️ No se encontró sensor asignado para tipo: ${tipoSensor}`)
                 console.warn('💡 Sensores disponibles:', dispositivo.sensores_asignados?.map(s => {
                     if (typeof s === 'object') {
-                        const detail = s.sensor_detail || s
-                        const tipo = 'tipo' in detail ? detail.tipo : (s.sensor_detail?.tipo || 'N/A')
-                        return `${detail.nombre || s.sensor_nombre} (${tipo})`
+                        const detail = s.sensor_detail
+                        const tipo = detail?.tipo || 'N/A'
+                        const nombre = detail?.nombre || s.sensor_nombre || 'Sin nombre'
+                        return `${nombre} (${tipo})`
                     }
                     return s
                 }))

@@ -38,6 +38,7 @@ export interface UserInfoForm {
     telegram_notifications_enabled?: boolean
     telegram_verified?: boolean
     can_receive_telegram?: boolean | null
+    profile_picture?: string | null
 }
 
 export interface NotificationSettings {

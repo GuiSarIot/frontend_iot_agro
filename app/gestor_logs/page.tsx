@@ -371,14 +371,14 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
     }
 
     // Opciones para gráfica Doughnut (sin escalas X/Y)
-    const doughnutChartOptions = {
+    const doughnutChartOptions: any = {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
             animateScale: true,
             animateRotate: true,
             duration: 1000,
-            easing: 'easeInOutQuart'
+            easing: 'easeInOutQuart' as const
         },
         plugins: {
             legend: {
@@ -387,7 +387,7 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
                     padding: 20,
                     font: {
                         size: 13,
-                        weight: '500'
+                        weight: 500
                     },
                     usePointStyle: true,
                     pointStyle: 'circle',
@@ -426,12 +426,12 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
     }
 
     // Opciones para gráfica Line (con escalas X/Y)
-    const lineChartOptions = {
+    const lineChartOptions: any = {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
             duration: 1000,
-            easing: 'easeInOutQuart'
+            easing: 'easeInOutQuart' as const
         },
         plugins: {
             legend: {
@@ -440,7 +440,7 @@ const ManageLogsPage: React.FC<ManageLogsPageProps> = ({
                     padding: 20,
                     font: {
                         size: 13,
-                        weight: '500'
+                        weight: 500
                     },
                     usePointStyle: true,
                     pointStyle: 'circle',

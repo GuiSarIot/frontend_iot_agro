@@ -25,6 +25,14 @@ interface Rol {
     name: string
 }
 
+interface RolApiItem {
+    id: string | number
+    nombre?: string
+    name?: string
+}
+
+type RolApiResponse = RolApiItem[] | { results?: RolApiItem[] }
+
 interface InputsValues {
     [key: string]: unknown
     username: string
@@ -156,7 +164,7 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
         try {
             showLoader(true)
             
-            const { status, message, data } = await ConsumerAPI({
+            const { status, message, data } = await ConsumerAPI<RolApiResponse>({
                 url: `${process.env.NEXT_PUBLIC_API_URL}/api/roles/`
             })
 
@@ -172,11 +180,11 @@ const ContentPageCreate: React.FC<ContentPageCreateProps> = ({
             }
             
             // La respuesta tiene estructura de paginación: { count, next, previous, results }
-            const rolesData = data?.results || data
+            const rolesData = Array.isArray(data) ? data : (data?.results || [])
             
             // Transformar los roles al formato esperado por el multiselect
             const rolesFormatted: Rol[] = Array.isArray(rolesData) 
-                ? rolesData.map((rol: any) => ({
+                ? rolesData.map((rol) => ({
                     code: rol.id,
                     name: rol.nombre || rol.name
                 }))

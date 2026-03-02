@@ -101,7 +101,7 @@ const DetalleUsuarioPage = ({ params }: DetalleUsuarioProps) => {
 
     const cargarUsuario = async () => {
         try {
-            const { data, status } = await ConsumerAPI({
+            const { data, status } = await ConsumerAPI<Usuario>({
                 url: `${process.env.NEXT_PUBLIC_API_URL}/api/usuarios/${usuarioId}/`
             })
 

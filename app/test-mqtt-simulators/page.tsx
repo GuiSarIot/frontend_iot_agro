@@ -142,7 +142,7 @@ export default function SimuladoresMqttPage() {
                 >
                     {dispositivos.map(device => (
                         <option key={device.id} value={device.identificador_unico}>
-                            {device.nombre} ({device.tipo}) - {device.ubicacion}
+                            {device.nombre} ({typeof device.tipo === 'string' ? device.tipo : device.tipo?.nombre || ''}) - {device.ubicacion}
                         </option>
                     ))}
                 </select>
@@ -165,7 +165,7 @@ export default function SimuladoresMqttPage() {
                             </div>
                             <div className={styles.infoRow}>
                                 <label>Tipo:</label>
-                                <span>{selectedDevice.tipo}</span>
+                                <span>{typeof selectedDevice.tipo === 'string' ? selectedDevice.tipo : selectedDevice.tipo?.nombre || ''}</span>
                             </div>
                             <div className={styles.infoRow}>
                                 <label>Ubicación:</label>

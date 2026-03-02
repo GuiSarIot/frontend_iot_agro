@@ -60,7 +60,7 @@ const getMethodFromAction = (action?: string): string => {
 }
 
 interface UseAccessLoggerOptions {
-    action?: 'view' | 'create' | 'update' | 'delete' | 'list'
+    action?: 'view' | 'create' | 'update' | 'delete' | 'list' | 'statistics'
     customModule?: string
     customEndpoint?: string
     enabled?: boolean
@@ -135,7 +135,7 @@ export const useAccessLogger = (options: UseAccessLoggerOptions = {}) => {
 
     // Función para registrar acciones específicas manualmente
     const logAction = async (
-        actionType: 'create' | 'update' | 'delete',
+        actionType: 'view' | 'create' | 'update' | 'delete' | 'list' | 'statistics' = 'view',
         statusCode: number = 200
     ) => {
         try {

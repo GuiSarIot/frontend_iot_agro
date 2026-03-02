@@ -74,7 +74,7 @@ export function useRecoveryPasswordLogin() {
             roles: data.roles,
             hasRolSistema: data.has_rol_sistema,
             nameRolSistema: data.rol_sistema,
-            levelAccessRolSistema: data.rol_sistema_level_access,
+            levelAccessRolSistema: String(data.rol_sistema_level_access ?? ''),
         })
 
         changeTitle(data.role.role)

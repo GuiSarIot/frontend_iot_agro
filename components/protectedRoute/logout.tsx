@@ -30,13 +30,13 @@ const Logout = ({ changeAuthContext, changeUserInfo, router }: LogoutParams) => 
         name: '',
         email: '',
         role: '',
-        module: null,                  // compatible con string | null
-        id: null,                       // compatible con string | number | null
-        roles: [],                       // array vacío
+        module: null,
+        id: null,
+        roles: [],
         nameImage: '',
-        hasRolIntitutional: false,
-        nameRolIntitutional: '',
-        levelAccessRolIntitutional: '',  // compatible con string | number
+        hasRolSistema: false,
+        nameRolSistema: '',
+        levelAccessRolSistema: '',
     }
 
     changeUserInfo(emptyUserInfo)

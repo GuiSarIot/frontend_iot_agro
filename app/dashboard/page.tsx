@@ -167,7 +167,7 @@ const DashboardPage: React.FC = () => {
                         <div className={styles.heroText}>
                             <div className={styles.greeting}>
                                 <DashboardIcon className={styles.heroIcon} />
-                                <h1>Bienvenido, {userInfo.first_name || userInfo.username}</h1>
+                                <h1>Bienvenido, {userInfo.name || 'Usuario'}</h1>
                             </div>
                             <p className={styles.heroSubtitle}>
                                 Sistema de Gestión IoT - Monitoreo y Control en Tiempo Real

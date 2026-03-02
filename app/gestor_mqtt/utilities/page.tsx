@@ -261,7 +261,9 @@ const MqttUtilitiesPage: React.FC<MqttUtilitiesPageProps> = ({
                                     backgroundColor: '#0d5309',
                                     color: '#ffffff',
                                     '&:hover': {
-                                        backgroundColor: '#0a4207'
+                                        backgroundColor: '#0a4207',
+                                        boxShadow: '0 6px 16px rgba(13, 83, 9, 0.4)',
+                                        transform: 'translateY(-1px)'
                                     },
                                     '&:disabled': {
                                         backgroundColor: '#d1d5db',
@@ -271,11 +273,7 @@ const MqttUtilitiesPage: React.FC<MqttUtilitiesPageProps> = ({
                                     fontWeight: 600,
                                     padding: '6px 16px',
                                     fontSize: '14px',
-                                    boxShadow: '0 4px 12px rgba(13, 83, 9, 0.3)',
-                                    '&:hover': {
-                                        boxShadow: '0 6px 16px rgba(13, 83, 9, 0.4)',
-                                        transform: 'translateY(-1px)'
-                                    }
+                                    boxShadow: '0 4px 12px rgba(13, 83, 9, 0.3)'
                                 }}
                             >
                                 Actualizar

@@ -9,8 +9,8 @@ import NavBarTop from '@/components/shared/navBarTop/navBarTop'
 import SideBarLeft from '@/components/shared/sideBarLeft/sideBarLeft'
 import { useAppContext } from '@/context/appContext'
 
-import { getAvailableModules, getDashboardModules, MODULES_CONFIG } from './modulesConfig.tsx'
-import { getModuleMenuByPath } from './moduleMenuConfig.tsx'
+import { getAvailableModules, getDashboardModules, MODULES_CONFIG } from './modulesConfig'
+import { getModuleMenuByPath } from './moduleMenuConfig'
 import SidebarMenu from './SidebarMenu'
 import styles from './AppLayout.module.css'
 

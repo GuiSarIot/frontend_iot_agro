@@ -95,6 +95,7 @@ export interface CreateDispositivoDto {
     ubicacion: string
     estado?: string
     descripcion?: string
+    mqtt_password?: string
     operador_asignado?: number | null
 }
 

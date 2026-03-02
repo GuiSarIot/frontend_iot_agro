@@ -29,6 +29,11 @@ interface EmailStatus {
     has_pending_verification: boolean
 }
 
+interface TelegramVerificationResponse {
+    verification_code?: string
+    expires_in_minutes?: number
+}
+
 interface NotificationsTabProps {
     userInfo: UserInfoForm
     notificationSettings: NotificationSettings
@@ -104,7 +109,7 @@ export default function NotificationsTab({
         setIsGeneratingCode(true)
 
         try {
-            const { status, data, message } = await ConsumerAPI({
+            const { status, data, message } = await ConsumerAPI<TelegramVerificationResponse>({
                 url: `${process.env.NEXT_PUBLIC_API_URL}/api/telegram/generate-verification/`,
                 method: 'POST'
             })
