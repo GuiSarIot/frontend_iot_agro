@@ -85,6 +85,10 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                 telegram_notifications: (data as UserInfoForm).telegram_notifications_enabled || false,
                 telegram_chat_id: (data as UserInfoForm).telegram_chat_id || ''
             })
+            // Establecer la imagen de perfil actual si existe
+            if ((data as UserInfoForm).profile_picture) {
+                setPreviewImage(`${process.env.NEXT_PUBLIC_API_URL}${(data as UserInfoForm).profile_picture}`)
+            }
         }
         showLoader(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -347,12 +351,24 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                 const formDataImage = new FormData()
                 formDataImage.append('profile_picture', selectedFile)
 
-                await ConsumerAPIFormData({
+                const imageResponse = await ConsumerAPIFormData({
                     url: `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userInfoForm.id}/`,
                     method: 'PATCH',
                     body: formDataImage,
                     headers: {} // Dejar que el navegador establezca el Content-Type para FormData
                 })
+
+                // Verificar si hubo error al subir la imagen
+                if (imageResponse.status === 'error') {
+                    showLoader(false)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al subir la imagen',
+                        text: imageResponse.message || 'No se pudo subir la foto de perfil',
+                        confirmButtonColor: '#dc3545'
+                    })
+                    return
+                }
             }
 
             showLoader(false)
@@ -364,7 +380,8 @@ const ContentPageUpdate: React.FC<ContentPageUpdateProps> = ({
                 confirmButtonColor: '#00a86b'
             })
 
-            // Recargar información del usuario
+            // Limpiar el archivo seleccionado y recargar información del usuario
+            setSelectedFile(null)
             loadInfoUser()
         } catch {
             showLoader(false)

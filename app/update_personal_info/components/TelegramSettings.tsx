@@ -89,7 +89,7 @@ const TelegramSettings = () => {
                 title: '📱 Código generado',
                 html: `
                     <p>${response.message}</p>
-                    <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                    <p style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
                         El sistema detectará automáticamente cuando vincules tu cuenta
                     </p>
                 `,
@@ -246,6 +246,16 @@ const TelegramSettings = () => {
                         <div className={styles.switchContainer}>
                             <div className={styles.switchLabel}>
                                 <span className="labelText">Activar notificaciones de Telegram</span>
+                                {!status?.is_linked && (
+                                    <span style={{ fontSize: '12px', color: '#999', marginLeft: '8px' }}>
+                                        (Primero debes vincular tu cuenta)
+                                    </span>
+                                )}
+                                {status?.is_linked && !status?.is_verified && (
+                                    <span style={{ fontSize: '12px', color: '#ffc107', marginLeft: '8px' }}>
+                                        (Pendiente de verificación)
+                                    </span>
+                                )}
                             </div>
                             <label className="switch">
                                 <input
@@ -273,7 +283,13 @@ const TelegramSettings = () => {
                         
                         {!status?.is_linked && (
                             <div className={`${styles.statusMessage} ${styles.info}`}>
-                                ℹ️ Verifica tu cuenta para activar las notificaciones
+                                ℹ️ Debes vincular tu cuenta de Telegram para activar las notificaciones
+                            </div>
+                        )}
+                        
+                        {status?.is_linked && !status?.is_verified && (
+                            <div className={`${styles.statusMessage} ${styles.warning}`}>
+                                ⚠️ Cuenta vinculada pero pendiente de verificación
                             </div>
                         )}
 
@@ -281,14 +297,18 @@ const TelegramSettings = () => {
                         {!status?.is_linked && (
                             <div className={styles.infoBox}>
                                 <div className={styles.infoTitle}>
-                                    ℹ️ Para vincular tu cuenta:
+                                    ℹ️ Para vincular tu cuenta de Telegram:
                                 </div>
                                 <ol>
-                                    <li>Haz clic en "Vincular cuenta de Telegram"</li>
-                                    <li>Se generará un código de verificación</li>
-                                    <li>Envía ese código al bot de Telegram</li>
-                                    <li>¡Listo! Podrás recibir notificaciones</li>
+                                    <li>Haz clic en "Vincular cuenta de Telegram" (abajo a la derecha)</li>
+                                    <li>Se generará un código de verificación único</li>
+                                    <li>Abre Telegram y busca el bot: <strong>@iot_sensor_platform_bot</strong></li>
+                                    <li>Envía el código al bot</li>
+                                    <li>¡Listo! Tu cuenta estará vinculada y podrás activar las notificaciones</li>
                                 </ol>
+                                <p style={{ marginTop: '12px', padding: '10px', background: '#fff3cd', borderLeft: '4px solid #ffc107', fontSize: '13px', color: '#856404', borderRadius: '4px' }}>
+                                    <strong>Nota:</strong> Debes vincular tu cuenta de Telegram antes de poder activar las notificaciones. El correo verificado es un requisito previo, pero necesitas completar la vinculación de Telegram.
+                                </p>
                             </div>
                         )}
                     </div>
@@ -462,85 +482,6 @@ const TelegramSettings = () => {
                     </div>
                 </div>
             )}
-
-            <style jsx>{`
-                .modal-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(0, 0, 0, 0.5);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 1000;
-                }
-
-                .modal-content {
-                    background: var(--bg-primary);
-                    border-radius: 8px;
-                    max-width: 600px;
-                    width: 90%;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                }
-
-                .switch {
-                    position: relative;
-                    display: inline-block;
-                    width: 48px;
-                    height: 26px;
-                }
-
-                .switch input {
-                    opacity: 0;
-                    width: 0;
-                    height: 0;
-                }
-
-                .slider {
-                    position: absolute;
-                    cursor: pointer;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background-color: #ccc;
-                    transition: .3s;
-                    border-radius: 26px;
-                }
-
-                .slider:before {
-                    position: absolute;
-                    content: "";
-                    height: 20px;
-                    width: 20px;
-                    left: 3px;
-                    bottom: 3px;
-                    background-color: white;
-                    transition: .3s;
-                    border-radius: 50%;
-                }
-
-                input:checked + .slider {
-                    background-color: #00a86b;
-                }
-
-                input:focus + .slider {
-                    box-shadow: 0 0 1px #00a86b;
-                }
-
-                input:checked + .slider:before {
-                    transform: translateX(22px);
-                }
-
-                input:disabled + .slider {
-                    opacity: 0.5;
-                    cursor: not-allowed;
-                }
-            `}</style>
         </>
     )
 }
