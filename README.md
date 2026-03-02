@@ -45,6 +45,13 @@ Edita `.env.local` y configura:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
+Para producción (Netlify), define también en **Site settings → Environment variables**:
+```env
+NEXT_PUBLIC_API_URL=https://backendiot-production-9651.up.railway.app
+```
+
+Importante: usa la URL base **sin** `/api` al final.
+
 4. **Ejecutar en desarrollo**
 ```bash
 npm run dev
